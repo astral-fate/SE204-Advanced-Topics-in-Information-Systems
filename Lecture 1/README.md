@@ -1,10 +1,16 @@
-Advanced Topics in Information Systems
+# SE204-Advanced-Topics-in-Information-Systems
+
+
+Assignment:
 
 
 
-# Assigment 
-
-Real life example of data and information and how with example it became knowladge 
+## 1.  Example about Difference between:
 
 
-- Difrencses between data model and schema
+- Data
+- Information
+- Knowledge
+
+## 2.  Data Model vs Schema Definition
+
