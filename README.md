@@ -1,13 +1,16 @@
 # SE204-Advanced-Topics-in-Information-Systems
 
 
-Assignment :
+Assignment:
 
 
-1- Data Model vs Schema Definition
-2- Example about Difference between:
+
+## 1.  Example about Difference between:
 
 
--l Data
--Information
--Knowledge
+- Data
+- Information
+- Knowledge
+
+## 2.  Data Model vs Schema Definition
+
