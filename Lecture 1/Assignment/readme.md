@@ -167,30 +167,62 @@ In this study, knowledge emerged from the analysis and interpretation of the ann
 3. **Visualization and Correlation Analysis**: To extract deeper insights from the annotated genome data, I created several heatmap visualizations exploring relationships between genes, organisms, functions, and resistance classifications. These visualizations revealed significant patterns:
 
    - **Gene against Source Organism** (Image 1): This heatmap revealed the distribution of AMR genes across different bacterial species. Escherichia coli and Salmonella enterica showed similar resistance gene patterns, suggesting horizontal gene transfer between these related species.
+  
+![1_gene_sample_id](https://github.com/user-attachments/assets/c4b9d820-1d25-45fa-892a-70b9ebb297d1)
+
 
    - **Function against Source Organism** (Image 2): This visualization highlighted the prevalence of efflux pump mechanisms across multiple organisms, with particular concentration in unknown organisms and Salmonella enterica.
 
+![2_antibiotics_class_sample_id](https://github.com/user-attachments/assets/fc8d592b-55b2-42f1-8781-34f477e2816a)
+
+
+
    - **Product against Source Organism** (Image 3): The analysis of gene products showed differential distribution across species, with highest intensity in Escherichia coli and unknown organisms, revealing potential species-specific adaptations.
 
+![3_antibiotics_sample_id](https://github.com/user-attachments/assets/b2bbcf56-dbb8-4a5d-a062-d41d390e61a4)
+
+
    - **Classification against Source Organism** (Image 4): The resistance classification patterns showed that efflux pump conferring antibiotic resistance and antibiotic target in susceptible species were the predominant mechanisms across most organisms.
+![4_classification_sample_id](https://github.com/user-attachments/assets/ab2d954c-494b-4da1-a72e-1144bce624a2)
+
+   - 
 
    - **Gene against Function** (Image 5): This correlation revealed specialized gene functions, with most genes having a single primary function, demonstrating the specificity of resistance mechanisms.
 
+ ![5_gene_antibiotic_class](https://github.com/user-attachments/assets/33df6511-971a-4570-9c69-28b64a0cee3f)
+
+
    - **Gene against Classification** (Image 6): This visualization showed how individual genes contribute to different resistance classifications, with some genes contributing to multiple resistance mechanisms.
+
+![6_gene_classification](https://github.com/user-attachments/assets/81f86dc6-d829-4bdb-88d9-aa2113f9a3e4)
+
 
    - **Function against Classification** (Image 7): This correlation identified how specific functions relate to resistance classifications, with efflux pump components strongly associated with efflux-based resistance.
 
+![7_antibiotic_class_classification](https://github.com/user-attachments/assets/2ac2617c-b3ff-447a-bdd2-835cf2830b64)
+
+
    - **Relationship Network** (Image 8): The network visualization revealed the complex interconnections between genes, antibiotics, antibiotic classes, and resistance classifications, demonstrating the multi-layered nature of antimicrobial resistance.
+
+![8_relationship_network](https://github.com/user-attachments/assets/c2b13678-0fe7-4f47-9316-75819f138704)
+
 
    - **Genes per Function Analysis** (Image 9): This quantitative analysis showed that most functions are performed by a single gene, with a few functions (like efflux pump components) being encoded by multiple genes, suggesting functional redundancy in critical resistance mechanisms.
 
+   ![10_gene_count_by_antibiotic_class](https://github.com/user-attachments/assets/9ff115e5-4b98-4198-85ef-1fd6c02f464a)
+
+
    - **Products per Classification Analysis** (Image 10): This revealed that efflux pumps represent the largest class of resistance products, highlighting their importance in Salmonella's resistance strategy.
+  
+![11_antibiotics_count_by_classification](https://github.com/user-attachments/assets/5109458c-4228-4c20-afcd-477af34f73d8)
 
-4. **Integration with Clinical Context**: The presence of specific resistance genes like TEM family beta-lactamases and tetracycline resistance genes (Tet(B)) provides actionable knowledge about which antibiotics might be ineffective against this strain. This knowledge directly informs treatment decisions and antibiotic stewardship strategies.
+   
 
-5. **Evolutionary Insights**: The identification of genes involved in antibiotic target protection and modification of cell wall charge provides insights into the adaptive strategies employed by S. enterica to evade antibiotic action. This knowledge contributes to our understanding of resistance evolution.
+5. **Integration with Clinical Context**: The presence of specific resistance genes like TEM family beta-lactamases and tetracycline resistance genes (Tet(B)) provides actionable knowledge about which antibiotics might be ineffective against this strain. This knowledge directly informs treatment decisions and antibiotic stewardship strategies.
 
-6. **Subsystem Analysis Interpretation**: The distribution of genes across functional subsystems revealed that a significant portion (973 genes) is dedicated to metabolism, while 201 genes are involved in stress response, defense, and virulence. This distribution provides knowledge about the strain's survival strategies and pathogenic potential.
+6. **Evolutionary Insights**: The identification of genes involved in antibiotic target protection and modification of cell wall charge provides insights into the adaptive strategies employed by S. enterica to evade antibiotic action. This knowledge contributes to our understanding of resistance evolution.
+
+7. **Subsystem Analysis Interpretation**: The distribution of genes across functional subsystems revealed that a significant portion (973 genes) is dedicated to metabolism, while 201 genes are involved in stress response, defense, and virulence. This distribution provides knowledge about the strain's survival strategies and pathogenic potential.
 
 The phylogenetic analysis further enhances this knowledge by placing the strain in its evolutionary context, showing its relationship to other clinically relevant Salmonella strains. This evolutionary context is crucial for understanding the acquisition and spread of resistance genes.
 
