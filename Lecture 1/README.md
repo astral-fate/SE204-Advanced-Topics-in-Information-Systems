@@ -15,7 +15,14 @@
 - Standard Deviation (sample): S = √(Σ(xᵢ - x̄)²/(n-1))
 - Interquartile Range (IQR) = Q₃ - Q₁
 
-
+**Data Visualization Types:**
+- Column/Bar charts: Compare values across categories
+- Line charts: Show trends over time
+- Pie/Doughnut charts: Show proportions of a whole
+- Scatter/Bubble charts: Show relationships between variables
+- Treemap charts: Show hierarchical data as nested rectangles
+- Map charts: Visualize geographic data distribution
+- Gauge charts: Display KPIs and progress toward goals
 
 # Assignment:
 
