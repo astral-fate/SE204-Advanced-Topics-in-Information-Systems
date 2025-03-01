@@ -7,7 +7,7 @@ Assignment:
 
 ## 1.  Course Syllabus 
 
-Descriptive data analysis and visualization.
+- Descriptive data analysis and visualization.
 
 
 - Frequent pattern mining.
