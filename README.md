@@ -5,12 +5,24 @@ Assignment:
 
 
 
-## 1.  Example about Difference between:
+## 1.  Course Syllabus 
+
+Descriptive data analysis and visualization.
 
 
-- Data
-- Information
-- Knowledge
+- Frequent pattern mining.
 
-## 2.  Data Model vs Schema Definition
 
+- Cluster and dimensionality reduction.
+
+
+- Machine learning 1: Introduction
+
+
+- Machine learning 2: Classification.
+
+
+- Machine learning 3: ROC analysis and regression
+
+
+- Machine learning 4: Deep learning.
