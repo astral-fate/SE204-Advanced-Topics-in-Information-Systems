@@ -23,10 +23,27 @@ The course includes practical assignments that reinforce the theoretical concept
 - Identifying closed and maximal frequent itemsets from transaction data
 - Analyzing real-world datasets to discover meaningful patterns
 
-## Recommended Textbooks
-1. P. N. Tan, M. Steinbach, A. Karpatne, V. Kumar, "Introduction to Data Mining", (2nd edition), Pearson, 2018.
-2. J. Han and M. Kamber, "Data Mining: Concepts and Techniques", 2011.
-3. C. C. Aggarwal, "Association Pattern Mining", in: "Data Mining", Springer, 2015.
+## Learning Resources:
+Video Tutorials:
+
+- YouTube Channel: StatQuest with Josh Starmer - Has clear explanations of data mining concepts
+- Coursera: "Data Mining Specialization" by University of Illinois - Covers association rules in depth
+- YouTube Playlist by Krish Naik - Search for "Association Rule Mining"
+
+### Online Courses:
+
+- edX: "Data Mining: Principles and Applications"
+- Udemy: "Data Mining with R" or "Data Mining with Python"
+
+### Books:
+
+"Introduction to Data Mining" by Tan, Steinbach, and Kumar - Excellent chapter on frequent pattern mining
+"Data Mining: Concepts and Techniques" by Han, Kamber, and Pei - Comprehensive coverage of these topics
+
+### Websites:
+
+- GeeksforGeeks - Search for "Apriori Algorithm" or "Frequent Pattern Mining"
+- Towards Data Science - Many articles on association rule mining with code examples
 
 ## Tools and Technologies
 - Python with data mining libraries (optional)
