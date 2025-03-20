@@ -28,10 +28,11 @@ Video Tutorials:
 
 - YouTube Channel: StatQuest with Josh Starmer - Has clear explanations of data mining concepts
 - Coursera: "Data Mining Specialization" by University of Illinois - Covers association rules in depth
+- (Data Mining Specialization by University of Illinois)[https://www.coursera.org/specializations/data-mining]
 
 <details>
 <summary>
-  (Data Mining Specialization" by University of Illinois)[https://www.coursera.org/specializations/data-mining]
+course structure
 </summary>
 
 1. https://www.coursera.org/learn/datavisualization/home/welcome
