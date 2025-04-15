@@ -2,6 +2,8 @@
 
 This course is part of [Cairo University Software Engineering Professional Master's Degree](https://github.com/astral-fate/Cairo-University-Software-Engineering-Professional-Master-s-Degree)
 
+Interactive learning material can be found [here](https://astral-fate.github.io/SE204-Advanced-Topics-in-Information-Systems/)
+
 ## Course Syllabus
 
 | Module                                                    | Main Topics                                                                                                                                                                                             | Key Concepts                                                                                                                                                                                                                                                                                                                           | Tools                      |
