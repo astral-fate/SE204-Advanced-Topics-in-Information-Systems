@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SE204 - Data Mining & ML Intro - Interactive Material</title>
+    <style>
+        /* --- Base Styles (Similar to c1.html) --- */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 950px; /* Slightly wider for tables */
+            margin: 20px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            color: #0056b3; /* Cairo University Blue */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: #007bff; /* Lighter Blue */
+        }
+
+        /* --- Main Tabs Styles --- */
+        .main-tabs {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #0056b3;
+        }
+
+        .main-tabs .tab-button {
+            padding: 12px 18px; /* Adjusted padding */
+            border: none;
+            background: none;
+            color: #0056b3;
+            font-size: 0.9em; /* Slightly smaller font */
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin-bottom: -2px;
+            border-bottom: 2px solid transparent;
+            text-align: center;
+        }
+
+        .main-tabs .tab-button.active {
+            background: #0056b3;
+            color: white;
+            border-bottom: 2px solid #0056b3;
+        }
+        .main-tabs .tab-button:hover:not(.active) {
+            background-color: #e9ecef;
+            border-bottom: 2px solid #adb5bd;
+        }
+
+        /* --- Content Sections --- */
+        .main-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .main-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- Accordion Styles (Glossary & Examples) --- */
+        .accordion { /* General Accordion Container */
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px; /* Space between accordions */
+        }
+        .accordion-item {
+            border-bottom: 1px solid #dee2e6;
+        }
+        .accordion-item:last-child { border-bottom: none; }
+
+        .accordion-header {
+            background-color: #f8f9fa;
+            cursor: pointer;
+            padding: 12px 20px; /* Adjusted padding */
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            position: relative;
+            color: #0056b3; /* Default header color */
+        }
+        /* Specific color for Glossary terms */
+        #glossary .accordion-header { color: #dc3545; }
+
+        .accordion-header:hover { background-color: #e9ecef; }
+
+        .accordion-header::after { /* Indicator (+/-) */
+            content: '\002B'; /* + sign */
+            color: #0056b3;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+            transition: transform 0.2s ease-in-out;
+        }
+        .accordion-header.active::after { content: "\2212"; transform: rotate(180deg); }
+        .accordion-header.active { background-color: #e7f1ff; }
+
+        .accordion-panel {
+            padding: 0 20px;
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+        .accordion-panel p, .accordion-panel ul, .accordion-panel ol, .accordion-panel div {
+            margin: 15px 0; /* Add margin when panel is open */
+        }
+        .accordion-panel code {
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+            background-color: #e9ecef;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.95em;
+        }
+         /* --- End Accordion Styles --- */
+
+        /* --- Table Styles --- */
+        table {
+            width: auto; /* Allow tables to size naturally or set specific width */
+            border-collapse: collapse;
+            margin: 15px auto; /* Center tables */
+            border: 1px solid #ccc;
+            font-size: 0.9em;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+        td code { /* Inline code in tables */
+            background-color: transparent;
+            padding: 0;
+            font-size: 1em;
+        }
+        .check-mark { color: green; font-weight: bold; }
+        .cross-mark { color: red; font-weight: bold; }
+
+        /* Specific table width for support/confidence */
+        .support-table { width: 60%; }
+
+        /* --- Formulas Section Specifics --- */
+        #formulas h4 { color: #17a2b8; margin-top: 1.5em; } /* Teal color for sub-concepts */
+        #formulas ul { list-style: disc; padding-left: 30px; }
+        #formulas ol { list-style: decimal; padding-left: 30px; }
+        #formulas .math { font-family: 'Times New Roman', serif; font-style: italic; font-size: 1.1em;} /* Basic math styling */
+
+
+        /* --- Quiz Styles (Unchanged) --- */
+        .question {
+            margin-bottom: 25px; padding: 20px; border: 1px solid #dee2e6; border-radius: 8px; background-color: #ffffff; position: relative;
+        }
+        .question p { margin: 0 0 15px; font-weight: bold; font-size: 1.05em; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .option-button {
+            padding: 10px 15px; border: 1px solid #ced4da; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px; text-align: left; transition: background-color 0.2s ease, border-color 0.2s ease; width: 100%;
+        }
+        .option-button:hover { background-color: #e9ecef; border-color: #adb5bd; }
+        .option-button.selected { background: #007bff; color: white; border-color: #0056b3; }
+        .check-answer {
+            margin-top: 15px; padding: 10px 20px; border: none; background: #28a745; color: white; cursor: pointer; border-radius: 5px; font-weight: bold; transition: background-color 0.2s ease;
+        }
+        .check-answer:hover { background-color: #218838; }
+        .feedback { margin-top: 15px; padding: 10px; border-radius: 5px; font-weight: bold; }
+        .feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SE204 - Data Mining & ML Introduction</h1>
+
+        <!-- Main Tab Buttons -->
+        <div class="main-tabs">
+            <button class="tab-button active" data-tab="glossary">Glossary</button>
+            <button class="tab-button" data-tab="formulas">Concepts & Examples</button>
+            <button class="tab-button" data-tab="fill">Fill in the Blank</button>
+            <button class="tab-button" data-tab="tf">True/False</button>
+            <button class="tab-button" data-tab="mc">Multiple Choice</button>
+        </div>
+
+        <!-- Glossary Section (Accordion) -->
+        <section id="glossary" class="main-content active">
+            <h2>Glossary of Terms</h2>
+            <div class="glossary-accordion accordion">
+                <!-- Add ALL terms here as accordion items -->
+                <div class="accordion-item"><button class="accordion-header">AI (Artificial Intelligence)</button><div class="accordion-panel"><p>A broad field of computer science focused on creating systems that can perform tasks requiring human intelligence (e.g., thinking, decision-making, learning).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Apriori Algorithm</button><div class="accordion-panel"><p>A classic algorithm for frequent itemset mining and association rule learning over transactional databases. It uses the Apriori principle for candidate generation and pruning.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Apriori Principle</button><div class="accordion-panel"><p>The principle stating that if an itemset is frequent, then all of its subsets must also be frequent. Used to prune the search space in the Apriori algorithm.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Association Rule</button><div class="accordion-panel"><p>An implication expression of the form X → Y, where X (antecedent) and Y (consequent) are disjoint itemsets. It indicates that transactions containing X are likely to also contain Y.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Association Rule Mining</button><div class="accordion-panel"><p>The task of discovering interesting association rules (based on support and confidence thresholds) within large datasets.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Binary Classification</button><div class="accordion-panel"><p>A classification task where the goal is to assign input data to one of two possible categories (e.g., spam/not spam, positive/negative).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Classification</button><div class="accordion-panel"><p>A supervised learning task where the goal is to assign input data to specific, predefined categories or classes.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Classifier</button><div class="accordion-panel"><p>A model learned from training data used to identify the category or class of new input data.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Closed Frequent Itemset</button><div class="accordion-panel"><p>A frequent itemset for which none of its proper supersets have the exact same support count.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Clustering</button><div class="accordion-panel"><p>An unsupervised learning task that involves grouping similar objects or data points together based on their characteristics, such that objects in the same group (cluster) are more similar to each other than to those in other groups.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Complex Data</button><div class="accordion-panel"><p>Non-traditional data types beyond simple numeric or categorical values, such as text, hyperlinks, images, audio, video, sequences (DNA), and spatio-temporal data (climate).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Conditional FP-Tree</button><div class="accordion-panel"><p>A sub-tree constructed from a conditional pattern base during the FP-Growth algorithm, used to mine frequent itemsets related to a specific item.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Conditional Pattern Base</button><div class="accordion-panel"><p>In FP-Growth, the set of prefix paths in the FP-Tree co-occurring with a specific suffix pattern (item).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Confidence (Association Rule)</button><div class="accordion-panel"><p>A measure of the reliability of an association rule X → Y. It's the conditional probability P(Y|X), calculated as support(X∪Y) / support(X).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Conventional Programming</button><div class="accordion-panel"><p>The traditional approach to programming where explicit rules and steps are defined by a human programmer to solve a problem.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Data Cleaning</button><div class="accordion-panel"><p>The process of handling noise, incomplete values, and inconsistencies in data before analysis or mining.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Data Integration</button><div class="accordion-panel"><p>Combining data from multiple heterogeneous or homogeneous sources into a unified view, often involving resolving schema and data conflicts.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Data Mining</button><div class="accordion-panel"><p>The process of discovering hidden, interesting, and useful patterns, correlations, trends, and knowledge from large amounts of data.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Data Mining Models</button><div class="accordion-panel"><p>Frameworks or techniques used in data mining, broadly categorized as Predictive (predicting future values, e.g., classification, regression) and Descriptive (finding patterns describing the data, e.g., clustering, association).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Data Selection</button><div class="accordion-panel"><p>Retrieving data relevant to the specific analysis task from a larger database or data source.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Data Transformation</button><div class="accordion-panel"><p>Converting data into forms appropriate for mining, often involving summary, aggregation, normalization, or discretization operations.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Deep Learning</button><div class="accordion-panel"><p>A subset of machine learning that uses artificial neural networks with multiple layers (deep architectures) to model complex patterns in data.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Dependent Variable (Target Variable)</button><div class="accordion-panel"><p>In predictive modeling, the attribute whose value is being predicted.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Descriptive Model (Data Mining)</button><div class="accordion-panel"><p>A data mining model whose objective is to find human-interpretable patterns (like correlations, trends, clusters) that describe the existing data.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Dimensionality Reduction</button><div class="accordion-panel"><p>An unsupervised learning technique used to reduce the number of features (dimensions) in a dataset while preserving important information.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Disjoint Itemsets</button><div class="accordion-panel"><p>Two itemsets that have no items in common (their intersection is empty).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Distributed Data Mining</button><div class="accordion-panel"><p>Data mining techniques designed for data that is geographically distributed or stored across multiple locations/entities.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">FP-Growth Algorithm</button><div class="accordion-panel"><p>An efficient algorithm for mining frequent itemsets that avoids explicit candidate generation by using a compact tree structure (FP-Tree).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">FP-Tree (Frequent Pattern Tree)</button><div class="accordion-panel"><p>A compact prefix tree structure used in the FP-Growth algorithm to store frequent item information from a transactional database.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">False Positive Rate (FPR)</button><div class="accordion-panel"><p>In binary classification evaluation (ROC Curve), the ratio of actual negative instances that are incorrectly classified as positive (FPR = FP / (FP + TN)). Plotted on the X-axis of an ROC curve.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Frequent Itemset</button><div class="accordion-panel"><p>An itemset whose support (frequency of occurrence) in the dataset is greater than or equal to a user-defined minimum support threshold (minsup).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Frequent Pattern</button><div class="accordion-panel"><p>A general term for patterns (like itemsets, sequences, or structures) that occur frequently in data.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Frequent Pattern Mining</button><div class="accordion-panel"><p>The data mining task focused on extracting frequent patterns (often itemsets) from a dataset.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Gradient Descent</button><div class="accordion-panel"><p>An iterative optimization algorithm used in machine learning to minimize a cost/loss function by adjusting model parameters in the direction opposite to the gradient of the function.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Heterogeneous Data</button><div class="accordion-panel"><p>Datasets containing attributes of different types (e.g., a mix of numerical, categorical, text).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">High Dimensionality</button><div class="accordion-panel"><p>A characteristic of datasets having a very large number of attributes or features (hundreds or thousands), posing challenges for traditional analysis techniques.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">IDLE (Python)</button><div class="accordion-panel"><p>Python's Integrated Development and Learning Environment; a simple editor and shell for writing and running Python code.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Incomplete Data</button><div class="accordion-panel"><p>Data where some attribute values are missing.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Inconsistent Data</button><div class="accordion-panel"><p>Data lacking uniformity in format or content, containing discrepancies (e.g., different date formats, inconsistent capitalization).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Independent Variables (Features)</button><div class="accordion-panel"><p>In predictive modeling, the attributes used to make a prediction about the target variable.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Itemset</button><div class="accordion-panel"><p>A collection of one or more items (e.g., {Milk, Bread}).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">K-Itemset</button><div class="accordion-panel"><p>An itemset that contains exactly k items.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Knowledge Presentation</button><div class="accordion-panel"><p>The final step in data mining where the discovered patterns and knowledge are presented to the user, often using visualization techniques.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Labeled Data</button><div class="accordion-panel"><p>Data where each instance has an associated characteristic, category, or output label (e.g., images labeled as 'cat' or 'dog', emails labeled 'spam'). Used in supervised learning.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Logistic Regression</button><div class="accordion-panel"><p>A classification algorithm used for both binary and multi-class problems. It uses the sigmoid (binary) or softmax (multi-class) function to model the probability of an instance belonging to a particular class.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Loss Function (Cost Function)</button><div class="accordion-panel"><p>In machine learning, a function that measures the difference (error) between the model's predictions and the actual true values. The goal of training is typically to minimize this function.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Machine Learning (ML)</button><div class="accordion-panel"><p>A field of computer science where algorithms learn patterns from data to make predictions or decisions without being explicitly programmed for each task.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Market Basket Analysis</button><div class="accordion-panel"><p>A common application of association rule mining, used to identify relationships between items frequently purchased together in retail transactions.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Maximal Frequent Itemset (Max Pattern)</button><div class="accordion-panel"><p>A frequent itemset for which none of its proper supersets are also frequent.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Minimum Support Threshold (minsup)</button><div class="accordion-panel"><p>A user-defined threshold used in frequent pattern mining. An itemset is considered frequent only if its support meets or exceeds this threshold.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Mlxtend</button><div class="accordion-panel"><p>A Python library providing useful tools for data science tasks, including implementations of Apriori and FP-Growth algorithms.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Multi-class Classification</button><div class="accordion-panel"><p>A classification task where the goal is to assign input data to one of more than two possible categories (e.g., classifying iris flower types).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Noisy Data</button><div class="accordion-panel"><p>Data containing errors or outliers (extreme values) that can distort analysis results.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Overfitting</button><div class="accordion-panel"><p>A situation in machine learning where a model learns the training data too well, including noise and specific details, and fails to generalize to new, unseen data.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Pandas (Python Library)</button><div class="accordion-panel"><p>A fundamental Python library for data manipulation and analysis, providing data structures like DataFrames.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Pattern Evaluation</button><div class="accordion-panel"><p>The step in data mining where discovered patterns are assessed based on interestingness measures to identify truly significant knowledge.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Pip (Python)</button><div class="accordion-panel"><p>The standard package installer for Python, used to install and manage third-party libraries.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Predictive Model (Data Mining)</button><div class="accordion-panel"><p>A data mining model whose objective is to predict the value of a particular target attribute based on the values of other input attributes (e.g., classification, regression).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Python</button><div class="accordion-panel"><p>A popular, high-level, multidisciplinary programming language widely used in data science, machine learning, web development, and more, known for its readability and extensive libraries.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">ROC Curve (Receiver Operating Characteristic)</button><div class="accordion-panel"><p>A graphical plot used to evaluate the performance of a binary classifier by plotting the True Positive Rate (TPR) against the False Positive Rate (FPR) at various classification thresholds.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Regression</button><div class="accordion-panel"><p>A supervised learning task where the goal is to predict a continuous numerical value (e.g., predicting house prices, stock prices).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Reinforcement Learning</button><div class="accordion-panel"><p>A type of machine learning where an agent learns to make decisions by interacting with an environment and receiving rewards or penalties for its actions.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Scalability</button><div class="accordion-panel"><p>The ability of an algorithm or system to handle increasingly large amounts of data or computational load efficiently.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Sigmoid Function</button><div class="accordion-panel"><p>A mathematical function (shaped like an 'S') used in binary logistic regression to map any real-valued number into a probability between 0 and 1.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Softmax Function</button><div class="accordion-panel"><p>A function used in multi-class logistic regression to convert a vector of scores into a probability distribution over multiple classes, where probabilities sum to 1.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Support (Association Rule)</button><div class="accordion-panel"><p>The fraction of transactions in the dataset that contain both the antecedent (X) and the consequent (Y) of the rule X → Y. Calculated as support_count(X∪Y) / total_transactions.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Support (Itemset)</button><div class="accordion-panel"><p>The frequency or proportion of transactions in a dataset that contain a particular itemset. Calculated as support_count(Itemset) / total_transactions.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Support Count (σ)</button><div class="accordion-panel"><p>The absolute number of transactions in a dataset that contain a particular itemset.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Supervised Learning</button><div class="accordion-panel"><p>A type of machine learning where the algorithm learns from labeled data (input-output pairs) to make predictions on new, unseen input data.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Superset</button><div class="accordion-panel"><p>A set that contains all the elements of another set, possibly along with additional elements. If itemset X contains all items in itemset Y, X is a superset of Y.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Testing Set</button><div class="accordion-panel"><p>Data that the machine learning model has never seen before, used to evaluate the model's performance and ability to generalize.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Training Set</button><div class="accordion-panel"><p>The subset of data used to train a machine learning model.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">True Positive Rate (TPR) / Recall</button><div class="accordion-panel"><p>In binary classification evaluation, the ratio of actual positive instances that are correctly classified as positive (TPR = TP / (TP + FN)). Plotted on the Y-axis of an ROC curve.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Underfitting</button><div class="accordion-panel"><p>A situation in machine learning where a model is too simple to capture the underlying patterns in the data, resulting in poor performance on both the training and testing sets.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Unlabeled Data</button><div class="accordion-panel"><p>Data where instances do not have pre-assigned labels or categories. Used in unsupervised learning.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Unsupervised Learning</button><div class="accordion-panel"><p>A type of machine learning where the algorithm learns patterns and structures from unlabeled data without explicit output guidance (e.g., clustering, dimensionality reduction).</p></div></div>
+            </div> <!-- End glossary-accordion -->
+        </section>
+
+        <!-- Formulas/Concepts & Examples Section -->
+        <section id="formulas" class="main-content">
+             <h2>Concepts & Examples</h2>
+
+             <!-- Basic FPM Concepts -->
+             <div class="accordion">
+                 <div class="accordion-item">
+                     <button class="accordion-header">Basic Frequent Pattern Mining Concepts</button>
+                     <div class="accordion-panel">
+                         <h4>Itemset</h4>
+                         <p>A collection of one or more items. Example: <code>{Milk, Bread, Diaper}</code></p>
+                         <h4>k-Itemset</h4>
+                         <p>An itemset containing exactly k items. Example: <code>{Milk, Bread, Diaper}</code> is a 3-itemset.</p>
+                         <h4>Support Count (σ)</h4>
+                         <p>The absolute frequency of occurrence of an itemset in the transactions. Formula: <code>σ(Itemset) = Number of transactions containing Itemset</code></p>
+                         <h4>Support (s)</h4>
+                         <p>The fraction or percentage of transactions that contain an itemset. Formula: <code>s(Itemset) = σ(Itemset) / Total number of transactions (T)</code></p>
+
+                         <div class="accordion">
+                             <div class="accordion-item">
+                                <button class="accordion-header example-toggle">Example: Support Calculation</button>
+                                <div class="accordion-panel example-content">
+                                     <p>Given the transactions:</p>
+                                     <table>
+                                         <thead><tr><th>TID</th><th>Items</th></tr></thead>
+                                         <tbody>
+                                             <tr><td>1</td><td>Bread, Milk</td></tr>
+                                             <tr><td>2</td><td>Bread, Diaper, Beer, Eggs</td></tr>
+                                             <tr><td>3</td><td>Milk, Diaper, Beer, Coke</td></tr>
+                                             <tr><td>4</td><td>Bread, Milk, Diaper, Beer</td></tr>
+                                             <tr><td>5</td><td>Bread, Milk, Diaper, Coke</td></tr>
+                                         </tbody>
+                                     </table>
+                                     <p>Calculate Support Count and Support for <code>{Milk, Bread, Diaper}</code>:</p>
+                                     <p>Transactions containing {Milk, Bread, Diaper}: TID 4, TID 5.</p>
+                                     <p>Support Count: <code>σ({Milk, Bread, Diaper}) = 2</code></p>
+                                     <p>Total Transactions (T) = 5</p>
+                                     <p>Support: <code>s({Milk, Bread, Diaper}) = 2 / 5 = 0.4</code> or <code>40%</code></p>
+                                </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+
+                 <div class="accordion-item">
+                     <button class="accordion-header">Frequent Itemset & Minsup</button>
+                     <div class="accordion-panel">
+                         <p>An itemset is considered **Frequent** if its support (s) is greater than or equal to a predefined **Minimum Support Threshold (minsup)**.</p>
+                         <div class="accordion">
+                              <div class="accordion-item">
+                                 <button class="accordion-header example-toggle">Example: Finding Frequent Itemsets (minsup = 60%)</button>
+                                 <div class="accordion-panel example-content">
+                                      <p>Using the same transactions as above, with <code>minsup = 60% (0.6)</code>. Which of <code>{Bread}, {Eggs}, {Bread, Diaper}, {Bread, Milk}, {Bread, Milk, Diaper}</code> are frequent?</p>
+                                      <table>
+                                          <thead><tr><th>Itemset</th><th>Support Count (σ)</th><th>Support (s = σ/5)</th><th>Frequent? (s ≥ 60%)</th></tr></thead>
+                                          <tbody>
+                                              <tr><td>{Bread}</td><td>4</td><td>4/5 = 80%</td><td class="check-mark">Yes</td></tr>
+                                              <tr><td>{Eggs}</td><td>1</td><td>1/5 = 20%</td><td class="cross-mark">No</td></tr>
+                                              <tr><td>{Bread, Diaper}</td><td>3</td><td>3/5 = 60%</td><td class="check-mark">Yes</td></tr>
+                                              <tr><td>{Bread, Milk}</td><td>3</td><td>3/5 = 60%</td><td class="check-mark">Yes</td></tr>
+                                              <tr><td>{Bread, Milk, Diaper}</td><td>2</td><td>2/5 = 40%</td><td class="cross-mark">No</td></tr>
+                                          </tbody>
+                                      </table>
+                                      <p>Frequent Itemsets are: {Bread}, {Bread, Diaper}, {Bread, Milk}.</p>
+                                 </div>
+                              </div>
+                          </div>
+                     </div>
+                 </div>
+             </div>
+
+             <!-- Closed and Max Itemsets -->
+              <div class="accordion">
+                 <div class="accordion-item">
+                     <button class="accordion-header">Closed and Maximal Frequent Itemsets</button>
+                     <div class="accordion-panel">
+                         <h4>Superset</h4>
+                         <p>An itemset X is a superset of itemset Y if X contains all items of Y (and possibly more).</p>
+                         <h4>Closed Frequent Itemset</h4>
+                         <p>A frequent itemset is **closed** if none of its immediate supersets have the *exact same support count*. Steps to check:</p>
+                         <ol>
+                             <li>Find all immediate supersets of the frequent itemset.</li>
+                             <li>Calculate the support count for each superset.</li>
+                             <li>If *any* superset has the same support count, the original itemset is NOT closed.</li>
+                             <li>If *all* supersets have a lower support count, the original itemset IS closed.</li>
+                         </ol>
+                         <h4>Maximal Frequent Itemset (Max Pattern)</h4>
+                         <p>A frequent itemset is **maximal** if none of its immediate supersets are *also frequent* (i.e., meet the minsup threshold). Steps to check:</p>
+                         <ol>
+                             <li>Find all immediate supersets of the frequent itemset.</li>
+                             <li>Calculate the support for each superset.</li>
+                             <li>If *any* superset is also frequent (support ≥ minsup), the original itemset is NOT maximal.</li>
+                             <li>If *all* supersets are infrequent (support < minsup), the original itemset IS maximal.</li>
+                         </ol>
+
+                         <div class="accordion">
+                            <div class="accordion-item">
+                                <button class="accordion-header example-toggle">Examples: Closed & Maximal (using table below)</button>
+                                <div class="accordion-panel example-content">
+                                     <p>Transactions:</p>
+                                     <table>
+                                         <thead><tr><th>TID</th><th>Milk</th><th>Bread</th><th>Butter</th><th>Cheese</th></tr></thead>
+                                         <tbody>
+                                             <tr><td>1</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
+                                             <tr><td>2</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
+                                             <tr><td>3</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
+                                             <tr><td>4</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+                                         </tbody>
+                                     </table>
+                                     <p>Total Transactions (T) = 4.</p>
+                                     <hr>
+                                     <p><strong>Example 1 (Closed): Is {Milk} closed?</strong></p>
+                                     <p>Support({Milk}) = 3/4 = 75%.</p>
+                                     <p>Supersets: {Milk, Bread}, {Milk, Butter}, {Milk, Cheese}</p>
+                                     <p>Support({Milk, Bread}) = 3/4 = 75%.</p>
+                                     <p>Since a superset ({Milk, Bread}) has the SAME support, <strong>{Milk} is NOT closed.</strong></p>
+                                     <hr>
+                                     <p><strong>Example 2 (Closed): Is {Bread} closed?</strong></p>
+                                     <p>Support({Bread}) = 4/4 = 100%.</p>
+                                     <p>Supersets: {Bread, Milk}, {Bread, Butter}, {Bread, Cheese}</p>
+                                     <p>Support({Bread, Milk}) = 3/4 = 75%</p>
+                                     <p>Support({Bread, Butter}) = 3/4 = 75%</p>
+                                     <p>Support({Bread, Cheese}) = 2/4 = 50%</p>
+                                     <p>Since all supersets have DIFFERENT (lower) support, <strong>{Bread} IS closed.</strong></p>
+                                     <hr>
+                                     <p><strong>Example 3 (Closed): Is {Milk, Bread} closed?</strong></p>
+                                     <p>Support({Milk, Bread}) = 3/4 = 75%.</p>
+                                     <p>Supersets: {Milk, Bread, Butter}, {Milk, Bread, Cheese}</p>
+                                     <p>Support({Milk, Bread, Butter}) = 2/4 = 50%</p>
+                                     <p>Support({Milk, Bread, Cheese}) = 1/4 = 25%</p>
+                                     <p>Since all supersets have DIFFERENT (lower) support, <strong>{Milk, Bread} IS closed.</strong></p>
+                                     <hr>
+                                     <p><strong>Example 4 (Maximal): Is {Milk, Bread} maximal? (minsup = 50%)</strong></p>
+                                     <p>Support({Milk, Bread}) = 75% (Frequent).</p>
+                                     <p>Supersets: {Milk, Bread, Butter}, {Milk, Bread, Cheese}</p>
+                                     <p>Support({Milk, Bread, Butter}) = 2/4 = 50% (Frequent ≥ 50%)</p>
+                                     <p>Since a superset ({Milk, Bread, Butter}) is also frequent, <strong>{Milk, Bread} is NOT maximal.</strong></p>
+                                     <hr>
+                                      <p><strong>Example 5 (Maximal): Is {Milk, Bread} maximal? (minsup = 60%)</strong></p>
+                                     <p>Support({Milk, Bread}) = 75% (Frequent).</p>
+                                     <p>Supersets: {Milk, Bread, Butter}, {Milk, Bread, Cheese}</p>
+                                     <p>Support({Milk, Bread, Butter}) = 2/4 = 50% (Infrequent < 60%)</p>
+                                     <p>Support({Milk, Bread, Cheese}) = 1/4 = 25% (Infrequent < 60%)</p>
+                                     <p>Since all supersets are infrequent, <strong>{Milk, Bread} IS maximal (at minsup=60%).</strong></p>
+                                     <hr>
+                                     <p><strong>Example 6 (Maximal): Is {Milk, Bread, Butter} maximal? (minsup = 50%)</strong></p>
+                                     <p>Support({Milk, Bread, Butter}) = 50% (Frequent).</p>
+                                     <p>Superset: {Milk, Bread, Butter, Cheese}</p>
+                                     <p>Support({Milk, Bread, Butter, Cheese}) = 0/4 = 0% (Infrequent < 50%)</p>
+                                     <p>Since its only superset is infrequent, <strong>{Milk, Bread, Butter} IS maximal.</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+                 </div>
+             </div>
+
+             <!-- Association Rules -->
+             <div class="accordion">
+                 <div class="accordion-item">
+                     <button class="accordion-header">Association Rules</button>
+                     <div class="accordion-panel">
+                         <p>An association rule is an implication of the form <code>X → Y</code>, where X and Y are disjoint itemsets.</p>
+                         <h4>Support (s) of a Rule</h4>
+                         <p>The fraction of transactions containing *both* X and Y. Formula: <code class="math">s(X → Y) = σ(X ∪ Y) / T</code></p>
+                         <h4>Confidence (c) of a Rule</h4>
+                         <p>Measures how often Y appears in transactions that contain X. Formula: <code class="math">c(X → Y) = σ(X ∪ Y) / σ(X) = s(X ∪ Y) / s(X)</code></p>
+                         <div class="accordion">
+                             <div class="accordion-item">
+                                 <button class="accordion-header example-toggle">Example: Rule Calculation</button>
+                                 <div class="accordion-panel example-content">
+                                     <p>Using the 5-transaction table from the Frequent Itemset example:</p>
+                                      <table>
+                                          <thead><tr><th>TID</th><th>Items</th></tr></thead>
+                                          <tbody>
+                                              <tr><td>1</td><td>Bread, Milk</td></tr>
+                                              <tr><td>2</td><td>Bread, Diaper, Beer, Eggs</td></tr>
+                                              <tr><td>3</td><td>Milk, Diaper, Beer, Coke</td></tr>
+                                              <tr><td>4</td><td>Bread, Milk, Diaper, Beer</td></tr>
+                                              <tr><td>5</td><td>Bread, Milk, Diaper, Coke</td></tr>
+                                          </tbody>
+                                      </table>
+                                      <p>Total Transactions (T) = 5.</p>
+                                      <hr>
+                                      <p><strong>Rule: {Bread} → {Milk}</strong></p>
+                                      <p>Itemset {Bread, Milk} appears in TIDs 1, 4, 5. So, <code>σ(Bread ∪ Milk) = 3</code>.</p>
+                                      <p>Itemset {Bread} appears in TIDs 1, 2, 4, 5. So, <code>σ(Bread) = 4</code>.</p>
+                                      <p>Support (Rule): <code>s({Bread} → {Milk}) = σ({Bread, Milk}) / T = 3 / 5 = 60%</code></p>
+                                      <p>Confidence (Rule): <code>c({Bread} → {Milk}) = σ({Bread, Milk}) / σ({Bread}) = 3 / 4 = 75%</code></p>
+                                      <hr>
+                                      <p><strong>Rule: {Milk} → {Diaper}</strong></p>
+                                      <p>Itemset {Milk, Diaper} appears in TIDs 3, 4, 5. So, <code>σ(Milk ∪ Diaper) = 3</code>.</p>
+                                      <p>Itemset {Milk} appears in TIDs 1, 3, 4, 5. So, <code>σ(Milk) = 4</code>.</p> <!-- Corrected count for {Milk} -->
+                                      <p>Support (Rule): <code>s({Milk} → {Diaper}) = σ({Milk, Diaper}) / T = 3 / 5 = 60%</code></p>
+                                      <p>Confidence (Rule): <code>c({Milk} → {Diaper}) = σ({Milk, Diaper}) / σ({Milk}) = 3 / 4 = 75%</code></p> <!-- Corrected calculation -->
+                                      <hr>
+                                       <p><strong>Rule: {Milk, Diaper} → {Beer}</strong></p>
+                                      <p>Itemset {Milk, Diaper, Beer} appears in TIDs 3, 4. So, <code>σ(Milk ∪ Diaper ∪ Beer) = 2</code>.</p>
+                                      <p>Itemset {Milk, Diaper} appears in TIDs 3, 4, 5. So, <code>σ(Milk, Diaper) = 3</code>.</p>
+                                      <p>Support (Rule): <code>s({Milk, Diaper} → {Beer}) = σ({Milk, Diaper, Beer}) / T = 2 / 5 = 40%</code></p>
+                                      <p>Confidence (Rule): <code>c({Milk, Diaper} → {Beer}) = σ({Milk, Diaper, Beer}) / σ({Milk, Diaper}) = 2 / 3 ≈ 66.7%</code></p>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+             <!-- Apriori Algorithm -->
+             <div class="accordion">
+                  <div class="accordion-item">
+                      <button class="accordion-header">Apriori Algorithm</button>
+                      <div class="accordion-panel">
+                         <p>A level-wise algorithm for finding frequent itemsets.</p>
+                         <p><strong>Key Idea:</strong> Uses the Apriori Principle ("If an itemset is frequent, all its subsets are frequent") to prune candidate itemsets.</p>
+                         <h4>Steps:</h4>
+                         <ol>
+                            <li><strong>Scan 1 (Find F1):</strong> Calculate support for individual items (1-itemsets). Keep items meeting minsup (these form F1). Let k = 1.</li>
+                            <li><strong>Generate Candidates (Ck+1):</strong> Generate candidate (k+1)-itemsets by joining frequent k-itemsets (Fk) with themselves (self-join).</li>
+                            <li><strong>Prune Candidates (Ck+1):</strong> Remove candidate (k+1)-itemsets if any of their k-item subsets are *not* in Fk (Apriori Principle).</li>
+                            <li><strong>Scan k+1 (Find Fk+1):</strong> Scan the database to count the support for the remaining candidates in Ck+1. Keep candidates meeting minsup (these form Fk+1).</li>
+                            <li><strong>Repeat:</strong> Increment k and repeat steps 2-4 until no more frequent itemsets (Fk+1) can be found.</li>
+                            <li><strong>Result:</strong> The union of all found frequent itemsets (F1, F2, F3...).</li>
+                         </ol>
+                         <h4>Association Rule Generation (After finding frequent itemsets Fk, k≥2):</h4>
+                         <ol>
+                            <li>For each frequent itemset L in Fk, generate all non-empty proper subsets S of L.</li>
+                            <li>For each subset S, form the rule S → (L - S).</li>
+                            <li>Calculate the confidence: c = support(L) / support(S).</li>
+                            <li>If c ≥ min_confidence, keep the rule.</li>
+                         </ol>
+                         <h4>Drawbacks:</h4>
+                         <ul>
+                             <li>Computationally Expensive (multiple database scans).</li>
+                             <li>Generates many candidate itemsets, especially for dense data or low minsup.</li>
+                             <li>Can be slow for high-dimensional data.</li>
+                         </ul>
+                          <div class="accordion">
+                             <div class="accordion-item">
+                                 <button class="accordion-header example-toggle">Example: Apriori Walkthrough (minsup=50%)</button>
+                                 <div class="accordion-panel example-content">
+                                     <p>Transactions:</p>
+                                     <table><thead><tr><th>TID</th><th>Items</th></tr></thead><tbody><tr><td>1</td><td>Milk, Bread, Butter</td></tr><tr><td>2</td><td>Milk, Bread</td></tr><tr><td>3</td><td>Bread, Butter</td></tr><tr><td>4</td><td>Milk, Bread, Butter, Eggs</td></tr><tr><td>5</td><td>Bread, Butter</td></tr></tbody></table>
+                                     <p>Minsup = 50% (Requires support count σ ≥ 0.5 * 5 = 2.5, i.e., σ ≥ 3)</p>
+                                     <p><strong>Step 1: Find F1 (Frequent 1-itemsets)</strong></p>
+                                     <table><thead><tr><th>Item</th><th>Count (σ)</th><th>Frequent (≥3)?</th></tr></thead><tbody><tr><td>{Milk}</td><td>3</td><td class="check-mark">✓</td></tr><tr><td>{Bread}</td><td>5</td><td class="check-mark">✓</td></tr><tr><td>{Butter}</td><td>4</td><td class="check-mark">✓</td></tr><tr><td>{Eggs}</td><td>1</td><td class="cross-mark">✗</td></tr></tbody></table>
+                                     <p><strong>F1 = {{Milk}, {Bread}, {Butter}}</strong></p>
+                                     <p><strong>Step 2: Generate & Prune C2 (Candidate 2-itemsets)</strong></p>
+                                     <p>Join F1: {Milk, Bread}, {Milk, Butter}, {Bread, Butter}. All subsets ({Milk},{Bread},{Butter}) are in F1, so no pruning needed.</p>
+                                     <p><strong>C2 = {{Milk, Bread}, {Milk, Butter}, {Bread, Butter}}</strong></p>
+                                     <p><strong>Step 3: Find F2 (Frequent 2-itemsets)</strong></p>
+                                     <table><thead><tr><th>Itemset</th><th>Count (σ)</th><th>Frequent (≥3)?</th></tr></thead><tbody><tr><td>{Milk, Bread}</td><td>3</td><td class="check-mark">✓</td></tr><tr><td>{Milk, Butter}</td><td>2</td><td class="cross-mark">✗</td></tr><tr><td>{Bread, Butter}</td><td>4</td><td class="check-mark">✓</td></tr></tbody></table>
+                                     <p><strong>F2 = {{Milk, Bread}, {Bread, Butter}}</strong></p>
+                                     <p><strong>Step 4: Generate & Prune C3 (Candidate 3-itemsets)</strong></p>
+                                     <p>Join F2: {Milk, Bread, Butter}. Subsets are {Milk, Bread} (in F2), {Bread, Butter} (in F2), {Milk, Butter} (NOT in F2).</p>
+                                     <p>Prune {Milk, Bread, Butter} because {Milk, Butter} is not frequent.</p>
+                                     <p><strong>C3 = {}</strong> (Empty)</p>
+                                     <p><strong>Step 5: Stop.</strong> No more candidates.</p>
+                                     <p><strong>Final Frequent Itemsets = F1 ∪ F2 = {{Milk}, {Bread}, {Butter}, {Milk, Bread}, {Bread, Butter}}</strong></p>
+                                     <p><strong>Step 6: Generate Association Rules (Example using F2, minconf=80%)</strong></p>
+                                     <p>From {Milk, Bread} (support=3):</p>
+                                     <ul><li>Rule: {Milk} → {Bread}. Confidence = σ({Milk, Bread})/σ({Milk}) = 3/3 = 100%. (Keep)</li><li>Rule: {Bread} → {Milk}. Confidence = σ({Milk, Bread})/σ({Bread}) = 3/5 = 60%. (Discard)</li></ul>
+                                     <p>From {Bread, Butter} (support=4):</p>
+                                      <ul><li>Rule: {Bread} → {Butter}. Confidence = σ({Bread, Butter})/σ({Bread}) = 4/5 = 80%. (Keep)</li><li>Rule: {Butter} → {Bread}. Confidence = σ({Bread, Butter})/σ({Butter}) = 4/4 = 100%. (Keep)</li></ul>
+                                     <p><strong>Final Association Rules (minsup=50%, minconf=80%):</strong> {Milk} → {Bread}, {Bread} → {Butter}, {Butter} → {Bread}</p>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+
+             <!-- FP-Growth Algorithm -->
+              <div class="accordion">
+                  <div class="accordion-item">
+                      <button class="accordion-header">FP-Growth Algorithm</button>
+                      <div class="accordion-panel">
+                          <p>An alternative to Apriori that avoids candidate generation.</p>
+                          <p><strong>Key Idea:</strong> Compresses the database into a Frequent Pattern Tree (FP-Tree) and mines frequent itemsets directly from this structure using conditional pattern bases and conditional FP-Trees.</p>
+                          <h4>Steps:</h4>
+                          <ol>
+                              <li><strong>Scan 1:</strong> Compute frequency (support count) for each item.</li>
+                              <li>Discard infrequent items (below minsup count).</li>
+                              <li>Sort frequent items in descending order of support count.</li>
+                              <li><strong>Scan 2 (Build FP-Tree):</strong> Read each transaction. For each transaction, select only the frequent items and sort them according to the order from step 3. Insert this ordered list as a path into the FP-Tree, incrementing node counts along the path. Maintain header table links for each item.</li>
+                              <li><strong>Mine FP-Tree (Recursive):</strong>
+                                  <ul>
+                                      <li>For each item in the header table (starting from the least frequent):</li>
+                                      <li>Find all paths ending in that item (its **conditional pattern base**).</li>
+                                      <li>Create a **conditional FP-Tree** from these paths (count items in the paths, remove infrequent ones, build tree).</li>
+                                      <li>If the conditional tree is not empty, recursively mine it.</li>
+                                      <li>Generate frequent itemsets by combining the current item with patterns found in its conditional FP-Tree.</li>
+                                  </ul>
+                              </li>
+                          </ol>
+                           <h4>Advantages over Apriori:</h4>
+                           <ul>
+                               <li>Generally faster, especially for dense datasets.</li>
+                               <li>Avoids costly candidate generation.</li>
+                               <li>Usually requires fewer database scans (typically two).</li>
+                           </ul>
+                           <h4>Disadvantages:</h4>
+                           <ul>
+                               <li>FP-Tree structure can be complex and memory-intensive for very large/sparse datasets.</li>
+                               <li>Building the FP-Tree itself can be somewhat expensive.</li>
+                           </ul>
+                            <div class="accordion">
+                                <div class="accordion-item">
+                                    <button class="accordion-header example-toggle">Example: FP-Growth Concepts (Example 1, minsup count=3)</button>
+                                    <div class="accordion-panel example-content">
+                                         <p>Using the same 5-transaction table as Apriori example (minsup count = 3).</p>
+                                         <p><strong>Steps 1-3 (Done in Apriori example):</strong> Frequent items sorted: Bread (5), Butter (4), Milk (3). {Eggs} is infrequent.</p>
+                                         <p><strong>Step 4: Reorder Transactions:</strong></p>
+                                         <table><thead><tr><th>TID</th><th>Original Items</th><th>Ordered Frequent Items</th></tr></thead><tbody><tr><td>1</td><td>Milk, Bread, Butter</td><td>{Bread, Butter, Milk}</td></tr><tr><td>2</td><td>Milk, Bread</td><td>{Bread, Milk}</td></tr><tr><td>3</td><td>Bread, Butter</td><td>{Bread, Butter}</td></tr><tr><td>4</td><td>Milk, Bread, Butter, Eggs</td><td>{Bread, Butter, Milk}</td></tr><tr><td>5</td><td>Bread, Butter</td><td>{Bread, Butter}</td></tr></tbody></table>
+                                         <p><strong>Step 5: Build FP-Tree (Visualized in Lecture Slides 68-72):</strong></p>
+                                         <p>The final tree has root `Null`, leading to `Bread:5`. From `Bread:5`, one path goes to `Butter:4` then `Milk:2`, another path goes directly to `Milk:1`.</p>
+                                         <p><strong>Step 6/7: Mine Tree (Example for 'Milk'):</strong></p>
+                                         <ul>
+                                             <li>Item: Milk (Count=3)</li>
+                                             <li>Conditional Pattern Base: {{Bread, Butter: 2}, {Bread: 1}} (Prefix paths ending in Milk)</li>
+                                             <li>Items in Base: Bread (2+1=3), Butter (2)</li>
+                                             <li>Conditional FP-Tree Items (minsup=3): Only {Bread:3} is frequent.</li>
+                                             <li>Conditional FP-Tree for Milk: `Null -> Bread:3`</li>
+                                             <li>Frequent Patterns ending in Milk: {Bread, Milk} (support=3)</li>
+                                         </ul>
+                                          <p><strong>Mine Tree (Example for 'Butter'):</strong></p>
+                                          <ul>
+                                             <li>Item: Butter (Count=4)</li>
+                                             <li>Conditional Pattern Base: {{Bread: 2}, {Bread: 1}, {Bread: 1}} => {{Bread: 4}}</li>
+                                             <li>Items in Base: Bread (4)</li>
+                                             <li>Conditional FP-Tree Items (minsup=3): {Bread:4} is frequent.</li>
+                                             <li>Conditional FP-Tree for Butter: `Null -> Bread:4`</li>
+                                             <li>Frequent Patterns ending in Butter: {Bread, Butter} (support=4)</li>
+                                         </ul>
+                                         <p><strong>Mine Tree (Example for 'Bread'):</strong></p>
+                                          <ul>
+                                             <li>Item: Bread (Count=5)</li>
+                                             <li>Conditional Pattern Base: {} (No prefix)</li>
+                                             <li>Frequent Patterns ending in Bread: {Bread} (support=5)</li>
+                                         </ul>
+                                         <p><strong>Final Frequent Itemsets: {Bread}, {Butter}, {Milk}, {Bread, Butter}, {Bread, Milk}</strong> (Same as Apriori)</p>
+                                    </div>
+                                </div>
+                            </div>
+                      </div>
+                  </div>
+              </div>
+
+             <!-- Machine Learning Intro -->
+             <div class="accordion">
+                 <div class="accordion-item">
+                     <button class="accordion-header">Machine Learning (ML) vs Conventional Programming</button>
+                     <div class="accordion-panel">
+                         <h4>Conventional Programming</h4>
+                         <p>Programmer provides **Rules** and **Input Data**. Computer executes rules to produce **Output**.</p>
+                         <p>Example: Explicitly coding `Z = X + Y`.</p>
+                         <h4>Machine Learning</h4>
+                         <p>Programmer provides **Input Data** and desired **Output Data** (examples). Computer finds the **Rules** (the model) that map input to output.</p>
+                         <p>Example: Given pairs `[(1,3)->4, (4,7)->11, (8,12)->20]`, the computer learns the rule `Z = X + Y`.</p>
+                     </div>
+                 </div>
+                  <div class="accordion-item">
+                      <button class="accordion-header">ML Concepts: Labeled/Unlabeled Data, Training/Testing</button>
+                      <div class="accordion-panel">
+                          <h4>Labeled Data</h4>
+                          <p>Input data where each instance has a known output or category label. Used in supervised learning.</p>
+                          <h4>Unlabeled Data</h4>
+                          <p>Input data without predefined output labels. Used in unsupervised learning.</p>
+                          <h4>Training Set</h4>
+                          <p>The portion of labeled data used to train the ML model (let it learn the rules/patterns).</p>
+                          <h4>Testing Set</h4>
+                          <p>A separate portion of labeled data, *not seen* during training, used to evaluate how well the trained model generalizes to new data.</p>
+                      </div>
+                  </div>
+                   <div class="accordion-item">
+                      <button class="accordion-header">ML Concepts: Overfitting & Underfitting</button>
+                      <div class="accordion-panel">
+                          <h4>Overfitting</h4>
+                          <p>Occurs when a model learns the training data *too well*, including its noise and specific quirks. It performs well on the training data but poorly on the testing data (fails to generalize).</p>
+                          <p>Often happens with overly complex models or insufficient training data.</p>
+                          <h4>Underfitting</h4>
+                          <p>Occurs when a model is *too simple* to capture the underlying patterns in the data. It performs poorly on both the training and testing data.</p>
+                      </div>
+                  </div>
+                  <div class="accordion-item">
+                      <button class="accordion-header">Types of Machine Learning</button>
+                      <div class="accordion-panel">
+                          <h4>Supervised Learning</h4>
+                          <p>Learns from **labeled data** (input-output pairs). Goal is to predict output for new inputs.</p>
+                          <p>Tasks: **Classification** (predict categories), **Regression** (predict continuous values).</p>
+                          <h4>Unsupervised Learning</h4>
+                          <p>Learns from **unlabeled data**. Goal is to discover hidden structures or relationships.</p>
+                          <p>Tasks: **Clustering** (group similar items), **Dimensionality Reduction** (reduce features).</p>
+                          <h4>Reinforcement Learning</h4>
+                          <p>An **agent** learns by interacting with an **environment**. It performs **actions**, receives **rewards** or penalties, and learns a **policy** to maximize cumulative reward.</p>
+                      </div>
+                  </div>
+             </div>
+
+             <!-- Classification & ROC -->
+             <div class="accordion">
+                <div class="accordion-item">
+                    <button class="accordion-header">Classification & ROC Curves</button>
+                    <div class="accordion-panel">
+                        <h4>Classification</h4>
+                        <p>A supervised learning task to assign inputs to predefined categories.</p>
+                        <ul>
+                            <li><strong>Binary Classification:</strong> Two possible output categories (e.g., Spam/Not Spam).</li>
+                            <li><strong>Multi-class Classification:</strong> More than two possible output categories (e.g., Iris flower types: Setosa, Versicolor, Virginica).</li>
+                        </ul>
+                        <h4>ROC Curve (Receiver Operating Characteristic)</h4>
+                        <p>Used to evaluate **binary classifiers**.</p>
+                        <p>Plots **True Positive Rate (TPR)** vs. **False Positive Rate (FPR)** at different thresholds.</p>
+                        <ul>
+                            <li><code class="math">TPR (Recall) = TP / (TP + FN)</code> = Ratio of actual positives correctly identified. (Y-axis)</li>
+                            <li><code class="math">FPR = FP / (FP + TN)</code> = Ratio of actual negatives incorrectly identified as positive. (X-axis)</li>
+                        </ul>
+                        <ul>
+                            <li><strong>Diagonal ROC Curve:</strong> Represents random guessing (bad model).</li>
+                            <li><strong>L-shaped ROC Curve (towards top-left):</strong> Represents a good model that separates classes well (high TPR, low FPR).</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Logistic Regression</button>
+                    <div class="accordion-panel">
+                        <p>A popular algorithm used for **classification** tasks.</p>
+                        <h4>Binary Classification:</h4>
+                        <ul>
+                            <li>Uses the **Sigmoid function** (<code class="math">ŷ = 1 / (1 + e<sup>-z</sup>)</code>) to output a probability (ŷ) between 0 and 1.</li>
+                            <li><code>z</code> is a linear combination of features: <code class="math">z = b<sub>0</sub> + b<sub>1</sub>x<sub>1</sub> + ... + b<sub>n</sub>x<sub>n</sub></code></li>
+                            <li>**Loss Function** (Log Loss / Binary Cross-Entropy): <code class="math">L(y, ŷ) = -[y * log(ŷ) + (1 - y) * log(1 - ŷ)]</code> measures the error.</li>
+                            <li>**Training:** Uses **Gradient Descent** to adjust coefficients (b<sub>0</sub>, b<sub>1</sub>, ...) to minimize the average loss over the training data.</li>
+                        </ul>
+                        <h4>Multi-class Classification:</h4>
+                        <ul>
+                           <li>Uses the **Softmax function** to compute probabilities for each class, ensuring they sum to 1.</li>
+                        </ul>
+                         <h4>Algorithm Steps (Conceptual):</h4>
+                         <ol>
+                             <li>Initialize model coefficients (weights/biases).</li>
+                             <li>For each instance in the training data:</li>
+                                 <li>Compute the predicted output probability (using sigmoid/softmax).</li>
+                                 <li>Calculate the error (loss) between prediction and actual label.</li>
+                                 <li>Update coefficients using gradient descent to reduce the loss.</li>
+                             <li>Repeat step 2 for multiple passes (epochs) or until convergence.</li>
+                         </ol>
+                    </div>
+                </div>
+             </div>
+
+        </section>
+
+        <!-- Quiz Sections -->
+        <div id="fill" class="main-content">
+            <h2>Fill in the Blank Questions</h2>
+            <div id="fill-questions"></div>
+        </div>
+
+        <div id="tf" class="main-content">
+            <h2>True/False Questions</h2>
+            <div id="tf-questions"></div>
+        </div>
+
+        <div id="mc" class="main-content">
+            <h2>Multiple Choice Questions</h2>
+            <div id="mc-questions"></div>
+        </div>
+
+    </div> <!-- End Container -->
+
+    <script>
+        // --- START OF QUIZ DATA (Lectures 4-7) ---
+        const fillInTheBlank = [
+            { question: "_______ is the process of discovering hidden patterns, correlations, and knowledge from large amounts of data.", options: ["Data Analysis", "Data Warehousing", "Data Mining", "Database Querying"], answer: "Data Mining" },
+            { question: "Finding web pages containing specific keywords is generally NOT considered data mining, but rather _______.", options: ["Information Retrieval", "Pattern Recognition", "Clustering", "Classification"], answer: "Information Retrieval" },
+            { question: "The challenge of handling datasets with hundreds or thousands of attributes is known as _______.", options: ["Scalability", "Heterogeneity", "High Dimensionality", "Complexity"], answer: "High Dimensionality" },
+            { question: "Handling data containing text, images, and audio requires techniques for _______ data.", options: ["Structured", "Numerical", "Complex", "Low-dimensional"], answer: "Complex" },
+            { question: "Handling missing values, noise, and inconsistencies is part of the _______ step in data mining.", options: ["Data Integration", "Data Selection", "Data Cleaning", "Pattern Evaluation"], answer: "Data Cleaning" },
+            { question: "Combining data from multiple sources into a single repository is known as _______.", options: ["Data Cleaning", "Data Transformation", "Data Selection", "Data Integration"], answer: "Data Integration" },
+            { question: "Predictive data mining models include classification and _______.", options: ["Clustering", "Association", "Regression", "Summarization"], answer: "Regression" },
+            { question: "Descriptive data mining models include clustering and _______.", options: ["Classification", "Regression", "Forecasting", "Association"], answer: "Association" },
+            { question: "In predictive models, the attribute being predicted is the _______ variable.", options: ["Independent", "Explanatory", "Input", "Dependent"], answer: "Dependent" },
+            { question: "_______ aims to find decision boundaries that separate classes.", options: ["Regression", "Clustering", "Classification", "Association"], answer: "Classification" },
+            { question: "Grouping similar customers based on purchasing behavior is an example of _______.", options: ["Regression", "Classification", "Clustering", "Association"], answer: "Clustering" },
+            { question: "Discovering rules like {Diapers} → {Milk} is the goal of _______ analysis.", options: ["Regression", "Classification", "Clustering", "Association"], answer: "Association" },
+            { question: "A group of items that appear together, like {Milk, Bread}, is an _______.", options: ["Association", "Itemset", "Cluster", "Pattern"], answer: "Itemset" },
+            { question: "The frequency of occurrence of an itemset is its _______ count.", options: ["Confidence", "Support", "Lift", "Interest"], answer: "Support" },
+            { question: "An itemset whose support is above a minimum threshold is called a _______ itemset.", options: ["Candidate", "Maximal", "Closed", "Frequent"], answer: "Frequent" },
+            { question: "A frequent itemset with no superset having the same support is a _______ frequent itemset.", options: ["Maximal", "Candidate", "Closed", "Basic"], answer: "Closed" },
+            { question: "A frequent itemset with no frequent superset is a _______ frequent itemset.", options: ["Maximal", "Candidate", "Closed", "Basic"], answer: "Maximal" },
+            { question: "The measure σ(X∪Y)/σ(X) calculates the _______ of the rule X→Y.", options: ["Support", "Lift", "Confidence", "Interest"], answer: "Confidence" },
+            { question: "The _______ principle states that if an itemset is frequent, all its subsets must be frequent.", options: ["FP-Growth", "Clustering", "Apriori", "Regression"], answer: "Apriori" },
+            { question: "The _______ algorithm avoids candidate generation by using a compact tree structure.", options: ["Apriori", "K-Means", "FP-Growth", "Decision Tree"], answer: "FP-Growth" },
+            { question: "In Python, the _______ command is used to install libraries like pandas or mlxtend.", options: ["python install", "import", "pip install", "lib install"], answer: "pip install" },
+            { question: "Learning from input-output pairs (labeled data) is characteristic of _______ learning.", options: ["Unsupervised", "Reinforcement", "Supervised", "Deep"], answer: "Supervised" },
+            { question: "When a model learns the training data too well but fails on new data, it is called _______.", options: ["Underfitting", "Bias", "Variance", "Overfitting"], answer: "Overfitting" },
+            { question: "AI is a broader field, and _______ is a subset of AI focused on learning from data.", options: ["Deep Learning", "Data Science", "Machine Learning", "Statistics"], answer: "Machine Learning" },
+            { question: "Identifying an email as 'spam' or 'not spam' is a _______ classification task.", options: ["Multi-class", "Regression", "Clustering", "Binary"], answer: "Binary" },
+            { question: "The _______ curve plots TPR against FPR to evaluate binary classifiers.", options: ["Learning", "Loss", "ROC", "Precision-Recall"], answer: "ROC" },
+            { question: "A perfect classifier would have an ROC curve that is _______-shaped.", options: ["Diagonal", "U", "L", "S"], answer: "L" },
+            { question: "The _______ function is used in binary logistic regression to output a probability.", options: ["Softmax", "ReLU", "Sigmoid", "Linear"], answer: "Sigmoid" },
+            { question: "Minimizing a loss function by iteratively adjusting model parameters is often done using _______ descent.", options: ["Stochastic", "Random", "Hill Climbing", "Gradient"], answer: "Gradient" }
+        ];
+
+        const trueOrFalse = [
+            { question: "Data mining only deals with structured data from databases.", answer: false },
+            { question: "Scalability is not a major challenge for data mining algorithms.", answer: false },
+            { question: "Traditional statistical analysis based on hypothesis testing is always sufficient for modern large datasets.", answer: false },
+            { question: "Data transformation involves retrieving relevant data from a database.", answer: false }, // That's Data Selection
+            { question: "Classification is a type of descriptive data mining model.", answer: false }, // It's Predictive
+            { question: "Regression predicts discrete class labels.", answer: false }, // Predicts continuous values
+            { question: "Clustering requires labeled data to form groups.", answer: false }, // It's Unsupervised
+            { question: "Support count and support percentage are the same thing.", answer: false },
+            { question: "All frequent itemsets are also closed itemsets.", answer: false },
+            { question: "A maximal frequent itemset is always a closed frequent itemset.", answer: true }, // By definition
+            { question: "Confidence measures how frequently items X and Y appear together in transactions.", answer: false }, // That's Support(X U Y)
+            { question: "The Apriori algorithm scans the database only once.", answer: false },
+            { question: "FP-Growth generates candidate itemsets similar to Apriori.", answer: false },
+            { question: "The FP-Tree stores all original transaction data.", answer: false }, // Stores compressed frequent item info
+            { question: "Python's IDLE cannot be used to save script files.", answer: false },
+            { question: "Machine learning requires explicitly programming rules for every possible input.", answer: false },
+            { question: "Unlabeled data has predefined output categories.", answer: false },
+            { question: "Overfitting leads to good generalization on new data.", answer: false },
+            { question: "Deep learning is a subset of machine learning.", answer: true },
+            { question: "Unsupervised learning includes classification and regression tasks.", answer: false },
+            { question: "Reinforcement learning involves an agent learning through rewards and penalties.", answer: true },
+            { question: "Multi-class classification deals with only two output categories.", answer: false },
+            { question: "A diagonal ROC curve indicates a very good classifier.", answer: false }, // Indicates random guessing
+            { question: "TPR (True Positive Rate) is the same as Recall.", answer: true },
+            { question: "Logistic Regression can only be used for binary classification.", answer: false } // Can use Softmax for multi-class
+        ];
+
+        const multipleChoice = [
+            { question: "Which is NOT typically considered a primary challenge motivating data mining?", options: ["Scalability", "High Dimensionality", "Simple Data Types", "Heterogeneous Data"], answer: "Simple Data Types" },
+            { question: "Which data mining step involves handling errors, outliers, and missing values?", options: ["Data Integration", "Data Cleaning", "Data Selection", "Pattern Evaluation"], answer: "Data Cleaning" },
+            { question: "Predicting house prices based on features like size and location is an example of:", options: ["Classification", "Clustering", "Association", "Regression"], answer: "Regression" },
+            { question: "Grouping genes with similar functionality based on expression data is an example of:", options: ["Classification", "Clustering", "Association", "Regression"], answer: "Clustering" },
+            { question: "What does the support of an itemset {A, B} represent?", options: ["How often A occurs", "How often B occurs", "The probability of B occurring given A", "The fraction of transactions containing both A and B"], answer: "The fraction of transactions containing both A and B" },
+            { question: "If minsup = 50% and an itemset appears in 2 out of 5 transactions, is it frequent?", options: ["Yes", "No", "Cannot be determined"], answer: "No" }, // 2/5 = 40% < 50%
+            { question: "If Support({A,B,C}) = 30% and Support({A,B}) = 60%, what is the Confidence({A,B} → {C})?", options: ["30%", "60%", "50%", "20%"], answer: "50%" }, // 30% / 60% = 0.5
+            { question: "Which algorithm relies heavily on the principle 'all subsets of a frequent itemset must be frequent'?", options: ["FP-Growth", "K-Means", "Apriori", "Logistic Regression"], answer: "Apriori" },
+            { question: "What is a primary advantage of FP-Growth over Apriori?", options: ["Easier to implement", "Requires less memory", "Avoids candidate generation", "Works better with sparse data"], answer: "Avoids candidate generation" },
+            { question: "What Python library provides implementations of Apriori and FP-Growth?", options: ["Numpy", "Pandas", "Scikit-learn", "Mlxtend"], answer: "Mlxtend" },
+            { question: "Learning to classify images as 'cat' or 'dog' using pre-labeled images is an example of:", options: ["Supervised Learning", "Unsupervised Learning", "Reinforcement Learning", "Data Cleaning"], answer: "Supervised Learning" },
+            { question: "A model that performs poorly on both training and testing data likely suffers from:", options: ["Overfitting", "High Variance", "Underfitting", "Data Leakage"], answer: "Underfitting" },
+            { question: "Which term best describes the relationship: AI > Machine Learning > Deep Learning?", options: ["Synonyms", "Subset Relationship", "Independent Fields", "Sequential Process"], answer: "Subset Relationship" },
+            { question: "Classifying handwritten digits (0-9) is an example of:", options: ["Binary Classification", "Multi-class Classification", "Regression", "Clustering"], answer: "Multi-class Classification" },
+            { question: "In an ROC curve, what does the Y-axis represent?", options: ["False Positive Rate", "True Positive Rate (Recall)", "Precision", "Accuracy"], answer: "True Positive Rate (Recall)" },
+            { question: "Which algorithm is specifically designed for classification tasks, outputting probabilities?", options: ["Linear Regression", "K-Means Clustering", "Apriori", "Logistic Regression"], answer: "Logistic Regression" },
+             { question: "Which data mining task corresponds to 'finding groups of objects such that objects in a group are similar'?", options: ["Classification", "Regression", "Clustering", "Association Rule Mining"], answer: "Clustering" },
+            { question: "Which Python environment provides a simple text editor and interactive shell?", options: ["CMD/Terminal", "Jupyter Notebook", "VS Code", "IDLE"], answer: "IDLE" }
+        ];
+        // --- END OF QUIZ DATA ---
+
+
+        // --- START OF SCRIPT LOGIC ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Select main tabs and content sections
+            const mainTabButtons = document.querySelectorAll('.main-tabs .tab-button');
+            const mainTabContents = document.querySelectorAll('.main-content');
+
+            // Select quiz content containers
+            const fillContainer = document.getElementById('fill-questions');
+            const tfContainer = document.getElementById('tf-questions');
+            const mcContainer = document.getElementById('mc-questions');
+
+             // Select ALL accordion headers (Glossary and Examples)
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+
+            // --- Main Tab Switching Logic ---
+            mainTabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab'); // Get the ID of the target content
+
+                    // Deactivate all main buttons and content
+                    mainTabButtons.forEach(btn => btn.classList.remove('active'));
+                    mainTabContents.forEach(content => content.classList.remove('active'));
+
+                    // Activate the clicked button
+                    button.classList.add('active');
+
+                    // Activate the corresponding content section
+                    const targetContent = document.getElementById(tabId);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                });
+            });
+
+            // --- Accordion Logic (for Glossary AND Examples) ---
+             accordionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    // Toggle active class on the header for styling (+) (-) sign
+                    this.classList.toggle('active');
+
+                    // Get the panel sibling
+                    const panel = this.nextElementSibling;
+
+                    // Toggle the max-height for smooth transition
+                    if (panel.style.maxHeight) {
+                        // If panel is open, close it
+                        panel.style.maxHeight = null;
+                        panel.style.paddingTop = "0";
+                        panel.style.paddingBottom = "0";
+                         // Add a slight delay for padding removal if needed
+                        // setTimeout(() => { panel.style.padding = "0 20px"; }, 300);
+                    } else {
+                         // If panel is closed, open it
+                         panel.style.paddingTop = "15px"; // Add padding back when opening
+                         panel.style.paddingBottom = "15px";
+                         panel.style.maxHeight = panel.scrollHeight + "px";
+                    }
+                });
+            });
+
+
+            // --- Function to handle option selection within a question ---
+            function handleOptionSelection(button, questionDiv) {
+                const siblings = questionDiv.querySelectorAll('.option-button.selected');
+                siblings.forEach(sib => sib.classList.remove('selected'));
+                button.classList.add('selected');
+                const existingFeedback = questionDiv.querySelector('.feedback');
+                if (existingFeedback) { existingFeedback.remove(); }
+            }
+
+            // --- Function to create and append feedback ---
+            function showFeedback(questionDiv, isCorrect, correctAnswer) {
+                const existingFeedback = questionDiv.querySelector('.feedback');
+                if (existingFeedback) { existingFeedback.remove(); }
+
+                const feedback = document.createElement('div');
+                feedback.className = 'feedback';
+                if (isCorrect) {
+                    feedback.classList.add('correct');
+                    feedback.textContent = 'Correct!';
+                } else {
+                    feedback.classList.add('incorrect');
+                    feedback.textContent = `Incorrect. Correct answer: ${correctAnswer}`;
+                }
+                const checkButton = questionDiv.querySelector('.check-answer');
+                 if (checkButton) {
+                    checkButton.parentNode.insertBefore(feedback, checkButton.nextSibling);
+                } else {
+                     questionDiv.appendChild(feedback);
+                }
+            }
+
+            // --- Load Fill in the Blank Questions ---
+            function loadFillInTheBlankQuestions() {
+                fillContainer.innerHTML = '';
+                fillInTheBlank.forEach((q) => {
+                    const questionDiv = document.createElement('div'); questionDiv.className = 'question';
+                    const questionText = document.createElement('p'); questionText.textContent = q.question; questionDiv.appendChild(questionText);
+                    const optionsDiv = document.createElement('div'); optionsDiv.className = 'options';
+                    q.options.forEach(option => {
+                        const optionButton = document.createElement('button'); optionButton.className = 'option-button'; optionButton.textContent = option;
+                        optionButton.addEventListener('click', () => handleOptionSelection(optionButton, questionDiv)); optionsDiv.appendChild(optionButton);
+                    });
+                    questionDiv.appendChild(optionsDiv);
+                    const checkButton = document.createElement('button'); checkButton.className = 'check-answer'; checkButton.textContent = 'Check Answer';
+                    checkButton.addEventListener('click', () => {
+                        const selected = questionDiv.querySelector('.option-button.selected');
+                        showFeedback(questionDiv, selected && selected.textContent === q.answer, q.answer);
+                    });
+                    questionDiv.appendChild(checkButton); fillContainer.appendChild(questionDiv);
+                });
+            }
+
+            // --- Load True/False Questions ---
+            function loadTrueFalseQuestions() {
+                tfContainer.innerHTML = '';
+                trueOrFalse.forEach((q) => {
+                    const questionDiv = document.createElement('div'); questionDiv.className = 'question';
+                    const questionText = document.createElement('p'); questionText.textContent = q.question; questionDiv.appendChild(questionText);
+                    const optionsDiv = document.createElement('div'); optionsDiv.className = 'options';
+                    const trueButton = document.createElement('button'); trueButton.className = 'option-button'; trueButton.textContent = 'True';
+                    trueButton.addEventListener('click', () => handleOptionSelection(trueButton, questionDiv)); optionsDiv.appendChild(trueButton);
+                    const falseButton = document.createElement('button'); falseButton.className = 'option-button'; falseButton.textContent = 'False';
+                    falseButton.addEventListener('click', () => handleOptionSelection(falseButton, questionDiv)); optionsDiv.appendChild(falseButton);
+                    questionDiv.appendChild(optionsDiv);
+                    const checkButton = document.createElement('button'); checkButton.className = 'check-answer'; checkButton.textContent = 'Check Answer';
+                    checkButton.addEventListener('click', () => {
+                        const selected = questionDiv.querySelector('.option-button.selected');
+                        const correctAnswerText = q.answer ? 'True' : 'False';
+                        const isCorrect = selected && ((selected.textContent === 'True' && q.answer) || (selected.textContent === 'False' && !q.answer));
+                        showFeedback(questionDiv, isCorrect, correctAnswerText);
+                    });
+                    questionDiv.appendChild(checkButton); tfContainer.appendChild(questionDiv);
+                });
+            }
+
+            // --- Load Multiple Choice Questions ---
+            function loadMultipleChoiceQuestions() {
+                mcContainer.innerHTML = '';
+                multipleChoice.forEach((q) => {
+                    const questionDiv = document.createElement('div'); questionDiv.className = 'question';
+                    const questionText = document.createElement('p'); questionText.textContent = q.question; questionDiv.appendChild(questionText);
+                    const optionsDiv = document.createElement('div'); optionsDiv.className = 'options';
+                     q.options.forEach(option => {
+                        const optionButton = document.createElement('button'); optionButton.className = 'option-button'; optionButton.textContent = option;
+                        optionButton.addEventListener('click', () => handleOptionSelection(optionButton, questionDiv)); optionsDiv.appendChild(optionButton);
+                    });
+                    questionDiv.appendChild(optionsDiv);
+                    const checkButton = document.createElement('button'); checkButton.className = 'check-answer'; checkButton.textContent = 'Check Answer';
+                     checkButton.addEventListener('click', () => {
+                        const selected = questionDiv.querySelector('.option-button.selected');
+                        showFeedback(questionDiv, selected && selected.textContent === q.answer, q.answer);
+                    });
+                    questionDiv.appendChild(checkButton); mcContainer.appendChild(questionDiv);
+                });
+            }
+
+            // --- Initial Load ---
+            loadFillInTheBlankQuestions();
+            loadTrueFalseQuestions();
+            loadMultipleChoiceQuestions();
+
+        }); // End DOMContentLoaded
+        // --- END OF SCRIPT LOGIC ---
+    </script>
+</body>
+</html>
