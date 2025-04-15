@@ -1,39 +1,50 @@
-# SE204-Advanced-Topics-in-Information-Systems
 
-## Descriptive Data Analysis - Key Formulas
+## Module: Descriptive Data Analysis and Visualization
 
-**Measures of Central Tendency:**
-- Mean: x̄ = (x₁ + x₂ + ... + xₙ)/n
-- Median: Middle value (ordered data) or average of two middle values
-- Mode: Most frequent value
+This module introduces fundamental concepts of information systems, data types, and dives deep into the process, techniques, and tools for descriptive data analysis and visualization.
 
-**Measures of Dispersion:**
-- Range = maximum - minimum
-- Variance (population): σ² = Σ(xᵢ - x̄)²/n
-- Variance (sample): S² = Σ(xᵢ - x̄)²/(n-1)
-- Standard Deviation (population): σ = √(Σ(xᵢ - x̄)²/n)
-- Standard Deviation (sample): S = √(Σ(xᵢ - x̄)²/(n-1))
-- Interquartile Range (IQR) = Q₃ - Q₁
+## Course Outline Table
 
-**Data Visualization Types:**
-- Column/Bar charts: Compare values across categories
-- Line charts: Show trends over time
-- Pie/Doughnut charts: Show proportions of a whole
-- Scatter/Bubble charts: Show relationships between variables
-- Treemap charts: Show hierarchical data as nested rectangles
-- Map charts: Visualize geographic data distribution
-- Gauge charts: Display KPIs and progress toward goals
+| Module                                       | Main Topics                                                                                                                                                              | Key Concepts                                                                                                                                                                                                                                                                                                                                                               | Examples / Notes                                                                                                                                                                                                                                                                                        |
+| :------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **1: Foundations**                           | - Course Overview & Syllabus<br>- Information System Definition & Elements<br>- Data, Information, and Knowledge<br>- Types of Data (Nature & Structure)                           | - Grading: 60% (Attendance, Assignments, Quizzes, Midterm), 40% Final Exam.<br>- Syllabus includes: Descriptive Analysis, Frequent Patterns, Clustering, ML (Intro, Classification, ROC/Regression, Deep Learning).<br>- IS: Interrelated components (collect, manipulate, store, disseminate info) + feedback.<br>- IS Elements: Technology, Task, Person (Managers, Users, Analysts, Developers), Structure.<br>- Data (raw facts) -> Information (analyzed/organized, context, answers what/who/where/when) -> Knowledge (info + experience/interpretation, answers how).<br>- Data by Nature: Quantitative (Numeric - Discrete/Continuous), Qualitative (Categorical - Ordinal/Categorical).<br>- Data by Structure: Structured (tables, RDBMS, SQL), Semi-structured (some structure, no fixed model, NoSQL, XML/JSON), Unstructured (no predefined model, native format, text, images, video). | - IS Diagram: Input -> Processing -> Output (with Feedback loop).<br>- IS Elements Diagram.<br>- Data/Info/Knowledge Example: Student Math Grades -> Success % -> Teacher Qualification Insight.<br>- Data Type Examples: # children (discrete), height (continuous), alphabet order (ordinal), product types (categorical), demographic table (structured), webpages/emails (semi-structured), audio/video (unstructured). |
+| **2: Data Analysis Fundamentals**            | - Data Analysis Definition<br>- Data Analysis vs. Data Analytics<br>- Data Analysis Techniques                                                                                 | - Data Analysis: Process of identifying, cleaning, transforming, modeling data to discover useful info & support decisions.<br>- Analysis (historical view, "what happened") vs. Analytics (broader, includes analysis, models future/predicts, "why it happened/what will happen/what to do").<br>- Techniques: Text Analysis (insights from text), Statistical (Descriptive - 'what happened', Inferential - 'conclusions about population from sample'), Diagnostic ('why did it happen'), Predictive ('what might happen'), Prescriptive ('what should we do'). | - Analysis vs. Analytics Venn Diagram.<br>- Data Analysis Techniques Diagram.<br>- Statistical Analysis Sub-types Diagram (Descriptive/Inferential).<br>- Technique Examples: Looking at past sales (Descriptive), Why sales dropped (Diagnostic), Predicting next month's sales (Predictive), Suggesting marketing strategy (Prescriptive). |
+| **3: Descriptive Statistics**                | - Descriptive Analysis Methods Overview<br>- Measures of Frequency<br>- Measures of Central Tendency<br>- Measures of Dispersion                                                     | - Methods: Frequency, Central Tendency, Dispersion.<br>- Frequency: Count/percentage of value occurrence (Frequency Table, Relative Frequency Distribution).<br>- Central Tendency: Mean (average, sensitive to outliers), Median (middle value, robust to outliers), Mode (most frequent value, uni/multi/no mode).<br>- Dispersion: Spread of data. Range (Max-Min, sensitive to outliers), Interquartile Range (IQR = Q3-Q1, robust), Variance (avg squared distance from mean, population σ² vs sample S²), Standard Deviation (sqrt(variance), population σ vs sample S). | - Frequency Table Examples: Temperature counts, Grade relative frequency, Age intervals.<br>- Mean Example: Simple calculation & impact of outlier salary.<br>- Median Example: Odd/even number of observations.<br>- Mode Example: Visual representation of uni/multi/no mode.<br>- Range Example: Simple calculation.<br>- IQR Example: Finding Q1, Median, Q3 from sorted data.<br>- Variance/Std Dev Example: Step-by-step calculation for sample data. |
+| **4: Analysis Process & Visualization**      | - Descriptive Analysis Phases<br>- Data Visualization<br>- Data Visualization Techniques<br>- Data Visualization Tools                                                       | - Phases: Data Collection -> Data Preparation (Cleaning [handle missing/noisy/inconsistent], Transformation, Reduction) -> Apply Method -> Summary Statistics & Visualization.<br>- Visualization: Representing data graphically for understanding patterns, trends, insights.<br>- Techniques: Column/Bar (compare categories/values), Line (trends over time), Pie/Doughnut (proportions of whole, 100% total), Scatter (relationship between 2 variables), Bubble (Scatter + 3rd dim as size), Area (Line chart emphasizing magnitude), Treemap (hierarchical parts-to-whole), Map (geographical distribution), Gauge (KPIs, progress to goal).<br>- Tools: Spreadsheets (Excel, Sheets), Software (Tableau, Power BI, QlikView), Programming Libraries (Matplotlib, ggplot2, D3.js). | - Phases Diagram.<br>- Data Preparation Diagram (Cleaning/Transform/Reduce).<br>- Examples provided for *each* visualization technique (student counts, attendance, sports participation, geographic data, KPIs).<br>- Tool Logos/Examples shown. |
+| **5: Application (Excel)**                   | - Pivot Tables                                                                                                                                                           | - Pivot Tables: Excel feature to summarize, analyze, explore, present large datasets.<br>- Functionality: Aggregate data (Sum, Count, Avg), group data, filter, create crosstabs, calculate percentages.                                                                                                                                                                     | - Pivot Table Examples: Count by category (Banana/Orange in NZ), Count & Percentage by category (Apple sales by country), Crosstabulation (Sum of Amount by Product/Country), Creating Histogram bins (Amount ranges). |
+| **Assignments**                              | - Assignment #1<br>- Assignment #2                                                                                                                                         | - Conceptual understanding and application.<br>- Practical application using tools/concepts learned.                                                                                                                                                                                                                                                                              | - #1: Give Data/Info/Knowledge example; Difference between data model/schema.<br>- #2: Design a specific Pivot Table based on provided data (sum/grouping by fruit/vegetable categories across countries). |
 
-# Assignment:
+## Learning Outcomes
+After completing this module, students will be able to:
+1. Define and differentiate between data, information, and knowledge within the context of information systems.
+2. Identify and classify various types of data based on their nature and structure.
+3. Understand the process of data analysis and distinguish it from data analytics.
+4. Describe and select appropriate data analysis techniques (descriptive, diagnostic, predictive, prescriptive).
+5. Calculate, interpret, and apply key descriptive statistics (measures of frequency, central tendency, and dispersion).
+6. Recognize the importance of data visualization and select appropriate visualization techniques for different data types and analytical goals.
+7. Utilize tools like spreadsheets (e.g., Excel Pivot Tables) for basic descriptive data analysis and summarization.
+8. Understand the phases involved in conducting a descriptive data analysis project.
 
+## Assignments
+The module includes assignments designed to reinforce understanding and practical skills:
+- Conceptual questions requiring examples and definitions (e.g., Data/Info/Knowledge, Data Model vs. Schema).
+- Practical exercises involving data summarization and analysis using tools like Excel Pivot Tables based on provided datasets.
 
+## Learning Resources (General Suggestions)
+While the course uses specific references, these general resources can supplement learning in data analysis and visualization:
+- **Books:**
+    - "Data Science for Business" by Provost and Fawcett
+    - "Storytelling with Data" by Cole Nussbaumer Knaflic
+    - "Introduction to Data Mining" by Tan, Steinbach, Kumar
+- **Websites & Blogs:**
+    - Towards Data Science (Medium.com)
+    - Kaggle Learn Courses
+    - StatQuest with Josh Starmer (YouTube & Website)
+    - FlowingData.com
+- **Online Courses:**
+    - Coursera, edX, Udemy offer numerous courses on Data Analysis, Statistics, and Data Visualization (e.g., Google Data Analytics Professional Certificate, IBM Data Analyst Professional Certificate).
 
-## 1.  Example about Difference between:
-
-
-- Data
-- Information
-- Knowledge
-
-## 2.  Data Model vs Schema Definition
-
+## Tools and Technologies
+- **Spreadsheets:** Microsoft Excel (including Pivot Tables), Google Sheets
+- **Data Visualization Software:** Tableau, Microsoft Power BI, QlikView (mentioned as examples)
+- **Programming Libraries (Mentioned):** Python (with libraries like Matplotlib, Pandas), R (with ggplot2), JavaScript (with D3.js)
