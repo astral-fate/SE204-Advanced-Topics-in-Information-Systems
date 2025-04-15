@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SE204 - Lecture 1: Interactive Material</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            color: #0056b3; /* Cairo University Blue */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            margin-top: 20px; /* Reduced top margin for sections */
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: #007bff; /* Lighter Blue */
+        }
+
+        /* Main Tabs Styles */
+        .main-tabs {
+            display: flex;
+            justify-content: space-around; /* Or flex-start, center */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            margin-bottom: 25px;
+            border-bottom: 2px solid #0056b3;
+        }
+
+        .main-tabs .tab-button {
+            padding: 12px 20px; /* Adjusted padding slightly */
+            border: none;
+            background: none;
+            color: #0056b3;
+            font-size: 0.95em; /* Slightly smaller font */
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin-bottom: -2px; /* Overlap border */
+            border-bottom: 2px solid transparent;
+            text-align: center;
+        }
+
+        .main-tabs .tab-button.active {
+            background: #0056b3;
+            color: white;
+            border-bottom: 2px solid #0056b3;
+        }
+        .main-tabs .tab-button:hover:not(.active) {
+            background-color: #e9ecef;
+            border-bottom: 2px solid #adb5bd;
+        }
+
+        /* Content Sections */
+        .main-content {
+            display: none; /* Hide all main content sections by default */
+            animation: fadeIn 0.5s;
+        }
+
+        .main-content.active {
+            display: block; /* Show only the active one */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+
+        /* --- Accordion Styles (for Glossary) --- */
+        .glossary-accordion {
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            overflow: hidden; /* Contain borders */
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid #dee2e6; /* Separator */
+        }
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .accordion-header {
+            background-color: #f8f9fa;
+            color: #dc3545; /* Highlight Red for terms */
+            cursor: pointer;
+            padding: 15px 20px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            position: relative; /* For the indicator */
+        }
+
+        .accordion-header:hover {
+            background-color: #e9ecef;
+        }
+
+        /* Indicator (+/-) */
+        .accordion-header::after {
+            content: '\002B'; /* + sign */
+            color: #0056b3;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .accordion-header.active::after {
+            content: "\2212"; /* - sign */
+            transform: rotate(180deg); /* Optional: animate the sign itself */
+        }
+        /* Optional: Slightly different style for active header */
+        .accordion-header.active {
+             background-color: #e7f1ff;
+        }
+
+
+        .accordion-panel {
+            padding: 0 20px; /* Start with 0 padding top/bottom */
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out; /* Smooth transition */
+        }
+        .accordion-panel p {
+            margin: 15px 0; /* Add margin back when panel is open */
+            color: #333; /* Reset color for definition */
+        }
+
+        /* --- End Accordion Styles --- */
+
+
+        /* Formulas Styles */
+        #formulas .formula-block {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        #formulas code {
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+            background-color: #e9ecef;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.95em;
+        }
+        #formulas .example {
+             margin-top: 15px;
+             padding-left: 15px;
+             border-left: 3px solid #17a2b8; /* Info Blue */
+        }
+         #formulas .solution {
+             margin-top: 10px;
+             padding-left: 15px;
+             font-style: italic;
+        }
+        #formulas .solution code {
+            font-style: normal; /* Keep code normal style */
+        }
+
+        /* Quiz Styles (apply within #fill, #tf, #mc) */
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background-color: #ffffff; /* White background for questions */
+            position: relative; /* For feedback positioning */
+        }
+
+        .question p {
+            margin: 0 0 15px;
+            font-weight: bold;
+            font-size: 1.05em;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-button {
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+            background: #f8f9fa; /* Light background for options */
+            color: #495057;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: left;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            width: 100%;
+        }
+        .option-button:hover {
+             background-color: #e9ecef;
+             border-color: #adb5bd;
+        }
+
+        .option-button.selected {
+            background: #007bff;
+            color: white;
+            border-color: #0056b3;
+        }
+
+        .check-answer {
+            margin-top: 15px;
+            padding: 10px 20px;
+            border: none;
+            background: #28a745; /* Success Green */
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+        .check-answer:hover {
+             background-color: #218838;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SE204 - Lecture 1: Interactive Material</h1>
+
+        <!-- Main Tab Buttons -->
+        <div class="main-tabs">
+            <button class="tab-button active" data-tab="glossary">Glossary</button>
+            <button class="tab-button" data-tab="formulas">Formulas & Examples</button>
+            <button class="tab-button" data-tab="fill">Fill in the Blank</button>
+            <button class="tab-button" data-tab="tf">True/False</button>
+            <button class="tab-button" data-tab="mc">Multiple Choice</button>
+        </div>
+
+        <!-- Glossary Section (Accordion) -->
+        <section id="glossary" class="main-content active">
+            <h2>Glossary of Terms</h2>
+            <div class="glossary-accordion">
+                <div class="accordion-item">
+                    <button class="accordion-header">Area Chart</button>
+                    <div class="accordion-panel">
+                        <p>A line chart where the area below the line is filled, used to show trends over time and highlight the magnitude of change.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Bar Chart</button>
+                    <div class="accordion-panel">
+                        <p>A chart using horizontal bars to compare values across categories, especially useful when category labels are long.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Bubble Chart</button>
+                    <div class="accordion-panel">
+                        <p>A scatter chart where a third dimension is represented by the size of the bubbles (data points).</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Categorical Data (Qualitative)</button>
+                    <div class="accordion-panel">
+                        <p>Data divided into categories based on non-numeric characteristics that follow no fixed order (e.g., product types).</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Column Chart</button>
+                    <div class="accordion-panel">
+                        <p>A chart using vertical columns to compare values across categories or show value changes over time.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Continuous Data (Quantitative)</button>
+                    <div class="accordion-panel">
+                        <p>Numeric data that can take any value within an interval (e.g., height, weight).</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Data</button>
+                    <div class="accordion-panel">
+                        <p>Raw, unorganized facts, figures, symbols, and observations that do not carry specific meaning on their own.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Data Analysis</button>
+                    <div class="accordion-panel">
+                        <p>The process of identifying, cleaning, transforming, and modeling data to discover meaningful information and support decision-making. (Often looks backward at historical data).</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Data Analytics</button>
+                    <div class="accordion-panel">
+                        <p>The broader field of using data, tools (statistical analysis, machine learning, models) to examine raw data, gain insights, make predictions, and drive organizational decisions. (Often looks forward).</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Data Cleaning</button>
+                    <div class="accordion-panel">
+                        <p>The process of identifying and correcting or removing errors, inconsistencies, and inaccuracies in a dataset (part of data preparation).</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Data Collection</button>
+                    <div class="accordion-panel">
+                        <p>The first phase of descriptive data analysis, involving identifying sources, selecting methods, and acquiring relevant data.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Data Preparation</button>
+                    <div class="accordion-panel">
+                        <p>The process of cleaning, transforming, and reducing data to make it suitable for analysis.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Data Reduction</button>
+                    <div class="accordion-panel">
+                        <p>Techniques like sampling or aggregation used to decrease the size of large datasets for manageability.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Data Transformation</button>
+                    <div class="accordion-panel">
+                        <p>Converting data into a suitable format for analysis, such as changing data types, encoding variables, or scaling values.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Data Visualization</button>
+                    <div class="accordion-panel">
+                        <p>Representing data in a graphical or pictorial form to easily understand patterns, trends, and insights.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Descriptive Analysis</button>
+                    <div class="accordion-panel">
+                        <p>A type of statistical analysis that answers "What happened?" by summarizing and describing past data using measures like mean, frequency, etc.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Diagnostic Analysis</button>
+                    <div class="accordion-panel">
+                        <p>A data analysis technique answering "Why did this happen?" by finding causes based on insights from statistical analysis.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Discrete Data (Quantitative)</button>
+                    <div class="accordion-panel">
+                        <p>Numeric data consisting of whole numbers that can be counted (e.g., number of children).</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Feedback Mechanism (in IS)</button>
+                    <div class="accordion-panel">
+                        <p>The component of an information system that helps organizations achieve goals by providing information (from output) to potentially modify input or processing.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Frequency Distribution Table</button>
+                    <div class="accordion-panel">
+                        <p>A table showing the number of times each value or group of values (class interval) occurs in a dataset.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Frequency Table</button>
+                    <div class="accordion-panel">
+                        <p>A tabulation showing the count (frequency) of each distinct value in a dataset.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Gauge Chart</button>
+                    <div class="accordion-panel">
+                        <p>A chart, often semi-circular, used to display a single Key Performance Indicator (KPI) value against a target or scale, typically color-coded.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Inferential Analysis</button>
+                    <div class="accordion-panel">
+                        <p>A type of statistical analysis that uses a sample of data to draw conclusions about a larger population.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Information</button>
+                    <div class="accordion-panel">
+                        <p>Data that has been processed, organized, analyzed, or combined to extract meaning, provide context, and answer "who, what, where, when" questions. Must be timely, accurate, and complete.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Information System (IS)</button>
+                    <div class="accordion-panel">
+                        <p>A set of interrelated components (Technology, Task, Person, Structure) that collect, manipulate, store, and disseminate information, providing a feedback mechanism to achieve a goal.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Interquartile Range (IQR)</button>
+                    <div class="accordion-panel">
+                        <p>A measure of dispersion calculated as the difference between the upper quartile (Q3) and the lower quartile (Q1) of a dataset, representing the spread of the middle 50% of the data.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Knowledge</button>
+                    <div class="accordion-panel">
+                        <p>Information combined with experience, context, and interpretation, answering the "how" question and providing a deeper level of understanding.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header">Line Chart</button>
+                    <div class="accordion-panel">
+                        <p>A chart using points connected by lines to show trends over time or categories.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Map Chart</button>
+                    <div class="accordion-panel">
+                        <p>A chart using geographic maps to visualize the spatial distribution of data.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Mean</button>
+                    <div class="accordion-panel">
+                        <p>The average of a dataset, calculated by summing all values and dividing by the number of values. Susceptible to outliers.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Measures of Central Tendency</button>
+                    <div class="accordion-panel">
+                        <p>Statistical measures identifying the center point of a distribution (Mean, Median, Mode).</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Measures of Dispersion</button>
+                    <div class="accordion-panel">
+                        <p>Statistical measures describing the spread or variability of data points in a distribution (Range, IQR, Variance, Standard Deviation).</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Measures of Frequency</button>
+                    <div class="accordion-panel">
+                        <p>Statistical measures showing how often each value or category occurs in a dataset (e.g., count, percentage, frequency tables).</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Median</button>
+                    <div class="accordion-panel">
+                        <p>The middle value in a dataset that has been sorted in ascending or descending order. Not affected by outliers.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Mode</button>
+                    <div class="accordion-panel">
+                        <p>The value that occurs most frequently in a dataset. A dataset can have one mode (uni-modal), multiple modes (multi-modal), or no mode.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Ordinal Data (Qualitative)</button>
+                    <div class="accordion-panel">
+                        <p>Categorical data that follows a logical order or sequence (e.g., months of the year, education levels).</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Person (in IS)</button>
+                    <div class="accordion-panel">
+                        <p>The people involved in an information system, including managers, users, analysts, and developers.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Pie & Doughnut Chart</button>
+                    <div class="accordion-panel">
+                        <p>Circular charts used to show proportions of a whole, where segments represent percentages (totaling 100%). Best for few categories.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Pivot Table</button>
+                    <div class="accordion-panel">
+                        <p>An interactive table (often in spreadsheets) that summarizes, analyzes, and explores large datasets by grouping and aggregating data (e.g., sum, count, average) based on selected fields.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Predictive Analysis</button>
+                    <div class="accordion-panel">
+                        <p>A data analysis technique answering "What might happen in the future?" by using past data to make predictions.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Prescriptive Analysis</button>
+                    <div class="accordion-panel">
+                        <p>A data analysis technique answering "What should we do next?" by combining insights from other analyses to recommend actions.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Qualitative Data</button>
+                    <div class="accordion-panel">
+                        <p>Non-numeric data divided into categories based on characteristics, qualities, or attributes (includes Ordinal and Categorical).</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Quantitative Data</button>
+                    <div class="accordion-panel">
+                        <p>Numeric data that can be quantified and measured (includes Discrete and Continuous).</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Range</button>
+                    <div class="accordion-panel">
+                        <p>The simplest measure of dispersion, calculated as the difference between the largest and smallest observation in a dataset. Highly affected by outliers.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Relative Frequency Distribution</button>
+                    <div class="accordion-panel">
+                        <p>A frequency distribution showing the percentage or proportion of observations falling into each value or category, rather than the actual count.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Scatter Chart</button>
+                    <div class="accordion-panel">
+                        <p>A chart using points to compare two sets of numeric values and show the relationship between them.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Semi-structured Data</button>
+                    <div class="accordion-panel">
+                        <p>Data that has some organizational properties (like tags) but doesn't fit a rigid relational data model (e.g., XML, JSON, emails).</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Standard Deviation</button>
+                    <div class="accordion-panel">
+                        <p>A measure of dispersion representing the average amount of variability or spread of data points around the mean. It is the square root of the variance and is in the same units as the original data.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Statistical Analysis</button>
+                    <div class="accordion-panel">
+                        <p>A data analysis technique involving collecting, analyzing, interpreting, presenting, and modeling data to understand patterns and trends (includes Descriptive and Inferential).</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Structure (in IS)</button>
+                    <div class="accordion-panel">
+                        <p>The organizational relationships between the people components in an information system, including hierarchy and evaluation systems.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Structured Data</button>
+                    <div class="accordion-panel">
+                        <p>Data that adheres to a predefined data model and can be easily stored in tables with rows and columns (e.g., relational databases, spreadsheets).</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Task (in IS)</button>
+                    <div class="accordion-panel">
+                        <p>The activities supported by an information system, necessary for producing a good or service, involving material, information, and knowledge flow.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Technology (in IS)</button>
+                    <div class="accordion-panel">
+                        <p>The hardware, software, and telecommunications components of an information system.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Text Analysis</button>
+                    <div class="accordion-panel">
+                        <p>A data analysis technique using computer systems to read, understand, and extract insights from human-written text (e.g., reviews, emails).</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Treemap Chart</button>
+                    <div class="accordion-panel">
+                        <p>A chart using nested rectangles to show hierarchical data, where the area of each rectangle is proportional to its value, illustrating parts of a whole.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Unstructured Data</button>
+                    <div class="accordion-panel">
+                        <p>Data that lacks a predefined data model and stored in its native format, often qualitative (e.g., images, audio, video, text documents).</p>
+                    </div>
+                </div>
+                 <div class="accordion-item">
+                    <button class="accordion-header">Variance</button>
+                    <div class="accordion-panel">
+                        <p>A measure of dispersion indicating the average squared difference of data points from the mean. Units are the square of the original data units.</p>
+                    </div>
+                </div>
+            </div> <!-- End glossary-accordion -->
+        </section>
+
+        <!-- Formulas Section -->
+        <section id="formulas" class="main-content">
+             <!-- Formulas content remains the same as previous version -->
+             <h2>Formulas and Examples</h2>
+             <h3>Measures of Central Tendency</h3>
+             <div class="formula-block">
+                <h4>Mean (Average)</h4>
+                <p><strong>Formula:</strong> <code>x̄ = (x₁ + x₂ + ... + xn) / n</code></p>
+                <ul><li><code>x̄</code> = Mean</li><li><code>xi</code> = Individual data points</li><li><code>n</code> = Total number of data points</li></ul>
+                <div class="example"><p><strong>Example (Page 31):</strong> Compute the mean for the data: <code>5, 6, 2, 4, 7, 8, 3, 5, 6, 6</code></p><div class="solution"><p><strong>Solution:</strong></p><p>Sum = <code>5 + 6 + 2 + 4 + 7 + 8 + 3 + 5 + 6 + 6 = 52</code></p><p>n = <code>10</code></p><p>Mean (x̄) = <code>52 / 10 = 5.2</code></p></div></div>
+             </div>
+             <div class="formula-block">
+                <h4>Median (Middle Value)</h4>
+                <p><strong>Formula (Odd n):</strong> Median = Value of the <code>((n+1)/2)</code>th term (after sorting)</p>
+                <p><strong>Formula (Even n):</strong> Median = Average of the <code>(n/2)</code>th term and the <code>((n/2)+1)</code>th term (after sorting)</p>
+                 <div class="example"><p><strong>Example 1 (Odd n - Page 34):</strong> Find the median of: <code>4, 17, 77, 25, 22, 23, 92, 82, 40, 24, 14, 12, 67, 23, 29</code></p><div class="solution"><p><strong>Solution:</strong></p><p>Sort the data: <code>4, 12, 14, 17, 22, 23, 23, <strong>24</strong>, 25, 29, 40, 67, 77, 82, 92</code></p><p>n = <code>15</code> (odd)</p><p>Position = <code>(15 + 1) / 2 = 8</code>th term</p><p>Median = <code>24</code></p></div></div>
+                 <div class="example"><p><strong>Example 2 (Even n - Page 34):</strong> Find the median of: <code>3, 13, 7, 5, 21, 23, 23, 40, 23, 14, 12, 56, 23, 29</code></p><div class="solution"><p><strong>Solution:</strong></p><p>Sort the data: <code>3, 5, 7, 12, 13, 14, <strong>21</strong>, <strong>23</strong>, 23, 23, 23, 29, 40, 56</code></p><p>n = <code>14</code> (even)</p><p>Positions = <code>(14 / 2) = 7</code>th term and <code>(14 / 2) + 1 = 8</code>th term</p><p>Values at positions 7 and 8 are <code>21</code> and <code>23</code>.</p><p>Median = <code>(21 + 23) / 2 = 44 / 2 = 22</code></p></div></div>
+             </div>
+             <h3>Measures of Dispersion</h3>
+             <div class="formula-block">
+                <h4>Range</h4>
+                <p><strong>Formula:</strong> Range = Largest Observation - Smallest Observation</p>
+                <div class="example"><p><strong>Example (Page 37):</strong> Find the range for the data: <code>3, 6, 9, 16, 27, 27, 37, 48</code></p><div class="solution"><p><strong>Solution:</strong></p><p>Largest = <code>48</code></p><p>Smallest = <code>3</code></p><p>Range = <code>48 - 3 = 45</code></p></div></div>
+             </div>
+             <div class="formula-block">
+                <h4>Interquartile Range (IQR)</h4>
+                <p><strong>Formula:</strong> IQR = Upper Quartile (Q3) - Lower Quartile (Q1)</p>
+                <ul><li>Q1 = Median of the lower half of the sorted data</li><li>Q3 = Median of the upper half of the sorted data</li></ul>
+                 <div class="example"><p><strong>Example 1 (Odd n - Page 39):</strong> Find the IQR for: <code>1, 10, 2, 3, 15, 7, 7, 8, 1, 12, 5</code></p><div class="solution"><p><strong>Solution:</strong></p><p>Sort the data: <code>1, 1, 2, 3, 5, <strong>7</strong>, 7, 8, 10, 12, 15</code></p><p>Overall Median (Q2) = <code>7</code></p><p>Lower Half: <code>[1, 1, <strong>2</strong>, 3, 5]</code> -> Median of lower half (Q1) = <code>2</code></p><p>Upper Half: <code>[7, 8, <strong>10</strong>, 12, 15]</code> -> Median of upper half (Q3) = <code>10</code></p><p>IQR = Q3 - Q1 = <code>10 - 2 = 8</code></p></div></div>
+                 <div class="example"><p><strong>Example 2 (Even n - Page 40):</strong> Find the IQR for: <code>3.3, 3.7, 2.5, 3.5, 3.0, 4.3, 3.1, 4.1, 1.9, 3.6</code></p><div class="solution"><p><strong>Solution:</strong></p><p>Sort the data: <code>1.9, 2.5, 3.0, 3.1, 3.3, | 3.5, 3.6, 3.7, 4.1, 4.3</code></p><p>Overall Median (Q2) = <code>(3.3 + 3.5) / 2 = 3.4</code></p><p>Lower Half: <code>[1.9, 2.5, <strong>3.0</strong>, 3.1, 3.3]</code> -> Median of lower half (Q1) = <code>3.0</code></p><p>Upper Half: <code>[3.5, 3.6, <strong>3.7</strong>, 4.1, 4.3]</code> -> Median of upper half (Q3) = <code>3.7</code></p><p>IQR = Q3 - Q1 = <code>3.7 - 3.0 = 0.7</code></p></div></div>
+             </div>
+             <div class="formula-block">
+                <h4>Variance</h4>
+                <p><strong>Formula (Population):</strong> <code>σ² = Σ(xi – μ)² / N</code></p>
+                <p><strong>Formula (Sample):</strong> <code>S² = Σ(xi – x̄)² / (n – 1)</code></p>
+                 <ul><li><code>σ²</code> = Population Variance, <code>S²</code> = Sample Variance</li><li><code>xi</code> = Individual data point</li><li><code>μ</code> = Population Mean, <code>x̄</code> = Sample Mean</li><li><code>N</code> = Population size, <code>n</code> = Sample size</li></ul>
+                <div class="example"><p><strong>Example (Sample Variance - Page 47):</strong> Calculate the sample variance for: <code>10, 11, 15, 20, 24</code></p><div class="solution"><p><strong>Solution:</strong></p><p>Calculate Sample Mean (x̄): <code>(10 + 11 + 15 + 20 + 24) / 5 = 80 / 5 = 16</code></p><p>Calculate squared deviations from the mean:</p><ul><li><code>(10 - 16)² = (-6)² = 36</code></li><li><code>(11 - 16)² = (-5)² = 25</code></li><li><code>(15 - 16)² = (-1)² = 1</code></li><li><code>(20 - 16)² = (4)² = 16</code></li><li><code>(24 - 16)² = (8)² = 64</code></li></ul><p>Sum of squared deviations (Σ(xi – x̄)²): <code>36 + 25 + 1 + 16 + 64 = 142</code></p><p>n = <code>5</code>, so n - 1 = <code>4</code></p><p>Sample Variance (S²) = <code>142 / 4 = 35.5</code></p></div></div>
+             </div>
+              <div class="formula-block">
+                <h4>Standard Deviation</h4>
+                <p><strong>Formula (Population):</strong> <code>σ = √[ Σ(xi – μ)² / N ] = √σ²</code></p>
+                <p><strong>Formula (Sample):</strong> <code>S = √[ Σ(xi – x̄)² / (n – 1) ] = √S²</code></p>
+                <div class="example"><p><strong>Example (Sample Standard Deviation - Page 47):</strong> Calculate the sample standard deviation for: <code>10, 11, 15, 20, 24</code></p><div class="solution"><p><strong>Solution:</strong></p><p>From the variance calculation above, Sample Variance (S²) = <code>35.5</code></p><p>Sample Standard Deviation (S) = <code>√35.5 ≈ 5.958</code></p></div></div>
+             </div>
+        </section>
+
+        <!-- Quiz Sections -->
+        <div id="fill" class="main-content">
+            <h2>Fill in the Blank Questions</h2>
+            <div id="fill-questions"></div>
+        </div>
+
+        <div id="tf" class="main-content">
+            <h2>True/False Questions</h2>
+            <div id="tf-questions"></div>
+        </div>
+
+        <div id="mc" class="main-content">
+            <h2>Multiple Choice Questions</h2>
+            <div id="mc-questions"></div>
+        </div>
+
+    </div> <!-- End Container -->
+
+    <script>
+        // --- START OF QUIZ DATA ---
+        const fillInTheBlank = [
+            {
+                question: "An _______ is a set of interrelated components that collect, manipulate, store and disseminate information.",
+                options: ["Information System", "Database", "Operating System", "Algorithm"],
+                answer: "Information System"
+            },
+            {
+                question: "Raw, unorganized facts and details like text and figures are known as _______.",
+                options: ["Information", "Knowledge", "Data", "Wisdom"],
+                answer: "Data"
+            },
+            {
+                question: "Data becomes _______ when analyzed, organized, or classified to extract meaning.",
+                options: ["Knowledge", "Information", "Wisdom", "Insight"],
+                answer: "Information"
+            },
+            {
+                question: "_______ provides answers to the question 'how' by combining information with experience and context.",
+                options: ["Data", "Information", "Knowledge", "Analytics"],
+                answer: "Knowledge"
+            },
+            {
+                question: "Data that can be quantified and measured numerically is called _______ data.",
+                options: ["Qualitative", "Categorical", "Quantitative", "Ordinal"],
+                answer: "Quantitative"
+            },
+            {
+                question: "Data that consists of whole numbers (e.g., number of students) is _______ quantitative data.",
+                options: ["Continuous", "Discrete", "Ordinal", "Categorical"],
+                answer: "Discrete"
+            },
+            {
+                question: "Data divided into categories based on non-numeric characteristics is called _______ data.",
+                options: ["Quantitative", "Continuous", "Qualitative", "Discrete"],
+                answer: "Qualitative"
+            },
+            {
+                question: "Data that can be stored neatly in tables with rows and columns is known as _______ data.",
+                options: ["Unstructured", "Semi-structured", "Structured", "Qualitative"],
+                answer: "Structured"
+            },
+            {
+                question: "XML and JSON files are examples of _______ data.",
+                options: ["Structured", "Unstructured", "Semi-structured", "Quantitative"],
+                answer: "Semi-structured"
+            },
+            {
+                question: "Image, audio, and video files are typically examples of _______ data.",
+                options: ["Structured", "Semi-structured", "Unstructured", "Discrete"],
+                answer: "Unstructured"
+            },
+            {
+                question: "_______ analysis looks backwards, providing a historical view of what has happened.",
+                options: ["Predictive", "Prescriptive", "Diagnostic", "Analysis"],
+                answer: "Analysis"
+            },
+             {
+                question: "_______ models the future or predicts a result based on data.",
+                options: ["Analysis", "Analytics", "Descriptive Stats", "Data Cleaning"],
+                answer: "Analytics"
+            },
+            {
+                question: "The data analysis technique that answers 'Why did this happen?' is _______ analysis.",
+                options: ["Descriptive", "Predictive", "Diagnostic", "Prescriptive"],
+                answer: "Diagnostic"
+            },
+             {
+                question: "The data analysis technique that answers 'What should we do next?' is _______ analysis.",
+                options: ["Descriptive", "Predictive", "Diagnostic", "Prescriptive"],
+                answer: "Prescriptive"
+            },
+            {
+                question: "The most frequently occurring value in a dataset is called the _______.",
+                options: ["Mean", "Median", "Mode", "Range"],
+                answer: "Mode"
+            },
+            {
+                question: "The difference between the largest and smallest observation is the _______.",
+                options: ["Variance", "Range", "IQR", "Median"],
+                answer: "Range"
+            },
+            {
+                question: "The measure of spread representing the middle 50% of the data is the _______.",
+                options: ["Range", "Standard Deviation", "Variance", "Interquartile Range"],
+                answer: "Interquartile Range"
+            },
+            {
+                question: "The square root of the variance is the _______.",
+                options: ["Mean", "Range", "Standard Deviation", "IQR"],
+                answer: "Standard Deviation"
+            },
+            {
+                question: "Identifying and handling missing values, errors, or outliers is part of _______.",
+                options: ["Data Collection", "Data Visualization", "Data Cleaning", "Data Reduction"],
+                answer: "Data Cleaning"
+            },
+            {
+                question: "Tools like Tableau and Power BI are examples of specialized _______ software.",
+                options: ["Spreadsheet", "Programming Library", "Data Visualization", "Database"],
+                answer: "Data Visualization"
+            },
+            {
+                question: "_______ tables in Excel allow you to summarize and analyze large datasets interactively.",
+                options: ["Frequency", "Lookup", "Pivot", "Data"],
+                answer: "Pivot"
+            }
+        ];
+
+        const trueOrFalse = [
+            {
+                question: "Information systems only consist of hardware and software.",
+                answer: false // Also includes Person, Task, Structure
+            },
+            {
+                question: "Feedback in an information system helps organizations achieve their goals.",
+                answer: true
+            },
+            {
+                question: "Data and Information are the same thing.",
+                answer: false
+            },
+            {
+                question: "Knowledge answers the 'what' and 'where' questions.",
+                answer: false // Information does; Knowledge answers 'how'
+            },
+            {
+                question: "Height and weight are examples of discrete quantitative data.",
+                answer: false // They are continuous
+            },
+            {
+                question: "Ordinal data has a logical order or sequence.",
+                answer: true
+            },
+            {
+                question: "Unstructured data easily fits into relational database tables.",
+                answer: false
+            },
+            {
+                question: "Data analysis and data analytics are identical terms.",
+                answer: false
+            },
+            {
+                question: "Descriptive analysis aims to predict future outcomes.",
+                answer: false // Predictive analysis does
+            },
+            {
+                question: "Inferential analysis uses a sample to draw conclusions about a population.",
+                answer: true
+            },
+            {
+                question: "The mean is heavily affected by outliers.",
+                answer: true
+            },
+            {
+                question: "The median is the average of all values in a dataset.",
+                answer: false // That's the mean
+            },
+            {
+                question: "A dataset can have more than one mode.",
+                answer: true
+            },
+            {
+                question: "The range is a robust measure of dispersion, unaffected by extreme values.",
+                answer: false // It is highly affected by extremes
+            },
+            {
+                question: "IQR is calculated as Q3 minus Q1.",
+                answer: true
+            },
+            {
+                question: "Variance is measured in the same units as the original data.",
+                answer: false // It's in squared units; Standard Deviation is in original units
+            },
+            {
+                question: "Data reduction techniques like sampling make analysis more manageable.",
+                answer: true
+            },
+            {
+                question: "Data visualization makes complex data harder to understand.",
+                answer: false
+            },
+            {
+                question: "Pie charts are best used when you have many categories to display.",
+                answer: false // Best for few categories
+            },
+            {
+                question: "Scatter plots are used to show the relationship between two numeric variables.",
+                answer: true
+            },
+             {
+                question: "Gauge charts are primarily used to compare multiple categories simultaneously.",
+                answer: false // Typically display a single KPI
+            },
+             {
+                question: "Python's Matplotlib is an example of a spreadsheet tool for visualization.",
+                answer: false // It's a programming library
+            }
+        ];
+
+        const multipleChoice = [
+            {
+                question: "Which of the following is NOT an element of an Information System according to the lecture?",
+                options: ["Technology", "Task", "Person", "Profit"],
+                answer: "Profit" // Profit is a goal/outcome, not an element
+            },
+            {
+                question: "Transforming raw student grades into a class average percentage is an example of turning data into what?",
+                options: ["Knowledge", "Wisdom", "Information", "Raw Data"],
+                answer: "Information"
+            },
+            {
+                question: "Determining *why* high grades correlate with qualified teachers represents which level?",
+                options: ["Data", "Information", "Knowledge", "Analysis"],
+                answer: "Knowledge"
+            },
+            {
+                question: "Which data type classification relates to the inherent nature of the data (numeric vs. non-numeric)?",
+                options: ["According to Structure", "According to Source", "According to its Nature", "According to Size"],
+                answer: "According to its Nature"
+            },
+             {
+                question: "Employee names, addresses, and phone numbers stored in a database table are typically:",
+                options: ["Unstructured data", "Semi-structured data", "Structured data", "Qualitative data only"],
+                answer: "Structured data"
+            },
+            {
+                question: "Which data analysis technique is used to understand human-written text like emails or reviews?",
+                options: ["Statistical Analysis", "Text Analysis", "Predictive Analysis", "Diagnostic Analysis"],
+                answer: "Text Analysis"
+            },
+            {
+                question: "Which type of Statistical Analysis summarizes completed data using mean, median, or frequency?",
+                options: ["Inferential Analysis", "Predictive Analysis", "Descriptive Analysis", "Diagnostic Analysis"],
+                answer: "Descriptive Analysis"
+            },
+            {
+                question: "Forecasting next month's sales based on past trends is an example of:",
+                options: ["Descriptive Analysis", "Diagnostic Analysis", "Predictive Analysis", "Prescriptive Analysis"],
+                answer: "Predictive Analysis"
+            },
+            {
+                question: "Which measure of central tendency is the middle value in a sorted dataset?",
+                options: ["Mean", "Mode", "Median", "Range"],
+                answer: "Median"
+            },
+            {
+                question: "If a dataset has values: 5, 8, 10, 8, 12. What is the Mode?",
+                options: ["5", "8", "10", "12"],
+                answer: "8"
+            },
+            {
+                question: "What is the primary drawback of using the Range as a measure of dispersion?",
+                options: ["It's hard to calculate", "It's only for categorical data", "It's heavily affected by outliers", "It's always zero"],
+                answer: "It's heavily affected by outliers"
+            },
+            {
+                question: "If Q1=20 and Q3=50 for a dataset, what is the Interquartile Range (IQR)?",
+                options: ["20", "30", "50", "70"],
+                answer: "30" // IQR = Q3 - Q1 = 50 - 20 = 30
+            },
+            {
+                question: "Why is Standard Deviation often preferred over Variance for interpretation?",
+                options: ["It is easier to calculate", "It ignores outliers", "It is in the same units as the original data", "It is always a whole number"],
+                answer: "It is in the same units as the original data"
+            },
+            {
+                question: "Which is NOT a phase of descriptive data analysis mentioned?",
+                options: ["Data Collection", "Data Preparation", "Apply Method", "Hypothesis Testing"],
+                answer: "Hypothesis Testing" // Hypothesis testing is more inferential
+            },
+            {
+                question: "Encoding categorical variables into numbers is an example of which data preparation task?",
+                options: ["Data Cleaning", "Data Reduction", "Data Transformation", "Data Collection"],
+                answer: "Data Transformation"
+            },
+            {
+                question: "Which chart type is best for showing trends over time?",
+                options: ["Pie Chart", "Bar Chart", "Line Chart", "Treemap"],
+                answer: "Line Chart"
+            },
+            {
+                question: "Which chart type is ideal for showing proportions of a whole for a few categories?",
+                options: ["Line Chart", "Scatter Plot", "Pie Chart", "Area Chart"],
+                answer: "Pie Chart"
+            },
+            {
+                question: "To visualize the relationship between two numeric variables like height and weight, which chart is most appropriate?",
+                options: ["Bar Chart", "Scatter Plot", "Pie Chart", "Map Chart"],
+                answer: "Scatter Plot"
+            },
+             {
+                question: "Which chart uses nested rectangles to show hierarchical data or parts of a whole?",
+                options: ["Area Chart", "Treemap Chart", "Bubble Chart", "Gauge Chart"],
+                answer: "Treemap Chart"
+            },
+            {
+                question: "Which tool category includes Matplotlib (Python) and ggplot2 (R)?",
+                options: ["Spreadsheets", "Data Visualization Software", "Programming libraries", "Database Systems"],
+                answer: "Programming libraries"
+            },
+            {
+                question: "What Excel feature was demonstrated for creating summary tables and histograms from raw data?",
+                options: ["VLOOKUP", "Conditional Formatting", "Pivot Tables", "Solver"],
+                answer: "Pivot Tables"
+            }
+        ];
+        // --- END OF QUIZ DATA ---
+
+
+        // --- START OF SCRIPT LOGIC ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Select main tabs and content sections
+            const mainTabButtons = document.querySelectorAll('.main-tabs .tab-button');
+            const mainTabContents = document.querySelectorAll('.main-content');
+
+            // Select quiz content containers
+            const fillContainer = document.getElementById('fill-questions');
+            const tfContainer = document.getElementById('tf-questions');
+            const mcContainer = document.getElementById('mc-questions');
+
+             // Select accordion elements
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+
+            // --- Main Tab Switching Logic ---
+            mainTabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab'); // Get the ID of the target content
+
+                    // Deactivate all main buttons and content
+                    mainTabButtons.forEach(btn => btn.classList.remove('active'));
+                    mainTabContents.forEach(content => content.classList.remove('active'));
+
+                    // Activate the clicked button
+                    button.classList.add('active');
+
+                    // Activate the corresponding content section
+                    const targetContent = document.getElementById(tabId);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                });
+            });
+
+            // --- Accordion Logic (for Glossary) ---
+             accordionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    // Toggle active class on the header for styling (+) (-) sign
+                    this.classList.toggle('active');
+
+                    // Get the panel sibling
+                    const panel = this.nextElementSibling;
+
+                    // Toggle the max-height for smooth transition
+                    if (panel.style.maxHeight) {
+                        // If panel is open, close it
+                        panel.style.maxHeight = null;
+                        panel.style.padding = "0 20px"; // Remove padding when closing
+                    } else {
+                         // If panel is closed, open it
+                        panel.style.maxHeight = panel.scrollHeight + "px";
+                        panel.style.padding = "15px 20px"; // Add padding back when opening
+                    }
+
+                    // --- Optional: Close other accordions ---
+                    // accordionHeaders.forEach(otherHeader => {
+                    //     if (otherHeader !== this && otherHeader.classList.contains('active')) {
+                    //         otherHeader.classList.remove('active');
+                    //         otherHeader.nextElementSibling.style.maxHeight = null;
+                    //         otherHeader.nextElementSibling.style.padding = "0 20px";
+                    //     }
+                    // });
+                    // --- End Optional Close Others ---
+                });
+            });
+
+
+            // --- Function to handle option selection within a question ---
+            function handleOptionSelection(button, questionDiv) {
+                // Deselect siblings within the same question
+                const siblings = questionDiv.querySelectorAll('.option-button.selected');
+                siblings.forEach(sib => sib.classList.remove('selected'));
+                // Select clicked button
+                button.classList.add('selected');
+                 // Clear previous feedback when a new option is selected
+                const existingFeedback = questionDiv.querySelector('.feedback');
+                if (existingFeedback) {
+                    existingFeedback.remove();
+                }
+            }
+
+            // --- Function to create and append feedback ---
+            function showFeedback(questionDiv, isCorrect, correctAnswer) {
+                 // Remove existing feedback first
+                const existingFeedback = questionDiv.querySelector('.feedback');
+                if (existingFeedback) {
+                    existingFeedback.remove();
+                }
+
+                const feedback = document.createElement('div');
+                feedback.className = 'feedback';
+                if (isCorrect) {
+                    feedback.classList.add('correct');
+                    feedback.textContent = 'Correct!';
+                } else {
+                    feedback.classList.add('incorrect');
+                    feedback.textContent = `Incorrect. Correct answer: ${correctAnswer}`;
+                }
+                // Append feedback after the check button
+                const checkButton = questionDiv.querySelector('.check-answer');
+                 if (checkButton) {
+                    // Insert after the check button if it exists
+                    checkButton.parentNode.insertBefore(feedback, checkButton.nextSibling);
+                } else {
+                     // Otherwise, append to the end of the question div
+                     questionDiv.appendChild(feedback);
+                }
+            }
+
+            // --- Load Fill in the Blank Questions ---
+            function loadFillInTheBlankQuestions() {
+                fillContainer.innerHTML = ''; // Clear previous content
+                fillInTheBlank.forEach((q) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question';
+
+                    const questionText = document.createElement('p');
+                    questionText.textContent = q.question;
+                    questionDiv.appendChild(questionText);
+
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.className = 'options';
+
+                    q.options.forEach(option => {
+                        const optionButton = document.createElement('button');
+                        optionButton.className = 'option-button';
+                        optionButton.textContent = option;
+                        optionButton.addEventListener('click', () => handleOptionSelection(optionButton, questionDiv));
+                        optionsDiv.appendChild(optionButton);
+                    });
+                    questionDiv.appendChild(optionsDiv);
+
+                    const checkButton = document.createElement('button');
+                    checkButton.className = 'check-answer';
+                    checkButton.textContent = 'Check Answer';
+                    checkButton.addEventListener('click', () => {
+                        const selected = questionDiv.querySelector('.option-button.selected');
+                        if (selected) {
+                            showFeedback(questionDiv, selected.textContent === q.answer, q.answer);
+                        } else {
+                             showFeedback(questionDiv, false, q.answer); // Indicate incorrect if nothing selected
+                        }
+                    });
+                    questionDiv.appendChild(checkButton);
+
+                    fillContainer.appendChild(questionDiv);
+                });
+            }
+
+            // --- Load True/False Questions ---
+            function loadTrueFalseQuestions() {
+                tfContainer.innerHTML = ''; // Clear previous content
+                trueOrFalse.forEach((q) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question';
+
+                    const questionText = document.createElement('p');
+                    questionText.textContent = q.question;
+                    questionDiv.appendChild(questionText);
+
+                     const optionsDiv = document.createElement('div'); // Keep consistent structure
+                    optionsDiv.className = 'options';
+
+                    const trueButton = document.createElement('button');
+                    trueButton.className = 'option-button';
+                    trueButton.textContent = 'True';
+                    trueButton.addEventListener('click', () => handleOptionSelection(trueButton, questionDiv));
+                    optionsDiv.appendChild(trueButton);
+
+                    const falseButton = document.createElement('button');
+                    falseButton.className = 'option-button';
+                    falseButton.textContent = 'False';
+                    falseButton.addEventListener('click', () => handleOptionSelection(falseButton, questionDiv));
+                    optionsDiv.appendChild(falseButton);
+
+                    questionDiv.appendChild(optionsDiv);
+
+                    const checkButton = document.createElement('button');
+                    checkButton.className = 'check-answer';
+                    checkButton.textContent = 'Check Answer';
+                    checkButton.addEventListener('click', () => {
+                        const selected = questionDiv.querySelector('.option-button.selected');
+                         const correctAnswerText = q.answer ? 'True' : 'False';
+                        if (selected) {
+                            const isCorrect = (selected.textContent === 'True' && q.answer) || (selected.textContent === 'False' && !q.answer);
+                            showFeedback(questionDiv, isCorrect, correctAnswerText);
+                        } else {
+                            showFeedback(questionDiv, false, correctAnswerText);
+                        }
+                    });
+                    questionDiv.appendChild(checkButton);
+
+                    tfContainer.appendChild(questionDiv);
+                });
+            }
+
+            // --- Load Multiple Choice Questions ---
+            function loadMultipleChoiceQuestions() {
+                mcContainer.innerHTML = ''; // Clear previous content
+                multipleChoice.forEach((q) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question';
+
+                    const questionText = document.createElement('p');
+                    questionText.textContent = q.question;
+                    questionDiv.appendChild(questionText);
+
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.className = 'options';
+
+                    q.options.forEach(option => {
+                        const optionButton = document.createElement('button');
+                        optionButton.className = 'option-button';
+                        optionButton.textContent = option;
+                        optionButton.addEventListener('click', () => handleOptionSelection(optionButton, questionDiv));
+                        optionsDiv.appendChild(optionButton);
+                    });
+                    questionDiv.appendChild(optionsDiv);
+
+                    const checkButton = document.createElement('button');
+                    checkButton.className = 'check-answer';
+                    checkButton.textContent = 'Check Answer';
+                    checkButton.addEventListener('click', () => {
+                        const selected = questionDiv.querySelector('.option-button.selected');
+                        if (selected) {
+                            showFeedback(questionDiv, selected.textContent === q.answer, q.answer);
+                        } else {
+                             showFeedback(questionDiv, false, q.answer);
+                        }
+                    });
+                    questionDiv.appendChild(checkButton);
+
+                    mcContainer.appendChild(questionDiv);
+                });
+            }
+
+            // --- Initial Load ---
+            // Load all quiz questions initially so they are ready when tabs are clicked
+            loadFillInTheBlankQuestions();
+            loadTrueFalseQuestions();
+            loadMultipleChoiceQuestions();
+
+        }); // End DOMContentLoaded
+        // --- END OF SCRIPT LOGIC ---
+    </script>
+</body>
+</html>
