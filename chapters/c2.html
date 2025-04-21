@@ -107,6 +107,12 @@
         .accordion-panel {
             padding: 0 20px; background-color: white; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, padding 0.4s ease-out;
         }
+         /* Adjusted padding for open panels */
+        .accordion-panel.open {
+             padding: 15px 20px;
+             max-height: 5000px; /* Sufficiently large */
+        }
+
         .accordion-panel > * { margin-top: 15px; margin-bottom: 15px; }
         .accordion-panel > *:first-child { margin-top: 15px; }
         .accordion-panel > *:last-child { margin-bottom: 15px; }
@@ -141,7 +147,7 @@
         .feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-        /* --- Example Box Styles --- */
+        /* --- Example Box Styles (Used for transaction data display) --- */
         .example-box {
             background-color: #f8f9fa;
             border-left: 3px solid #0056b3;
@@ -151,13 +157,18 @@
         }
 
         .example-box table {
-            margin: 10px 0;
+            margin: 10px auto; /* Center tables in example boxes */
             width: auto;
         }
 
-        .example-box ul {
+        .example-box ul, .example-box ol {
             margin: 10px 0;
             padding-left: 20px;
+        }
+         .example-box hr {
+            margin: 15px 0;
+            border: 0;
+            border-top: 1px dashed #adb5bd;
         }
     </style>
 </head>
@@ -244,11 +255,39 @@
                          <h4>Itemset</h4><p>A collection of one or more items. Example: <code>{Milk, Bread, Diaper}</code></p>
                          <h4>k-Itemset</h4><p>An itemset containing exactly k items. Example: <code>{Milk, Bread, Diaper}</code> is a 3-itemset.</p>
                          <h4>Support Count (σ)</h4><p>The absolute frequency of occurrence of an itemset. Formula: <code>σ(Itemset) = Count(Transactions containing Itemset)</code></p>
-                         <h4>Support (s)</h4><p>The fraction/percentage of transactions containing an itemset. Formula: <code>s(Itemset) = σ(Itemset) / Total Transactions (T)</code></p>
+                         <h4>Support (s)</h4><p>The fraction/percentage of transactions containing an itemset. Formula: <code class="math">s(Itemset) = σ(Itemset) / Total Transactions (T)</code></p>
                          <div class="accordion"><div class="accordion-item"><button class="accordion-header">Example: Support Calculation</button><div class="accordion-panel">
                              <p>Transactions:</p><table><thead><tr><th>TID</th><th>Items</th></tr></thead><tbody><tr><td>1</td><td>Bread, Milk</td></tr><tr><td>2</td><td>Bread, Diaper, Beer, Eggs</td></tr><tr><td>3</td><td>Milk, Diaper, Beer, Coke</td></tr><tr><td>4</td><td>Bread, Milk, Diaper, Beer</td></tr><tr><td>5</td><td>Bread, Milk, Diaper, Coke</td></tr></tbody></table>
                              <p>Support Count & Support for <code>{Milk, Bread, Diaper}</code>:</p><p>Occurs in TIDs 4, 5.</p><p><code>σ({Milk, Bread, Diaper}) = 2</code></p><p><code>T = 5</code></p><p><code>s({Milk, Bread, Diaper}) = 2 / 5 = 40%</code></p>
                          </div></div></div>
+
+                         <h4>Superset</h4>
+                         <p>A superset is a set that contains all elements of another set, along with possibly more elements. If an itemset X contains all elements of itemset Y, then X is a superset of Y.</p>
+                         <div class="example-box">
+                             <p><strong>Example 1:</strong></p>
+                             <p>Given the set {A, B, C, D}, what are the supersets of {C}?</p>
+                             <p>Supersets of {C} are:</p>
+                             <ul>
+                                 <li>{C, A}</li>
+                                 <li>{C, B}</li>
+                                 <li>{C, D}</li>
+                                 <li>{C, A, B}</li>
+                                 <li>{C, A, D}</li>
+                                 <li>{C, B, D}</li>
+                                 <li>{C, A, B, D}</li>
+                             </ul>
+                             <hr>
+                              <p><strong>Example 2:</strong></p>
+                             <p>Given the set {A, B, C, D}, what are the supersets of {A, B}?</p>
+                              <p>Supersets of {A, B} are:</p>
+                             <ul>
+                                 <li>{A, B, C}</li>
+                                 <li>{A, B, D}</li>
+                                 <li>{A, B, C, D}</li>
+                             </ul>
+                         </div>
+
+
                      </div>
                  </div>
                  <div class="accordion-item">
@@ -267,72 +306,193 @@
                  <div class="accordion-item">
                      <button class="accordion-header">Closed and Maximal Frequent Itemsets</button>
                      <div class="accordion-panel">
-                             <h4>1. Superset</h4>
-                             <p>X is a superset of Y if X contains all items of Y.</p>
-                             <div class="example-box">
-                                 <p><strong>Example:</strong></p>
-                                 <p>Let's say we have:</p>
-                                 <ul>
-                                     <li>Y = {Coffee, Sugar}</li>
-                                     <li>X = {Coffee, Sugar, Milk}</li>
-                                 </ul>
-                                 <p>Here, X is a superset of Y because X contains all items from Y (Coffee and Sugar) plus an additional item (Milk).</p>
+                             <h4>Closed Frequent Itemset</h4>
+                            
+                             <p>A frequent itemset is <strong>closed</strong> if all of its proper supersets have a support count that is <strong>different</strong> from the support count of the itemset itself. 
+                                <br>
+                                This means its support value is not 'repeated' by any larger itemset containing it.</p>
+                              <p>In simple terms:</p>
+                              <ul>
+                                  <li><strong>Not Closed</strong>: You can add items to the frequent itemset, and the new, larger itemset has the <strong>exact same support</strong>. 
+                                    <br>
+                                    (Support is "repeated" by a superset).</li>
+                                  <li><strong>Closed</strong>: For every way you add items to the frequent itemset to make a larger itemset, the support of that larger itemset is <strong>different</strong> from the original. (Support is "not repeated" by any superset).</li>
+                              </ul>
+                             <div class="accordion">
+                                 <div class="accordion-item">
+                                     <button class="accordion-header">Example: Is {Milk} Closed? (Using Milk/Bread Data)</button>
+                                     <div class="accordion-panel">
+                                         <div class="example-box">
+                                             <p><strong>Transaction Data (T=4):</strong></p>
+                                             <table>
+                                                 <thead><tr><th>Transaction ID</th><th>Milk</th><th>Bread</th><th>Butter</th><th>Cheese</th></tr></thead>
+                                                 <tbody>
+                                                     <tr><td>1</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
+                                                     <tr><td>2</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
+                                                     <tr><td>3</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
+                                                     <tr><td>4</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+                                                 </tbody>
+                                             </table>
+                                             <hr>
+                                             <p><strong>Itemset:</strong> {Milk}</p>
+                                             <p><strong>Support:</strong> {Milk} appears in T1, T2, T3. Support = 3/4 = 75%.</p>
+                                             <p><strong>Supersets and their Supports:</strong></p>
+                                             <ul>
+                                                 <li>{Milk, Bread}: Appears in T1, T2, T3. Support = 3/4 = 75%.</li>
+                                                 <li>{Milk, Butter}: Appears in T1, T3. Support = 2/4 = 50%.</li>
+                                                 <li>{Milk, Cheese}: Appears in T2. Support = 1/4 = 25%.</li>
+                                                 <li>{Milk, Bread, Butter}: Appears in T1, T3. Support = 2/4 = 50%.</li>
+                                                 <li>{Milk, Bread, Cheese}: Appears in T2. Support = 1/4 = 25%.</li>
+                                                  <li>{Milk, Butter, Cheese}: Appears in NONE. Support = 0/4 = 0%.</li>
+                                                 <li>{Milk, Bread, Butter, Cheese}: Appears in NONE. Support = 0/4 = 0%.</li>
+                                             </ul>
+                                              <hr>
+                                             <p><strong>Conclusion:</strong> {Milk} is <strong>NOT closed</strong> because its superset {Milk, Bread} has the exact same support (75%).</p>
+                                              <p>This happens because every transaction containing Milk also contains Bread in this dataset.</p>
+                                         </div>
+                                     </div>
+                                 </div>
+                                  <div class="accordion-item">
+                                     <button class="accordion-header">Example: Is {Jeans, Belt} Closed? (Using Jeans/Belt Data)</button>
+                                     <div class="accordion-panel">
+                                         <div class="example-box">
+                                              <p><strong>Transaction Data (T=6):</strong></p>
+                                              <table>
+                                                <thead><tr><th>TID</th><th>Shirt</th><th>Jeans</th><th>Belt</th><th>Dress</th><th>Socks</th></tr></thead>
+                                                <tbody>
+                                                <tr><td>T1</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
+                                                <tr><td>T2</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
+                                                <tr><td>T3</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td></tr>
+                                                <tr><td>T4</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+                                                <tr><td>T5</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+                                                <tr><td>T6</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
+                                                </tbody>
+                                              </table>
+                                             <hr>
+                                             <p><strong>Itemset:</strong> {Jeans, Belt}</p>
+                                             <p><strong>Support:</strong> {Jeans, Belt} appears in T2, T3, T5, T6. Support = 4/6 ≈ 66.67%.</p>
+                                              <hr>
+                                             <p><strong>Step 1:</strong> Find all supersets of {Jeans, Belt}.</p>
+                                             <p>Supersets include: {Jeans, Belt, Shirt}, {Jeans, Belt, Dress}, {Jeans, Belt, Socks}, etc.</p>
+                                             <p><strong>Step 2:</strong> Compute the support of each superset.</p>
+                                              <ul>
+                                                  <li>Support({Jeans, Belt, Shirt}): Appears in T3, T5. Support = 2/6 ≈ 33.33%.</li>
+                                                  <li>Support({Jeans, Belt, Dress}): Appears in T5. Support = 1/6 ≈ 16.67%.</li>
+                                                  <li>Support({Jeans, Belt, Socks}): Appears in T2, T5, T6. Support = 3/6 = 50%.</li>
+                                             </ul>
+                                              <p><strong>Step 3:</strong> Check if any superset has the same support as {Jeans, Belt} (66.67%).</p>
+                                              <p>None of the calculated superset supports (33.33%, 16.67%, 50%) are equal to 66.67%.</p>
+                                              <hr>
+                                             <p><strong>Conclusion:</strong> {Jeans, Belt} IS <strong>closed</strong> because none of its proper supersets have the exact same support.</p>
+                                         </div>
+                                     </div>
+                                 </div>
                              </div>
 
-                             <h4>2. Closed Frequent Itemset</h4>
-                             <p>Frequent itemset where no immediate superset has the <strong>exact same</strong> support count.</p>
-                             <div class="example-box">
-                                 <p><strong>Example:</strong> Consider these transactions:</p>
-                                 <table>
-                                     <tr><th>Transaction</th><th>Items</th></tr>
-                                     <tr><td>T1</td><td>Coffee, Sugar, Milk</td></tr>
-                                     <tr><td>T2</td><td>Coffee, Sugar, Milk</td></tr>
-                                     <tr><td>T3</td><td>Coffee, Sugar</td></tr>
-                                     <tr><td>T4</td><td>Coffee</td></tr>
-                                 </table>
-                                 <p>Looking at support counts:</p>
-                                 <ul>
-                                     <li>{Coffee} appears in 4 transactions (support=4)</li>
-                                     <li>{Coffee, Sugar} appears in 3 transactions (support=3)</li>
-                                     <li>{Coffee, Sugar, Milk} appears in 2 transactions (support=2)</li>
-                                 </ul>
-                                 <p>Here, {Coffee, Sugar, Milk} is a closed frequent itemset because no superset has exactly 2 appearances.</p>
-                             </div>
 
-                             <h4>3. Maximal Frequent Itemset</h4>
-                             <p>Frequent itemset where no immediate superset is *also frequent* (meets minsup).</p>
-                             <div class="example-box">
-                                <table>
-                                    <tr><th>Transaction</th><th>Items</th></tr>
-                                    <tr><td>T1</td><td>Coffee, Sugar, Milk</td></tr>
-                                    <tr><td>T2</td><td>Coffee, Sugar, Milk</td></tr>
-                                    <tr><td>T3</td><td>Coffee, Sugar</td></tr>
-                                    <tr><td>T4</td><td>Coffee</td></tr>
-                                </table>
-                                 <p><strong>Example:</strong> Using same transactions with minsup = 3 (75%):</p>
-                                 <ul>
-                                     <li>{Coffee} - appears 4 times ✓ (Frequent)</li>
-                                     <li>{Coffee, Sugar} - appears 3 times ✓ (Frequent)</li>
-                                     <li>{Coffee, Sugar, Milk} - appears 2 times ✗ (Not Frequent)</li>
-                                 </ul>
-                                 <p>Here, {Coffee, Sugar} is a maximal frequent itemset because:</p>
-                                 <ul>
-                                     <li>It is frequent (appears 3 times ≥ minsup)</li>
-                                     <li>Its superset {Coffee, Sugar, Milk} is not frequent (appears 2 times < minsup)</li>
-                                 </ul>
-                             </div>
+                             <h4>Maximal Frequent Itemset (Max Pattern)</h4>
+                             <p>A frequent itemset I is <strong>maximal frequent</strong> if there is no proper superset I' of I that is also frequent (i.e., meets the minimum support threshold).</p>
+                             <p><strong>To check if a frequent itemset is Maximal Frequent:</strong></p>
+                             <ol>
+                                 <li>Find all proper supersets of the frequent itemset.</li>
+                                 <li>Compute the support of each superset.</li>
+                                 <li>Check the support of each superset against the minimum support threshold (minsup):
+                                     <ul>
+                                         <li>If *any* proper superset has support ≥ minsup (i.e., is also frequent), the original itemset is **NOT maximal**.</li>
+                                         <li>If *all* proper supersets have support < minsup (i.e., are not frequent), the original itemset **IS maximal**.</li>
+                                     </ul>
+                                 </li>
+                             </ol>
+                             <div class="accordion">
+                                <div class="accordion-item"><button class="accordion-header">Example: Is {Milk, Bread} Maximal? (Using Milk/Bread Data)</button><div class="accordion-panel">
+                                   <div class="example-box">
+                                        <p><strong>Transaction Data (T=4):</strong> (Same as above)</p>
+                                         <table>
+                                             <thead><tr><th>Transaction ID</th><th>Milk</th><th>Bread</th><th>Butter</th><th>Cheese</th></tr></thead>
+                                             <tbody>
+                                                 <tr><td>1</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
+                                                 <tr><td>2</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
+                                                 <tr><td>3</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
+                                                 <tr><td>4</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+                                             </tbody>
+                                         </table>
+                                       <hr>
+                                        <p><strong>Let's check {Milk, Bread} (Support = 75%). Assume it is frequent.</strong></p>
 
-                             <div class="accordion"><div class="accordion-item"><button class="accordion-header">Examples: Closed & Maximal</button><div class="accordion-panel">
-                                <p>Transactions:</p><table><thead><tr><th>TID</th><th>Milk</th><th>Bread</th><th>Butter</th><th>Cheese</th></tr></thead><tbody><tr><td>1</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr><tr><td>2</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr><tr><td>3</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr><tr><td>4</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr></tbody></table><p>T=4.</p><hr/>
-                                <p><strong>Closed Example: {Milk} (Sup=75%)</strong>. Superset {Milk, Bread} also has Sup=75%. <strong>NOT Closed.</strong></p><hr/>
-                                <p><strong>Closed Example: {Bread} (Sup=100%)</strong>. Supersets {B,M}(75%), {B,T}(75%), {B,C}(50%). All different support. <strong>IS Closed.</strong></p><hr/>
-                                <p><strong>Closed Example: {Milk, Bread} (Sup=75%)</strong>. Supersets {M,B,T}(50%), {M,B,C}(25%). All different support. <strong>IS Closed.</strong></p><hr/>
-                                <p><strong>Maximal Example: {Milk, Bread} (Sup=75%). Minsup=50%.</strong> Superset {M,B,T} has Sup=50% (Frequent). <strong>NOT Maximal.</strong></p><hr/>
-                                <p><strong>Maximal Example: {Milk, Bread} (Sup=75%). Minsup=60%.</strong> Supersets {M,B,T}(50%), {M,B,C}(25%). Both infrequent (<60%). <strong>IS Maximal.</strong></p><hr/>
-                                <p><strong>Maximal Example: {Milk, Bread, Butter} (Sup=50%). Minsup=50%.</strong> Superset {M,B,T,C}(0%). Superset is infrequent (<50%). <strong>IS Maximal.</strong></p>
-                            </div></div></div>
+                                        <p><strong>Step 1:</strong> Find proper supersets of {Milk, Bread}.</p>
+                                        <p>Supersets include: {Milk, Bread, Butter}, {Milk, Bread, Cheese}, {Milk, Bread, Butter, Cheese}, etc.</p>
+
+                                        <p><strong>Step 2:</strong> Compute support for these supersets:</p>
+                                        <ul>
+                                             <li>Support({Milk, Bread, Butter}): Appears in T1, T3. Support = 2/4 = 50%.</li>
+                                             <li>Support({Milk, Bread, Cheese}): Appears in T2. Support = 1/4 = 25%.</li>
+                                             <li>Support({Milk, Bread, Butter, Cheese}): Appears in NONE. Support = 0/4 = 0%.</li>
+                                        </ul>
+
+                                        <p><strong>Now let's consider two different minsup values:</strong></p>
+
+                                        <hr>
+                                        <p><strong>Case 1: Minsup = 50% (Support Count ≥ 2)</strong></p>
+                                        <p><strong>Step 3:</strong> Check superset support against Minsup=50%.</p>
+                                        <ul>
+                                             <li>{Milk, Bread, Butter} (Sup=50%): Is 50% ≥ 50%? Yes. **Frequent.**</li>
+                                             <li>{Milk, Bread, Cheese} (Sup=25%): Is 25% ≥ 50%? No. Not frequent.</li>
+                                             <li>{Milk, Bread, Butter, Cheese} (Sup=0%): Is 0% ≥ 50%? No. Not frequent.</li>
+                                        </ul>
+                                        <p>Since its proper superset {Milk, Bread, Butter} is **also frequent** at Minsup=50%, {Milk, Bread} is **NOT maximal frequent** at Minsup=50%.</p>
+                                        <hr>
+                                        <p><strong>Case 2: Minsup = 60% (Support Count ≥ 3)</strong></p>
+                                         <p><strong>Step 3:</strong> Check superset support against Minsup=60%.</p>
+                                        <ul>
+                                             <li>{Milk, Bread, Butter} (Sup=50%): Is 50% ≥ 60%? No. Not frequent.</li>
+                                             <li>{Milk, Bread, Cheese} (Sup=25%): Is 25% ≥ 60%? No. Not frequent.</li>
+                                             <li>{Milk, Bread, Butter, Cheese} (Sup=0%): Is 0% ≥ 60%? No. Not frequent.</li>
+                                        </ul>
+                                        <p>Since **ALL** its proper supersets are **NOT frequent** at Minsup=60%, {Milk, Bread} IS **maximal frequent** at Minsup=60%.</p>
+                                   </div>
+                               </div></div>
+                                <div class="accordion-item"><button class="accordion-header">Example: Is {Jeans, Belt} Maximal? (Using Jeans/Belt Data, Minsup=66.67%)</button><div class="accordion-panel">
+                                   <div class="example-box">
+                                       <p><strong>Transaction Data (T=6):</strong> (Same as above)</p>
+                                         <table>
+                                                <thead><tr><th>TID</th><th>Shirt</th><th>Jeans</th><th>Belt</th><th>Dress</th><th>Socks</th></tr></thead>
+                                                <tbody>
+                                                <tr><td>T1</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
+                                                <tr><td>T2</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
+                                                <tr><td>T3</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td></tr>
+                                                <tr><td>T4</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+                                                <tr><td>T5</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+                                                <tr><td>T6</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
+                                                </tbody>
+                                              </table>
+                                        <hr>
+                                        <p><strong>Minsup = 66.67% (Support Count ≥ 4)</strong></p>
+                                        <p><strong>Let's check {Jeans, Belt} (Support = 66.67%). It is frequent.</strong></p>
+
+                                        <p><strong>Step 1:</strong> Find proper supersets of {Jeans, Belt}.</p>
+                                        <p>Supersets include: {Jeans, Belt, Shirt}, {Jeans, Belt, Dress}, {Jeans, Belt, Socks}, {Jeans, Belt, Shirt, Dress}, etc.</p>
+
+                                        <p><strong>Step 2:</strong> Compute support for some supersets:</p>
+                                        <ul>
+                                           <li>Support({Jeans, Belt, Shirt}): 2/6 ≈ 33.33%.</li>
+                                           <li>Support({Jeans, Belt, Dress}): 1/6 ≈ 16.67%.</li>
+                                           <li>Support({Jeans, Belt, Socks}): 3/6 = 50%.</li>
+                                           <li>Support({Jeans, Belt, Shirt, Dress}): 1/6 ≈ 16.67%.</li>
+                                           <li>...(Any larger supersets will have support ≤ 50%)</li>
+                                        </ul>
+
+                                        <p><strong>Step 3:</strong> Check superset support against Minsup=66.67%.</p>
+                                        <ul>
+                                            <li>{Jeans, Belt, Shirt} (Sup=33.33%): Is 33.33% ≥ 66.67%? No. Not frequent.</li>
+                                            <li>{Jeans, Belt, Dress} (Sup=16.67%): Is 16.67% ≥ 66.67%? No. Not frequent.</li>
+                                            <li>{Jeans, Belt, Socks} (Sup=50%): Is 50% ≥ 66.67%? No. Not frequent.</li>
+                                            <li>... All other supersets will also be not frequent.</li>
+                                        </ul>
+                                        <p>Since **ALL** its proper supersets are **NOT frequent** at Minsup=66.67%, {Jeans, Belt} IS **maximal frequent**.</p>
+                                   </div>
+                                </div></div>
+                             </div>
                          </div>
-                         
                  </div>
                  <div class="accordion-item">
                      <button class="accordion-header">Association Rules</button>
@@ -438,7 +598,7 @@
             { question: "Clustering requires labeled data to form groups.", answer: false }, // It's Unsupervised
             { question: "Support count and support percentage are the same thing.", answer: false },
             { question: "All frequent itemsets are also closed itemsets.", answer: false },
-            { question: "A maximal frequent itemset is always a closed frequent itemset.", answer: true }, // By definition
+            { question: "A maximal frequent itemset is always a closed frequent itemset.", answer: true }, // By definition, maximal implies no *frequent* superset. If a superset had the same support, it would also be frequent, making it non-maximal. So a maximal itemset cannot have a same-support superset.
             { question: "Confidence measures how frequently items X and Y appear together in transactions.", answer: false }, // That's Support(X U Y)
             { question: "The Apriori algorithm scans the database only once.", answer: false },
             { question: "FP-Growth generates candidate itemsets similar to Apriori.", answer: false },
@@ -487,28 +647,14 @@
             });
 
             // --- Accordion Logic (for Glossary AND Examples) ---
-            accordionHeaders.forEach(header => {
+             accordionHeaders.forEach(header => {
                 header.addEventListener('click', function() {
                     this.classList.toggle('active');
                     const panel = this.nextElementSibling;
-                    if (panel.style.maxHeight && panel.style.maxHeight !== '0px') { // Check if open
-                        // Closing
-                        panel.style.maxHeight = null; // Or '0px' explicitly
-                         // Apply padding removal after transition ends (or rely on CSS transition)
-                        // setTimeout(() => {
-                            if (!this.classList.contains('active')) { // Check if still closed after click
-                                panel.style.paddingTop = "0";
-                                panel.style.paddingBottom = "0";
-                            }
-                        // }, 400); // Match transition duration
-                    } else {
-                        // Opening
-                        panel.style.paddingTop = "15px";
-                        panel.style.paddingBottom = "15px";
-                        panel.style.maxHeight = "5000px"; // Set large max-height
-                        // Optional: Recalculate based on scrollHeight if needed after content is visible
-                        // panel.style.maxHeight = panel.scrollHeight + "px";
-                    }
+                    // Toggle the 'open' class
+                    panel.classList.toggle('open');
+
+                    // The CSS transition for max-height and padding handles the animation
                 });
             });
 
