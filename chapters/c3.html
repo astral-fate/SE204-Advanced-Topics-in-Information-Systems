@@ -1,755 +1,766 @@
+-
 
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SE204 - Chapter 3 Intro to ML</title> <!-- Updated Title -->
-    <style>
-        /* --- Base Styles (Similar to previous) --- */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-            color: #333;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SE204 - Lecture 7 Machine Learning Concepts</title> <!-- Updated Title based on PPT -->
+<style>
+/* --- Base Styles (Similar to previous) --- */
+body {
+font-family: Arial, sans-serif;
+background-color: #f8f9fa;
+margin: 0;
+padding: 20px;
+line-height: 1.6;
+color: #333;
+}
 
-        .container {
-            max-width: 1000px; /* Slightly wider for complex content */
-            margin: 20px auto;
-            padding: 30px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
+.container {
+        max-width: 950px; /* Slightly wider for tables */
+        margin: 20px auto;
+        padding: 30px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
 
-        h1, h2, h3 {
-            color: #0056b3; /* Cairo University Blue */
-        }
+    h1, h2, h3 {
+        color: #0056b3; /* Cairo University Blue */
+    }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #dee2e6;
-            padding-bottom: 15px;
-        }
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #dee2e6;
+        padding-bottom: 15px;
+    }
 
-        h2 {
-            margin-top: 20px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #e9ecef;
-            padding-bottom: 10px;
-        }
+    h2 {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 10px;
+    }
 
-        h3 {
-            margin-top: 25px;
-            margin-bottom: 15px;
-            color: #007bff; /* Lighter Blue */
-        }
+    h3 {
+        margin-top: 25px;
+        margin-bottom: 15px;
+        color: #007bff; /* Lighter Blue */
+    }
 
-        /* --- Main Tabs Styles --- */
-        .main-tabs {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #0056b3;
-        }
+    /* --- Main Tabs Styles --- */
+    .main-tabs {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #0056b3;
+    }
 
-        .main-tabs .tab-button {
-            padding: 12px 18px;
-            border: none;
-            background: none;
-            color: #0056b3;
-            font-size: 0.9em;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px 5px 0 0;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            margin-bottom: -2px;
-            border-bottom: 2px solid transparent;
-            text-align: center;
-        }
+    .main-tabs .tab-button {
+        padding: 12px 18px;
+        border: none;
+        background: none;
+        color: #0056b3;
+        font-size: 0.9em;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 5px 5px 0 0;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        margin-bottom: -2px;
+        border-bottom: 2px solid transparent;
+        text-align: center;
+    }
 
-        .main-tabs .tab-button.active {
-            background: #0056b3;
-            color: white;
-            border-bottom: 2px solid #0056b3;
-        }
-        .main-tabs .tab-button:hover:not(.active) {
-            background-color: #e9ecef;
-            border-bottom: 2px solid #adb5bd;
-        }
+    .main-tabs .tab-button.active {
+        background: #0056b3;
+        color: white;
+        border-bottom: 2px solid #0056b3;
+    }
+    .main-tabs .tab-button:hover:not(.active) {
+        background-color: #e9ecef;
+        border-bottom: 2px solid #adb5bd;
+    }
 
-        /* --- Content Sections --- */
-        .main-content {
-            display: none;
-            animation: fadeIn 0.5s;
-        }
-        .main-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    /* --- Content Sections --- */
+    .main-content {
+        display: none;
+        animation: fadeIn 0.5s;
+    }
+    .main-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- Accordion Styles (Glossary & Concepts/Examples) --- */
-        .accordion {
-            border: 1px solid #dee2e6; border-radius: 5px; overflow: hidden; margin-bottom: 20px;
-        }
-         /* Nested Accordions */
-        .accordion .accordion { /* Style for accordions nested inside other accordion panels */
-            margin-top: 15px;
-            margin-bottom: 15px;
-            border-color: #ccc;
-        }
+    /* --- Accordion Styles (Glossary & Examples) --- */
+    .accordion {
+        border: 1px solid #dee2e6; border-radius: 5px; overflow: hidden; margin-bottom: 20px;
+    }
+    .accordion-item { border-bottom: 1px solid #dee2e6; }
+    .accordion-item:last-child { border-bottom: none; }
+    .accordion-header {
+        background-color: #f8f9fa; cursor: pointer; padding: 12px 20px; width: 100%; border: none; text-align: left; outline: none; font-size: 1.1em; font-weight: bold; transition: background-color 0.3s ease; position: relative; color: #0056b3;
+    }
+    #glossary .accordion-header { color: #dc3545; } /* Glossary terms red */
+    .accordion-header:hover { background-color: #e9ecef; }
+    .accordion-header::after { content: '\002B'; color: #0056b3; font-weight: bold; float: right; margin-left: 5px; transition: transform 0.2s ease-in-out; }
+    .accordion-header.active::after { content: "\2212"; transform: rotate(180deg); }
+    .accordion-header.active { background-color: #e7f1ff; }
+    .accordion-panel {
+        padding: 0 20px; background-color: white; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+    }
+    .accordion-panel > * { margin-top: 15px; margin-bottom: 15px; }
+    .accordion-panel > *:first-child { margin-top: 15px; }
+    .accordion-panel > *:last-child { margin-bottom: 15px; }
+    .accordion-panel code { font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; background-color: #e9ecef; padding: 2px 5px; border-radius: 3px; font-size: 0.95em; }
+    /* --- End Accordion Styles --- */
 
-        .accordion-item { border-bottom: 1px solid #dee2e6; }
-        .accordion-item:last-child { border-bottom: none; }
-        .accordion-header {
-            background-color: #f8f9fa; cursor: pointer; padding: 12px 20px; width: 100%; border: none; text-align: left; outline: none; font-size: 1.1em; font-weight: bold; transition: background-color 0.3s ease; position: relative; color: #0056b3;
-        }
-        #glossary .accordion-header { color: #dc3545; } /* Glossary terms red */
-        .accordion-header:hover { background-color: #e9ecef; }
-        .accordion-header::after { content: '\002B'; color: #0056b3; font-weight: bold; float: right; margin-left: 5px; transition: transform 0.2s ease-in-out; }
-        .accordion-header.active::after { content: "\2212"; transform: rotate(180deg); }
-        .accordion-header.active { background-color: #e7f1ff; }
-        .accordion-panel {
-            padding: 0 20px; background-color: white; max-height: 0; overflow: hidden;
-            transition: max-height 0.4s ease-out; /* ONLY transition max-height */
-        }
-         .accordion-panel > * { margin-top: 15px; margin-bottom: 15px; } /* Add space inside panels */
+    /* --- Table Styles --- */
+    table { width: auto; border-collapse: collapse; margin: 15px auto; border: 1px solid #ccc; font-size: 0.9em; }
+    th, td { border: 1px solid #ccc; padding: 8px 10px; text-align: center; vertical-align: middle; }
+    th { background-color: #e9ecef; font-weight: bold; }
+    td code { background-color: transparent; padding: 0; font-size: 1em; }
+    .check-mark { color: green; font-weight: bold; }
+    .cross-mark { color: red; font-weight: bold; }
+    .support-table { width: 60%; } /* Not strictly needed for this ML content */
 
-        .accordion-panel code { font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; background-color: #e9ecef; padding: 2px 5px; border-radius: 3px; font-size: 0.95em; }
-        /* --- End Accordion Styles --- */
-
-        /* --- Table Styles --- */
-        table { width: auto; border-collapse: collapse; margin: 15px auto; border: 1px solid #ccc; font-size: 0.9em; }
-        th, td { border: 1px solid #ccc; padding: 8px 10px; text-align: center; vertical-align: middle; }
-        th { background-color: #e9ecef; font-weight: bold; }
-        td code { background-color: transparent; padding: 0; font-size: 1em; }
-        .check-mark { color: green; font-weight: bold; }
-        .cross-mark { color: red; font-weight: bold; }
-        .support-table { width: 60%; }
-
-        /* --- Concepts/Examples Section Specifics --- */
-        #formulas h4 { color: #17a2b8; margin-top: 1.5em; }
-        #formulas ul { list-style: disc; padding-left: 30px; }
-        #formulas ol { list-style: decimal; padding-left: 30px; }
-        #formulas .math { font-family: 'Times New Roman', serif; font-style: italic; font-size: 1.1em;}
-        #formulas img { display: block; max-width: 90%; height: auto; margin: 15px auto; border: 1px solid #ccc; } /* Style for images from slides */
+    /* --- Formulas Section Specifics --- */
+    #formulas h4 { color: #17a2b8; margin-top: 1.5em; }
+    #formulas ul { list-style: disc; padding-left: 30px; }
+    #formulas ol { list-style: decimal; padding-left: 30px; }
+    #formulas .math { font-family: 'Times New Roman', serif; font-style: italic; font-size: 1.1em;}
+    .image-description { font-size: 0.9em; color: #555; text-align: center; margin-top: 5px; }
 
 
-        /* --- Quiz Styles --- */
-        .question { margin-bottom: 25px; padding: 20px; border: 1px solid #dee2e6; border-radius: 8px; background-color: #ffffff; position: relative; }
-        .question p { margin: 0 0 15px; font-weight: bold; font-size: 1.05em; }
-        .options { display: flex; flex-direction: column; gap: 10px; }
-        .option-button { padding: 10px 15px; border: 1px solid #ced4da; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px; text-align: left; transition: background-color 0.2s ease, border-color 0.2s ease; width: 100%; }
-        .option-button:hover { background-color: #e9ecef; border-color: #adb5bd; }
-        .option-button.selected { background: #007bff; color: white; border-color: #0056b3; }
-        .check-answer { margin-top: 15px; padding: 10px 20px; border: none; background: #28a745; color: white; cursor: pointer; border-radius: 5px; font-weight: bold; transition: background-color 0.2s ease; }
-        .check-answer:hover { background-color: #218838; }
-        .feedback { margin-top: 15px; padding: 10px; border-radius: 5px; font-weight: bold; }
-        .feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    /* --- Quiz Styles --- */
+    .question { margin-bottom: 25px; padding: 20px; border: 1px solid #dee2e6; border-radius: 8px; background-color: #ffffff; position: relative; }
+    .question p { margin: 0 0 15px; font-weight: bold; font-size: 1.05em; }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option-button { padding: 10px 15px; border: 1px solid #ced4da; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px; text-align: left; transition: background-color 0.2s ease, border-color 0.2s ease; width: 100%; }
+    .option-button:hover { background-color: #e9ecef; border-color: #adb5bd; }
+    .option-button.selected { background: #007bff; color: white; border-color: #0056b3; }
+    .check-answer { margin-top: 15px; padding: 10px 20px; border: none; background: #28a745; color: white; cursor: pointer; border-radius: 5px; font-weight: bold; transition: background-color 0.2s ease; }
+    .check-answer:hover { background-color: #218838; }
+    .feedback { margin-top: 15px; padding: 10px; border-radius: 5px; font-weight: bold; }
+    .feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-        /* --- Example Box Styles (used for specific examples within concepts) --- */
-        .example-box {
-            background-color: #f8f9fa;
-            border-left: 3px solid #0056b3;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 0 5px 5px 0;
-        }
-        .example-box h4 { margin-top: 0.5em; }
-        .example-box table, .example-box ul, .example-box p {
-            margin: 10px 0;
-        }
+    /* --- Example Box Styles --- */
+    .example-box {
+        background-color: #f8f9fa;
+        border-left: 3px solid #0056b3;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 0 5px 5px 0;
+    }
 
-        .example-box ul {
-            padding-left: 20px;
-        }
+    .example-box table {
+        margin: 10px 0;
+        width: auto; /* Ensure tables don't force full width in box */
+    }
 
-        /* --- Visual Contrast Section --- */
-        .visual-contrast {
-            display: flex;
-            justify-content: space-around;
-            gap: 20px;
-            margin: 20px 0;
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
-        }
-        .visual-contrast > div {
-            flex: 1;
-            min-width: 250px; /* Minimum width before wrapping */
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #e7f1ff; /* Light blue background */
-        }
-         .visual-contrast > div h3 { margin-top: 0; color: #0056b3; }
-         .visual-contrast > div ul { padding-left: 20px; margin-top: 10px; }
+    .example-box ul, .example-box ol {
+        margin: 10px 0;
+        padding-left: 20px;
+    }
+</style>
 
-         /* ROC Curve Container */
-         .roc-curves {
-            display: flex;
-            justify-content: space-around;
-            gap: 30px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-         }
-         .roc-curve-item {
-            flex: 1;
-            min-width: 250px;
-            text-align: center;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-         }
-         .roc-curve-item img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 10px;
-         }
-         .roc-curve-item h4 { margin-top: 0; margin-bottom: 10px; color: #007bff; }
-         .roc-curve-item p { font-size: 0.9em; text-align: left; }
-
-
-    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>SE204 - Lecture 3 Intro to Machine Learning</h1> <!-- Updated Title -->
+<div class="container">
+<h1>SE204 - Lecture 7 Machine Learning Concepts</h1> <!-- Updated Title -->
 
-        <!-- Main Tab Buttons -->
-        <div class="main-tabs">
-            <button class="tab-button active" data-tab="glossary">Glossary</button>
-            <button class="tab-button" data-tab="concepts">Concepts & Examples</button>
-            <button class="tab-button" data-tab="fill">Fill in the Blank</button>
-            <button class="tab-button" data-tab="tf">True/False</button>
-            <button class="tab-button" data-tab="mc">Multiple Choice</button>
-        </div>
+<!-- Main Tab Buttons -->
+    <div class="main-tabs">
+        <button class="tab-button active" data-tab="glossary">Glossary</button>
+        <button class="tab-button" data-tab="formulas">Concepts & Examples</button>
+        <button class="tab-button" data-tab="fill">Fill in the Blank</button>
+        <button class="tab-button" data-tab="tf">True/False</button>
+        <button class="tab-button" data-tab="mc">Multiple Choice</button>
+    </div>
 
-        <!-- Glossary Section (Accordion) -->
-        <section id="glossary" class="main-content active">
-            <h2>Glossary of Terms</h2>
-            <div class="glossary-accordion accordion">
-                <!-- Combined FPM/DM and ML Terms -->
-        
+    <!-- Glossary Section (Accordion) -->
+    <section id="glossary" class="main-content active">
+        <h2>Glossary of Terms (from PPT ML Sections)</h2> <!-- Updated Title from ml.txt -->
+        <div class="glossary-accordion accordion">
+            <div class="accordion-item"><button class="accordion-header">Agent (Reinforcement Learning)</button><div class="accordion-panel"><p>In Reinforcement Learning, the entity that interacts with the environment and chooses actions.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Artificial Intelligence (AI)</button><div class="accordion-panel"><p>The goal of creating systems that can perform tasks requiring human intelligence, simulating human thinking, decision-making, and problem-solving.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Association (Data Mining)</button><div class="accordion-panel"><p>A descriptive data mining task focused on discovering relationships or rules between items in a dataset (e.g., Market Basket Analysis).</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Binary Classification</button><div class="accordion-panel"><p>A type of classification where the input is identified as belonging to one of exactly two output categories (e.g., spam/not spam, positive/negative diagnosis).</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Classification (Machine Learning)</button><div class="accordion-panel"><p>A supervised learning task that assigns input data to specific, predefined discrete categories or classes.</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">Classifier</button><div class="accordion-panel"><p>A model learned from training data in classification to identify the category or class of input features/data.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Clustering (Machine Learning)</button><div class="accordion-panel"><p>An unsupervised learning task that groups similar objects or data points together based on their characteristics, without using predefined labels.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Confidence (Association Rule)</button><div class="accordion-panel"><p>A measure for association rules X → Y, calculated as σ(X∪Y) / σ(X).</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Conventional Programming</button><div class="accordion-panel"><p>Programming methods where a detailed design with fixed steps/rules is created and then implemented in a computer language (the programmer explicitly tells the computer what to do).</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">Deep Learning (DL)</button><div class="accordion-panel"><p>A subset of Machine Learning that uses artificial neural networks with multiple layers to model complex patterns in data.</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">Dimensionality Reduction</button><div class="accordion-panel"><p>An unsupervised learning task that reduces the number of features/attributes in a dataset while retaining essential information.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Environment (Reinforcement Learning)</button><div class="accordion-panel"><p>In Reinforcement Learning, the context or world with which the agent interacts.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">False Positive Rate (FPR)</button><div class="accordion-panel"><p>On an ROC curve, the ratio of actual negative instances incorrectly classified as positive. Formula: FP / (FP + TN).</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Features (Independent Variables)</button><div class="accordion-panel"><p>Attributes of the input data used by a model (e.g., 16 features in the COVID diagnosis example).</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Frequent Pattern Mining</button><div class="accordion-panel"><p>A data mining task focusing on extracting patterns (like itemsets) that occur frequently in data.</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">Gradient Descent</button><div class="accordion-panel"><p>An optimization algorithm mentioned in the Logistic Regression steps, used to minimize the loss function by iteratively adjusting model coefficients.</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">Interpretability (Machine Learning)</button><div class="accordion-panel"><p>The ability to understand *why* a machine learning model makes a particular prediction or decision.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Itemset</button><div class="accordion-panel"><p>A collection of one or more items (from the context of Frequent Pattern Mining, which is mentioned).</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Labeled Data</button><div class="accordion-panel"><p>Data where each instance has a known characteristic, category, or attribute assigned to it (e.g., a photo labeled "cat"). Used in supervised learning.</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">Logistic Regression</button><div class="accordion-panel"><p>A classification algorithm used for binary and multi-class classification.</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">Loss Function</button><div class="accordion-panel"><p>In machine learning training, a function that measures the error between the predicted output and the actual output for a given input.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Machine Learning (ML)</button><div class="accordion-panel"><p>A field of computer science focused on algorithms and techniques for automating solutions to complex problems by creating predictive models that learn from data and generalize to unseen data (the computer finds the rules from examples).</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">Multi-class Classification</button><div class="accordion-panel"><p>A type of classification where the input is identified as belonging to one of more than two output categories (e.g., Iris flower types).</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Overfitting</button><div class="accordion-panel"><p>Occurs when a model learns the training data too well and does not generalize well to new, unseen data, often due to excessive model complexity relative to the data size.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Predictive Model (Machine Learning)</button><div class="accordion-panel"><p>A model that learns from data to make predictions or decisions on new, unseen data.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Regression (Machine Learning)</button><div class="accordion-panel"><p>A supervised learning task whose goal is to predict a continuous numerical value.</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">Reinforcement Learning</button><div class="accordion-panel"><p>A type of machine learning where an agent learns to choose actions by interacting with an environment and receiving rewards or penalties, aiming to find the best action for each state.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Reward (Reinforcement Learning)</button><div class="accordion-panel"><p>Feedback received by the agent in Reinforcement Learning, indicating the desirability of an action taken in a particular state.</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">ROC Curve (Receiver Operating Characteristic Curve)</button><div class="accordion-panel"><p>A common tool used to evaluate the performance of binary classification models by plotting the True Positive Rate (TPR) against the False Positive Rate (FPR) at various threshold settings.</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">Sigmoid Function</button><div class="accordion-panel"><p>A function used in binary logistic regression to compute the estimated output (predicted probability), squashing values between 0 and 1.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Softmax Function</button><div class="accordion-panel"><p>A function used in multi-class logistic regression to compute the probabilities for each class.</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">State (Reinforcement Learning)</button><div class="accordion-panel"><p>In Reinforcement Learning, the current situation or configuration of the environment observed by the agent.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Supervised Learning</button><div class="accordion-panel"><p>A type of machine learning where the model is trained on labeled data (input-output pairs) to predict a specific outcome.</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">Support (Itemset)</button><div class="accordion-panel"><p>The frequency or proportion of transactions containing a particular itemset (from the context of Frequent Pattern Mining, which is mentioned).</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Testing Set</button><div class="accordion-panel"><p>New data that the model has not seen during training, used to evaluate how well the model generalizes to real-world data.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Training Set</button><div class="accordion-panel"><p>The data used to train a machine learning model.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">True Positive Rate (TPR)</button><div class="accordion-panel"><p>On an ROC curve, the ratio of actual positive instances correctly classified as positive. Also known as Recall. Formula: TP / (TP + FN).</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">Underfitting</button><div class="accordion-panel"><p>Occurs when a model is too simple to learn the underlying pattern in the data, performing poorly on both training and unseen data.</p></div></div>
+             <div class="accordion-item"><button class="accordion-header">Unlabeled Data</button><div class="accordion-panel"><p>Data where instances do not have predefined categories or attributes assigned to them. Used in unsupervised learning.</p></div></div>
+            <div class="accordion-item"><button class="accordion-header">Unsupervised Learning</button><div class="accordion-panel"><p>A type of machine learning used when there is no labeled data, where the goal is for the machine to discover structures, patterns, or relationships in the data on its own.</p></div></div>
+        </div> <!-- End glossary-accordion -->
+    </section>
 
-                <div class="accordion-item"><button class="accordion-header">Deep Learning (DL)</button><div class="accordion-panel"><p>A subset of Machine Learning that uses artificial neural networks with multiple layers to model complex patterns in data.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Descriptive Model (Data Mining)</button><div class="accordion-panel"><p>A data mining model whose objective is to find human-interpretable patterns (like correlations, trends, clusters, association rules) that describe the existing data.</p></div></div>
-                 <div class="accordion-item"><button class="accordion-header">Disjoint Itemsets</button><div class="accordion-panel"><p>Two itemsets that have no items in common (their intersection is empty).</p></div></div>
-                 <div class="accordion-item"><button class="accordion-header">Dimensionality Reduction</button><div class="accordion-panel"><p>An unsupervised learning technique aimed at reducing the number of features in a dataset while retaining important information.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">False Positive Rate (FPR)</button><div class="accordion-panel"><p>On an ROC curve, plotted on the X-axis. Ratio of actual negative instances incorrectly classified as positive (FP / (FP + TN)).</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">FP-Growth Algorithm</button><div class="accordion-panel"><p>An efficient algorithm for mining frequent itemsets that avoids explicit candidate generation by using a compact tree structure (FP-Tree).</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">FP-Tree (Frequent Pattern Tree)</button><div class="accordion-panel"><p>A compact prefix tree structure used in the FP-Growth algorithm to store frequent item information from a transactional database.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Frequent Itemset</button><div class="accordion-panel"><p>An itemset whose support (frequency of occurrence) in the dataset is greater than or equal to a user-defined minimum support threshold (minsup).</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Frequent Pattern Mining</button><div class="accordion-panel"><p>The data mining task focused on extracting frequent patterns (often itemsets) from a dataset.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Gradient Descent</button><div class="accordion-panel"><p>An optimization algorithm used to minimize a function (like a loss function) by iteratively moving in the direction of the steepest decrease.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">High Dimensionality</button><div class="accordion-panel"><p>A characteristic of datasets having a very large number of attributes or features, posing challenges for analysis.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">IDLE (Python)</button><div class="accordion-panel"><p>Python's Integrated Development and Learning Environment; a simple editor and shell for writing and running Python code (.py files).</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Information Retrieval</button><div class="accordion-panel"><p>The activity of obtaining information resources relevant to an information need from a collection of information resources (e.g., finding web pages by keywords).</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Itemset</button><div class="accordion-panel"><p>A collection of one or more items (e.g., {Milk, Bread}).</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">K-Itemset</button><div class="accordion-panel"><p>An itemset that contains exactly k items.</p></div></div>
-                 <div class="accordion-item"><button class="accordion-header">Knowledge Presentation</button><div class="accordion-panel"><p>The final step in data mining where the discovered patterns and knowledge are presented to the user.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Labeled Data</button><div class="accordion-panel"><p>Data that has a characteristic, category, or attributes assigned to it (known output).</p></div></div>
-                 <div class="accordion-item"><button class="accordion-header">Logistic Regression</button><div class="accordion-panel"><p>A classification algorithm used for binary or multi-class classification tasks.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Loss Function</button><div class="accordion-panel"><p>A function that measures the difference between the predicted output of a model and the actual output, used to evaluate model performance during training.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Machine Learning (ML)</button><div class="accordion-panel"><p>A field of computer science that studies algorithms and techniques for automating solutions to complex problems by creating predictive models that learn from data and generalize to unseen data.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Maximal Frequent Itemset (Max Pattern)</button><div class="accordion-panel"><p>A frequent itemset for which none of its proper supersets are also frequent.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Minimum Support Threshold (minsup)</button><div class="accordion-panel"><p>A user-defined threshold used in frequent pattern mining. An itemset is considered frequent only if its support meets or exceeds this threshold.</p></div></div>
-                 <div class="accordion-item"><button class="accordion-header">Mlxtend</button><div class="accordion-panel"><p>A Python library providing useful tools for data science tasks, including implementations of Apriori and FP-Growth algorithms.</p></div></div>
-                 <div class="accordion-item"><button class="accordion-header">Multi-class Classification</button><div class="accordion-panel"><p>A type of classification where the model identifies the input as belonging to one of more than two possible output categories (e.g., Iris flower types).</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Overfitting</button><div class="accordion-panel"><p>Occurs when a model learns the training data too well, including noise, and fails to generalize to new, unseen data. Often happens with complex models and limited data.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Pandas (Python Library)</button><div class="accordion-panel"><p>A fundamental Python library for data manipulation and analysis, providing data structures like DataFrames.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Pattern Evaluation</button><div class="accordion-panel"><p>The step in data mining where discovered patterns are assessed based on interestingness measures.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Pip (Python)</button><div class="accordion-panel"><p>The standard package installer for Python, used to install and manage third-party libraries.</p></div></div>
-                 <div class="accordion-item"><button class="accordion-header">Predictive Model (Data Mining)</button><div class="accordion-panel"><p>A data mining model whose objective is to predict the value of a particular target attribute based on the values of other input attributes (e.g., classification, regression).</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Python</button><div class="accordion-panel"><p>A popular programming language widely used in data science and data mining, known for its readability and extensive libraries.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Regression (Data Mining)</button><div class="accordion-panel"><p>A predictive data mining task where the goal is to predict a continuous numerical value.</p></div></div>
-                 <div class="accordion-item"><button class="accordion-header">Reinforcement Learning</button><div class="accordion-panel"><p>A type of machine learning where an agent learns to make decisions by interacting with an environment and receiving rewards or penalties.</p></div></div>
-                 <div class="accordion-item"><button class="accordion-header">ROC Curve</button><div class="accordion-panel"><p>Receiver Operating Characteristic curve; a common tool used to evaluate the performance of a binary classification model by plotting the True Positive Rate (TPR) against the False Positive Rate (FPR) at various threshold settings.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Scalability</button><div class="accordion-panel"><p>The ability of an algorithm or system to handle increasingly large amounts of data or computational load efficiently.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Sigmoid Function</button><div class="accordion-panel"><p>A mathematical function used in logistic regression to map any real-valued number to a value between 0 and 1, representing a probability.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Softmax Function</button><div class="accordion-panel"><p>A function used in multi-class classification (like multi-class logistic regression) to output a probability distribution over multiple classes.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Support (Association Rule)</button><div class="accordion-panel"><p>The fraction of transactions in the dataset that contain both the antecedent (X) and the consequent (Y) of the rule X → Y. Calculated as support_count(X∪Y) / total_transactions.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Support (Itemset)</button><div class="accordion-panel"><p>The frequency or proportion of transactions in a dataset that contain a particular itemset. Calculated as support_count(Itemset) / total_transactions.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Support Count (σ)</button><div class="accordion-panel"><p>The absolute number of transactions in a dataset that contain a particular itemset.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Superset</button><div class="accordion-panel"><p>A set that contains all the elements of another set, possibly along with additional elements.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Supervised Learning</button><div class="accordion-panel"><p>A type of machine learning used when labeled data is available; the goal is to learn a mapping function from input to a known output (prediction).</p></div></div>
-                 <div class="accordion-item"><button class="accordion-header">Testing Set</button><div class="accordion-panel"><p>New data that the model has not seen, used to evaluate how well the trained model generalizes to real-world data.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Training Set</button><div class="accordion-panel"><p>The data used to train a machine learning model.</p></div></div>
-                 <div class="accordion-item"><button class="accordion-header">True Positive Rate (TPR)</button><div class="accordion-panel"><p>On an ROC curve, plotted on the Y-axis. Ratio of actual positive instances correctly classified as positive (TP / (TP + FN)). Also known as Recall.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Underfitting</button><div class="accordion-panel"><p>Occurs when a model is too simple to learn the underlying pattern in the data and performs poorly on both training and unseen data.</p></div></div>
-                <div class="accordion-item"><button class="accordion-header">Unlabeled Data</button><div class="accordion-panel"><p>Data that does not have predefined categories, labels, or characteristics assigned to it (no known output).</p></div></div>
-                 <div class="accordion-item"><button class="accordion-header">Unsupervised Learning</button><div class="accordion-panel"><p>A type of machine learning used when labeled data is not available; the goal is to discover structures, patterns, or relationships in the data on its own (e.g., clustering, association, dimensionality reduction).</p></div></div>
-            </div> <!-- End glossary-accordion -->
-        </section>
+    <!-- Formulas/Concepts & Examples Section -->
+    <section id="formulas" class="main-content">
+         <h2>Concepts & Examples (from PPT ML Sections)</h2>
+         <div class="accordion">
 
-        <!-- Concepts & Examples Section -->
-        <section id="concepts" class="main-content">
-             <h2>Concepts & Examples</h2>
-             <div class="accordion">
-                 <!-- FPM Concepts based on slides/assignment -->
-   
+             <!-- What is ML? (Slide 7) -->
+             <div class="accordion-item">
+                 <button class="accordion-header">What is Machine Learning?</button>
+                 <div class="accordion-panel">
+                     <p><strong>Definition:</strong> Machine Learning (ML) is a field of computer science that studies algorithms and techniques for automating solutions to complex problems that are hard to program using conventional methods.</p>
+                     <p>ML focuses on creating <strong>predictive models</strong> that learn from data and generalize to unseen data. The larger the dataset, the more accurate they typically become.</p>
+                     <h4>Conventional Programming vs ML:</h4>
+                     <ul>
+                        <li><strong>Conventional Programming:</strong> You provide <strong>Rules</strong> and <strong>Input Data</strong>. The computer follows the rules to produce the <strong>Output Data</strong>. (You tell the computer what to do).</li>
+                        <li><strong>Machine Learning:</strong> You provide <strong>Input Data</strong> and <strong>Output Data</strong> (examples). The ML algorithm finds the <strong>Rules</strong> (the relationship) between them. It can then predict the output for new input data. (You give it examples, and the computer figures out what to do).</li>
+                     </ul>
+                 </div>
+             </div>
 
-                 <!-- Machine Learning Concepts based on slides -->
-                 <div class="accordion-item">
-                     <button class="accordion-header">What is Machine Learning?</button>
-                     <div class="accordion-panel">
-                         <p><strong>Machine Learning (ML):</strong> A field of computer science studying algorithms and techniques for automating solutions to complex problems hard to program conventionally (S7).</p>
-                         <p>Goal: Create predictive models that learn from data and generalize to unseen data. Accuracy improves with more data (S7).</p>
-                         <div class="visual-contrast">
-                             <div>
-                                 <h3>Conventional Programming</h3>
-                                 <p>You tell the computer <strong>what to do</strong> by providing a detailed, fixed set of steps or rules.</p>
-                                 <ul>
-                                     <li>Design program logic (Rules).</li>
-                                     <li>Implement rules in code.</li>
-                                     <li>Input -> Apply Rules -> Output.</li>
-                                 </ul>
-                             </div>
-                             <div>
-                                 <h3>Machine Learning</h3>
-                                 <p>You give the computer <strong>examples</strong> (Input-Output pairs), and it <strong>figures out the rules</strong> itself.</p>
-                                 <ul>
-                                     <li>Provide Input data + Output data (Examples).</li>
-                                     <li>ML Algorithm finds relation (Rules).</li>
-                                     <li>New Input -> Apply Learned Rules -> Predicted Output.</li>
-                                 </ul>
-                             </div>
+             <!-- ML vs Conventional Programming Examples (Slide 8-9) -->
+             <div class="accordion-item">
+                 <button class="accordion-header">ML vs Conventional Programming Examples</button>
+                 <div class="accordion-panel">
+                     <p><strong>Example 1: Summing two integers</strong> (Slide 8)</p>
+                     <ul>
+                         <li><strong>Conventional:</strong> Input X, Y; Rule Z = X + Y; Output Z. Simple to program.</li>
+                         <li><strong>ML:</strong> Input data: [(1,3), (4,7), (8,12), ...]; Output data: [(4), (11), (20), ...]. ML algorithm finds the rule (addition). Less efficient for such simple, rule-based problems.</li>
+                     </ul>
+
+                     <p><strong>Example 2: Image Recognition</strong> (Slide 9)</p>
+                     <p>Given an image, decide if it's a cat or a dog.</p>
+                     <ul>
+                         <li><strong>By Conventional Programming:</strong> Extremely difficult. You would need explicit rules for every possible pixel pattern, lighting condition, angle, breed, etc. - practically impossible. <span class="cross-mark">✗</span></li>
+                         <li><strong>By Machine Learning:</strong> Possible. Train a model on many labeled images of cats and dogs. The model learns features and patterns to distinguish them. <span class="check-mark">✓</span></li>
+                     </ul>
+                     <p>Example: Given a picture of a handwritten digit, determine which symbol it represents (e.g., '2'). This is also possible with ML, but very hard with conventional programming.</p>
+                 </div>
+             </div>
+
+             <!-- Why ML is Booming / Advancements (Slide 10) -->
+             <div class="accordion-item">
+                 <button class="accordion-header">Why ML Progress Accelerated & Advancements</button>
+                 <div class="accordion-panel">
+                     <p>Dramatic progress in ML since the mid-2000s is attributed to:</p>
+                     <ul>
+                         <li>Availability of large amounts of data (e.g., images online).</li>
+                         <li>Availability of large amounts of compute power, supported by large memory and storage space.</li>
+                         <li>Improved algorithms optimized for large datasets.</li>
+                     </ul>
+                     <p>Advancements in ML include:</p>
+                     <ul>
+                         <li><strong>Speech Recognition:</strong> Recognize speech and convert to text.</li>
+                         <li><strong>Language Translation:</strong> Understand and form language constructs without formal grammar training, with huge accuracy increases.</li>
+                         <li><strong>Driverless Vehicles:</strong> Navigate vehicles without human intervention.</li>
+                     </ul>
+                 </div>
+             </div>
+
+            <!-- ML, DL, AI Relationship (Slide 11) -->
+             <div class="accordion-item">
+                 <button class="accordion-header">AI, Machine Learning, & Deep Learning Relationship</button>
+                 <div class="accordion-panel">
+                     <p><strong>Artificial Intelligence (AI):</strong> Broadest field. Goal is to create systems performing tasks requiring human intelligence (thinking, decision-making, problem-solving).</p>
+                     <p><strong>Machine Learning (ML):</strong> A subset of AI. Focuses on systems that *learn from data* and improve over time without explicit programming for every task. Goal: Build algorithms learning from data to make predictions/decisions.</p>
+                     <p><strong>Deep Learning (DL):</strong> A subset of ML. Uses artificial neural networks with multiple layers to model complex data patterns.</p>
+                     <p>Other AI techniques exist that are *not* based on ML, e.g., Expert Systems, Game Playing (traditional), Traditional Computer Vision, Traditional NLP.</p>
+                     <!-- Could describe the Venn diagram concept here if not using an image -->
+                     <img src="ven.png" alt="Venn diagram showing AI, ML, and DL relationship" style="display:block; margin:10px auto; max-width:80%;">
+                     <p class="image-description">Venn diagram: AI is the outer circle, ML is a circle inside AI, and DL is a circle inside ML.</p>
+                 </div>
+             </div>
+
+            <!-- Basic Concepts: Data, Sets, Over/Underfitting (Slides 12-13) -->
+             <div class="accordion-item">
+                 <button class="accordion-header">Basic Concepts: Labeled/Unlabeled Data, Training/Testing Sets, Over/Underfitting</button>
+                 <div class="accordion-panel">
+                     <h4>Labeled Data</h4>
+                     <p>Data where each instance has an assigned characteristic, category, or attribute (a "label"). Used in supervised learning.</p>
+                     <div class="example-box"><p><strong>Example:</strong> A photo explicitly tagged as "cat" or "dog".</p></div>
+
+                     <h4>Unlabeled Data</h4>
+                     <p>Data without predefined labels or categories. Used in unsupervised learning.</p>
+                     <div class="example-box"><p><strong>Example:</strong> A collection of photos without any tags; text documents needing to be grouped by topic.</p></div>
+
+                     <h4>Training Set</h4>
+                     <p>The portion of data used to train the machine learning model.</p>
+
+                     <h4>Testing Set</h4>
+                     <p>New data that the model has *not* seen during training, used to evaluate how well the model generalizes to real-world data.</p>
+
+                     <h4>Overfitting</h4>
+                     <p>Happens when a model learns the training data too well (memorizes it) but fails to perform accurately on new, unseen data. Often occurs if the model is too complex for the amount of training data.</p>
+
+                     <h4>Underfitting</h4>
+                     <p>Happens when a model is too simple to capture the underlying pattern in the data. It performs poorly on both the training data and new, unseen data.</p>
+                 </div>
+             </div>
+
+            <!-- Types of ML (Slides 14-15) -->
+             <div class="accordion-item">
+                 <button class="accordion-header">Types of Machine Learning</button>
+                 <div class="accordion-panel">
+                     <p>Machine Learning is typically categorized into three main types:</p>
+                     <ol>
+                         <li><strong>Supervised Learning:</strong> <br/>Used with labeled data (input-output pairs). The goal is to learn a mapping function to predict specific outcomes for new inputs.<br/>Includes: Classification, Regression.</li>
+                         <li><strong>Unsupervised Learning:</strong> <br/>Used with unlabeled data (only input, no specific output provided). The goal is to discover inherent structures, patterns, or relationships.<br/>Includes: Clustering, Dimensionality Reduction.</li>
+                         <li><strong>Reinforcement Learning:</strong> <br/>An agent learns to make sequences of decisions by interacting with an environment and receiving rewards or penalties. The goal is to maximize cumulative reward.</li>
+                     </ol>
+                     <!-- Could describe the hierarchy diagram if not using an image -->
+                     <img src="ml.png" alt="Hierarchy diagram showing types of Machine Learning" style="display:block; margin:10px auto; max-width:90%;">
+                     <p class="image-description">Diagram: ML branches into Supervised, Unsupervised, and Reinforcement. Supervised branches into Classification and Regression. Unsupervised branches into Clustering and Dimensionality Reduction.</p>
+                 </div>
+             </div>
+
+            <!-- Supervised Learning Details (Slide 16) -->
+             <div class="accordion-item">
+                 <button class="accordion-header">Supervised Learning Details</button>
+                 <div class="accordion-panel">
+                     <p>Most common type, used when you need to predict a specific outcome based on input data and have labeled examples.</p>
+                     <p>Models are trained on labeled datasets (input is associated with a known output).</p>
+                     <p>Goal: Learn a mapping function to accurately predict outputs for new, unseen inputs.</p>
+                     <p>Real-world applications:</p>
+                     <ul>
+                         <li>Fraud detection</li>
+                         <li>Spam filtering</li>
+                         <li>Medical diagnosis</li>
+                         <li>Email classification</li>
+                     </ul>
+                 </div>
+             </div>
+
+            <!-- Unsupervised Learning Details (Slide 17) -->
+             <div class="accordion-item">
+                 <button class="accordion-header">Unsupervised Learning Details</button>
+                 <div class="accordion-panel">
+                     <p>Used when you have input data but no specific output labels.</p>
+                     <p>Goal: Let the machine discover structures or relationships in the data on its own.</p>
+                     <p>Helpful when:</p>
+                     <ul>
+                         <li>You don't know the categories or groups in advance.</li>
+                         <li>You want to group similar items.</li>
+                     </ul>
+                     <p>The algorithm looks at input data and tries to group (cluster) or reduce dimensions based on similarities.</p>
+                     <p>Real-world applications:</p>
+                     <ul>
+                         <li>Customer segmentation in marketing</li>
+                         <li>Organizing documents by topic</li>
+                         <li>Reducing data for visualization</li>
+                     </ul>
+                 </div>
+             </div>
+
+            <!-- Reinforcement Learning Details (Slide 18) -->
+             <div class="accordion-item">
+                 <button class="accordion-header">Reinforcement Learning Details</button>
+                 <div class="accordion-panel">
+                     <p>An <strong>agent</strong> interacts with an <strong>environment</strong>. The agent observes the <strong>state</strong>, chooses an <strong>action</strong>, and receives a <strong>reward</strong>.</p>
+                     <p>Goal: Find the best action for each state to maximize cumulative reward.</p>
+                     <h4>How it Works:</h4>
+                     <ol>
+                         <li>Agent observes the environment's state.</li>
+                         <li>Agent takes an action.</li>
+                         <li>Environment provides a reward (positive for good action, negative for bad).</li>
+                         <li>Agent learns which actions lead to higher rewards.</li>
+                         <li>Repeat to improve strategy over time.</li>
+                     </ol>
+                     <p><strong>Example:</strong> Robotics applications learning to walk.</p>
+                     <!-- Could include a description of the diagram if not using an image -->
+                     <img src="rm.png" alt="Diagram showing Reinforcement Learning cycle" style="display:block; margin:10px auto; max-width:70%;">
+                     <p class="image-description">Diagram: Agent takes Action -> Environment changes State and gives Reward -> Agent observes State and Reward.</p>
+                 </div>
+             </div>
+
+             <!-- Supervised Tasks: Classification & Regression (Slide 19) -->
+             <div class="accordion-item">
+                 <button class="accordion-header">Supervised Learning Tasks: Classification & Regression</button>
+                 <div class="accordion-panel">
+                    <p>Within supervised learning, the two main task types are distinguished by the type of output they predict:</p>
+                    <ul>
+                       <li><strong>Classification:</strong> Predicts a discrete category or class label (e.g., "cat" or "dog", "spam" or "not spam", "class A", "class B", "class C").</li>
+                       <li><strong>Regression:</strong> Predicts a continuous numerical value (e.g., house price, temperature, stock value).</li>
+                    </ul>
+                     <!-- Could describe the diagrams distinguishing Classification (grouping points) and Regression (fitting a line) -->
+                     <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                         <div style="text-align: center; margin: 10px;">
+                             <img src="clas.png" alt="Classification example diagram" style="max-width: 250px; border: 1px solid #ccc;">
+                             <p class="image-description">Classification: Points grouped into distinct categories.</p>
                          </div>
-                         <p>ML enables solving problems like image recognition, language translation, and navigating vehicles, which are difficult with rigid conventional programming (S9, S10).</p>
-                         <p>Recent Progress (Mid-2000s onwards) driven by: Availability of large data (Internet), Large compute power/memory, Improved algorithms (S10).</p>
-                     </div>
-                 </div>
-
-                  <div class="accordion-item">
-                     <button class="accordion-header">ML, Deep Learning, and AI</button>
-                     <div class="accordion-panel">
-                          <img src="https://i.imgur.com/example_ai_ml_dl.png" alt="AI ML DL Diagram" style="max-width: 400px;"> <!-- Replace with actual image if available -->
-                         <p><strong>Artificial Intelligence (AI):</strong> The broad goal to create systems performing tasks requiring human intelligence.</p>
-                         <p><strong>Machine Learning (ML):</strong> A subset of AI focusing on systems that learn from data and improve over time without explicit programming.</p>
-                         <p><strong>Deep Learning (DL):</strong> A subset of ML using multi-layered artificial neural networks for complex pattern modeling.</p>
-                         <p>Note: Not all AI techniques are based on ML (e.g., Expert Systems, traditional Game Playing, traditional Computer Vision/NLP) (S11).</p>
-                     </div>
-                 </div>
-
-                 <div class="accordion-item">
-                     <button class="accordion-header">Key ML Concepts: Data & Model Evaluation</button>
-                     <div class="accordion-panel">
-                         <h4>Labeled vs. Unlabeled Data (S12)</h4>
-                         <ul>
-                             <li><strong>Labeled Data:</strong> Data with assigned categories, characteristics, or known output attributes (e.g., photos tagged "cat" or "dog").</li>
-                             <li><strong>Unlabeled Data:</strong> Data without predefined labels or outputs (e.g., photos without tags).</li>
-                         </ul>
-                         <p>Examples: (S12 Image described)</p>
-                          <img src="https://i.imgur.com/example_labeled_unlabeled.png" alt="Labeled vs Unlabeled Data Example" style="max-width: 600px;"> <!-- Replace with actual image if available -->
-
-                         <h4>Training Set & Testing Set (S13)</h4>
-                         <ul>
-                             <li><strong>Training Set:</strong> Data used to train the ML model.</li>
-                             <li><strong>Testing Set:</strong> New data the model has never seen, used to evaluate how well the model generalizes to real-world data.</li>
-                         </ul>
-
-                          <h4>Overfitting & Underfitting (S13)</h4>
-                         <ul>
-                             <li><strong>Overfitting:</strong> Model learns training data (including noise) too well, fails to generalize to new data. Happens when the model is too complex for the data.</li>
-                             <li><strong>Underfitting:</strong> Model is too simple, fails to learn the underlying pattern in the data. Performs poorly on both training and test data.</li>
-                         </ul>
-                     </div>
-                 </div>
-
-                  <div class="accordion-item">
-                     <button class="accordion-header">Types of Machine Learning</button>
-                     <div class="accordion-panel">
-                         <p>ML is broadly categorized into three types (S14, S15):</p>
-                         <ol>
-                             <li><strong>Supervised Learning:</strong> Uses labeled data to predict a specific outcome. (Examples: Classification, Regression)</li>
-                             <li><strong>Unsupervised Learning:</strong> Uses unlabeled data to discover structures, patterns, or relationships. (Examples: Clustering, Dimensionality Reduction, Association Rule Mining)</li>
-                             <li><strong>Reinforcement Learning:</strong> An agent learns by interacting with an environment and receiving rewards/penalties.</li>
-                         </ol>
-                          <p>(See diagram on S15 for visual representation)</p>
-                     </div>
-                 </div>
-
-                  <div class="accordion-item">
-                     <button class="accordion-header">Supervised Learning: Classification & Regression</button>
-                     <div class="accordion-panel">
-                         <p>Supervised learning uses <strong>labeled data</strong> to predict specific outcomes (S16).</p>
-                         <p>Goal: Learn a mapping function from input to known output to predict for unseen inputs (S16).</p>
-                         <p>Applications: Fraud detection, spam filtering, medical diagnosis, email classification (S16).</p>
-
-                         <div class="visual-contrast">
-                             <div>
-                                 <h3>Classification (S19, S20)</h3>
-                                 <p>Predicts a <strong>discrete category or class label</strong>.</p>
-                                 <p>Requires training data with predefined classes.</p>
-                                 <img src="https://i.imgur.com/example_classification.png" alt="Classification Example Diagram" style="max-width: 250px;"> <!-- Replace with actual image if available -->
-                                 <ul>
-                                     <li><strong>Binary Classification:</strong> Two output categories (S20, S21). Ex: Spam/Not Spam, Covid Positive/Negative.</li>
-                                     <li><strong>Multi-class Classification:</strong> More than two output categories (S20, S22). Ex: Iris flower types (setosa, virginica, versicolor), email types.</li>
-                                 </ul>
-                             </div>
-                             <div>
-                                 <h3>Regression (S19)</h3>
-                                  <p>Predicts a <strong>continuous numerical value</strong>.</p>
-                                   <img src="https://i.imgur.com/example_regression.png" alt="Regression Example Diagram" style="max-width: 250px;"> <!-- Replace with actual image if available -->
-                                  <p>Ex: Predicting house prices, stock values, temperature.</p>
-                             </div>
+                         <div style="text-align: center; margin: 10px;">
+                             <img src="reg.png" alt="Regression example diagram" style="max-width: 250px; border: 1px solid #ccc;">
+                             <p class="image-description">Regression: A line fitted through scattered points.</p>
                          </div>
                      </div>
                  </div>
+             </div>
 
-                 <div class="accordion-item">
-                     <button class="accordion-header">Evaluating Binary Classifiers: ROC Curve</button>
-                     <div class="accordion-panel">
-                         <p>The <strong>ROC Curve (Receiver Operating Characteristic)</strong> is a common tool to evaluate the performance of binary classification models (S23).</p>
-                         <p>It plots the <strong>True Positive Rate (TPR)</strong> on the Y-axis against the <strong>False Positive Rate (FPR)</strong> on the X-axis at various classification thresholds (S23).</p>
-                         <ul>
-                             <li><strong class="math">TPR = TP / (TP + FN)</strong> (Recall)</li>
-                             <li><strong class="math">FPR = FP / (FP + TN)</strong></li>
-                         </ul>
-                         <div class="roc-curves">
-                              <div class="roc-curve-item">
-                                 <h4>Diagonal ROC Curve</h4>
-                                 <img src="https://i.imgur.com/example_roc_diagonal.png" alt="Diagonal ROC Curve"> <!-- Replace with actual image if available -->
-                                 <p>Represents random guessing. The model cannot effectively separate the classes.</p>
-                             </div>
-                             <div class="roc-curve-item">
-                                  <h4>L-shaped ROC Curve</h4>
-                                  <img src="https://i.imgur.com/example_roc_lshaped.png" alt="L-shaped ROC Curve"> <!-- Replace with actual image if available -->
-                                  <p>Indicates a good model. Rises quickly towards the top-left corner (high TPR, low FPR), meaning it separates classes well.</p>
-                             </div>
+             <!-- Classification Details (Slides 20-22) -->
+             <div class="accordion-item">
+                 <button class="accordion-header">Classification Details (Binary & Multi-class)</button>
+                 <div class="accordion-panel">
+                     <p>Classification uses labeled training data to learn a <strong>classifier</strong> model, which then assigns new input data to predefined categories.</p>
+                     <p>Classifiers can be:</p>
+                     <ul>
+                         <li><strong>Binary Classifier:</strong> Identifies input as belonging to one of two output categories.</li>
+                         <li><strong>Multi-class Classifier:</strong> Identifies input as belonging to one of more than two output categories.</li>
+                     </ul>
+
+                     <!-- Nested Accordion for Binary Example -->
+                     <div class="accordion"><div class="accordion-item"><button class="accordion-header">Example: Binary Classification (COVID Diagnosis)</button><div class="accordion-panel">
+                        <p>Identify if a patient has a positive or negative COVID diagnosis based on features from blood analysis.</p>
+                        <p>Input: 16 features from blood analysis.</p>
+                        <p>Model: Machine Learning classifier.</p>
+                        <p>Output: One of two categories: "+VE Corona virus" or "-VE Corona virus".</p>
+                        <!-- Could describe the diagram: 16 features -> ML -> 2 outputs (+VE, -VE) -->
+                        <img src="class.png" alt="Binary Classification (COVID) diagram" style="display:block; margin:10px auto; max-width:80%;">
+                        <p class="image-description">Diagram: Box labeled "16 Features" -> Arrow -> Box "ML Classifier" -> Arrow -> Two boxes "+VE" and "-VE".</p>
+                     </div></div></div>
+
+                     <!-- Nested Accordion for Multi-class Example -->
+                     <div class="accordion"><div class="accordion-item"><button class="accordion-header">Example: Multi-class Classification (Iris Flowers)</button><div class="accordion-panel">
+                        <p>Classify Iris flowers into three types: Setosa, Versicolor, or Virginica.</p>
+                        <p>Input features: Petal length, petal width, sepal length, sepal width.</p>
+                        <p>Model: Machine Learning classifier.</p>
+                        <p>Output: One of three categories: "Iris setosa", "Iris versicolor", or "Iris virginica".</p>
+                         <!-- Could describe the diagram: 4 features -> ML -> 3 outputs (Setosa, Versicolor, Virginica) -->
+                         <img src="iris.png" alt="Multi-class Classification (Iris) diagram" style="display:block; margin:10px auto; max-width:80%;">
+                         <p class="image-description">Diagram: Box labeled "4 Features" -> Arrow -> Box "ML Classifier" -> Arrow -> Three boxes "Setosa", "Versicolor", "Virginica".</p>
+                     </div></div></div>
+                 </div>
+             </div>
+
+            <!-- ROC Curve (Slides 23-24) -->
+             <div class="accordion-item">
+                 <button class="accordion-header">ROC Curve (Receiver Operating Characteristic)</button>
+                 <div class="accordion-panel">
+                     <p>A common tool to evaluate the performance of <strong>binary classification</strong> models.</p>
+                     <p>Objective: Evaluate performance.</p>
+                     <p>How to Plot: A graph with:</p>
+                     <ul>
+                         <li>X-axis: <strong>False Positive Rate (FPR)</strong></li>
+                         <li>Y-axis: <strong>True Positive Rate (TPR)</strong> (also known as Recall)</li>
+                     </ul>
+                     <h4>Formulas:</h4>
+                     <ul>
+                         <li><span class="math">FPR = FP / (FP + TN)</span>: Ratio of actual negative instances incorrectly classified as positive.</li>
+                         <li><span class="math">TPR = TP / (TP + FN)</span>: Ratio of actual positive instances correctly classified as positive.</li>
+                     </ul>
+                     <h4>Types of ROC curves:</h4>
+                     <ul>
+                        <li><strong>Diagonal ROC curve:</strong> Means the model performs like random guessing. For every correct positive, there's a false one (TP ≈ FP, TN ≈ FN). It's a bad model, cannot tell classes apart.</li>
+                        <li><strong>L-shaped ROC curve:</strong> Means the curve rises quickly toward the top-left corner. Model makes many correct predictions (True Positives are high, False Positives are low). It's a great model, separates classes well.</li>
+                     </ul>
+                     <!-- Could describe the diagrams for Diagonal vs L-shaped curves -->
+                      <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                         <div style="text-align: center; margin: 10px;">
+                             <img src="dg.png" alt="Diagonal ROC curve" style="max-width: 250px; border: 1px solid #ccc;">
+                             <p class="image-description">Diagonal ROC Curve: Straight line from (0,0) to (1,1).</p>
+                         </div>
+                         <div style="text-align: center; margin: 10px;">
+                             <img src="lroc.png" alt="L-shaped ROC curve" style="max-width: 250px; border: 1px solid #ccc;">
+                             <p class="image-description">L-shaped ROC Curve: Curve goes sharply up towards (0,1) then across.</p>
                          </div>
                      </div>
                  </div>
+             </div>
 
-                 <div class="accordion-item">
-                      <button class="accordion-header">Supervised Learning Algorithm: Logistic Regression</button>
-                      <div class="accordion-panel">
-                          <p><strong>Logistic Regression</strong> is a classification algorithm used for binary or multi-class classification (S25, S26).</p>
-                          <h4>For Binary Classification (S26, S27):</h4>
-                           <p>Uses the <strong>Sigmoid function</strong> to output a value between 0 and 1, representing the probability of belonging to the positive class.</p>
-                           <p>Predicted output: <code class="math">ŷ = 1 / (1 + e⁻ᶻ)</code></p>
-                           <p>Where <code class="math">z</code> is a linear combination of input features <code class="math">X</code> and coefficients (weights) <code class="math">b</code>: <code class="math">z = b₀ + b₁x₁ + b₂x₂ + ... + b<span style="vertical-align: sub;">n</span>x<span style="vertical-align: sub;">n</span></code></p>
-                           <p>Model performance is evaluated using a <strong>Loss Function</strong>. For binary classification, the common loss is:</p>
-                           <p><code class="math">L(y, ŷ) = -[y * log(ŷ) + (1 - y) * log(1 - ŷ)]</code></p>
-                           <p>Where <code class="math">y</code> is the true label (0 or 1) and <code class="math">ŷ</code> is the predicted probability.</p>
-                           <p>The model learns by minimizing this loss function, typically using an optimization algorithm like <strong>Gradient Descent</strong> (S27).</p>
-
-                           <h4>For Multi-class Classification (S26):</h4>
-                           <p>Uses the <strong>Softmax function</strong> instead of Sigmoid to output a probability distribution over all classes.</p>
-
-                           <h4>How the Algorithm Works (Conceptual Steps - S27):</h4>
-                           <ol>
-                               <li>Initialize the coefficients (<code class="math">b</code> values) for the sigmoid function.</li>
-                               <li>Input the first data instance (features <code class="math">X</code>).</li>
-                               <li>Compute the predicted output <code class="math">ŷ</code> using the current coefficients and sigmoid function.</li>
-                               <li>Compute the error between the predicted output (<code class="math">ŷ</code>) and the actual output (<code class="math">y</code>) using the loss function.</li>
-                               <li>Update the coefficients using an optimization algorithm (like Gradient Descent) to minimize the calculated error.</li>
-                               <li>Input the next instance and repeat steps 3-5 for all instances (this completes one iteration/epoch).</li>
-                               <li>Repeat multiple iterations until the model converges and achieves high accuracy.</li>
-                           </ol>
-                      </div>
+            <!-- Classification Algorithms (Slide 25) -->
+             <div class="accordion-item">
+                 <button class="accordion-header">Classification Algorithms (Examples)</button>
+                 <div class="accordion-panel">
+                     <p>Examples of algorithms used for classification:</p>
+                     <ul>
+                         <li>Logistic Regression</li>
+                         <li>Decision Trees</li>
+                         <li>Artificial Neural Networks (ANNs)</li>
+                         <li>Support Vector Machines (SVM)</li>
+                         <li>Random Forest</li>
+                         <li>K-Nearest Neighbors (KNN)</li>
+                     </ul>
+                     <p>This lecture focuses on Logistic Regression.</p>
                  </div>
+             </div>
 
-                  <div class="accordion-item">
-                     <button class="accordion-header">Unsupervised Learning</button>
-                     <div class="accordion-panel">
-                         <p>Unsupervised learning is used when there is <strong>no labeled data</strong> and no specific output to predict (S17).</p>
-                         <p>Goal: Let the machine discover structures, patterns, or relationships in the data on its own (S17).</p>
-                         <p>Helpful when you don't know the categories/groups in advance or want to group similar items (S17).</p>
-                         <p>Techniques look for similarities to group data or reduce dimensions (S17).</p>
-                         <p>Applications: Customer segmentation, organizing documents by topic, reducing data for visualization (S17).</p>
-                     </div>
+            <!-- Logistic Regression (Slides 26-27) -->
+             <div class="accordion-item">
+                 <button class="accordion-header">Logistic Regression</button>
+                 <div class="accordion-panel">
+                     <p>A classification algorithm used for both binary and multi-class classification.</p>
+                     <p><strong>Examples:</strong> Classify emails as spam/ordinary; classify Iris flowers.</p>
+
+                     <h4>In Binary Classification:</h4>
+                     <p>Uses the <strong>Sigmoid function</strong> to compute the estimated output (predicted probability <span class="math">ŷ</span>).</p>
+                     <p>Formula: <span class="math">ŷ = 1 / (1 + e<sup>-z</sup>)</span></p>
+                     <p>Where <span class="math">z</span> is a linear combination of features X: <span class="math">z = b<sub>0</sub> + b<sub>1</sub>x<sub>1</sub> + b<sub>2</sub>x<sub>2</sub> + ... + b<sub>n</sub>x<sub>n</sub></span></p>
+                     <p>The model's performance is evaluated using a <strong>loss function</strong> during training.</p>
+                     <p>Loss function for binary classification: <span class="math">L(y, ŷ) = -[y * log(ŷ) + (1 - y) * log(1 - ŷ)]</span></p>
+                     <p>Where <span class="math">y</span> is the true label (0 or 1), and <span class="math">ŷ</span> is the predicted probability.</p>
+
+                     <h4>In Multi-class Classification:</h4>
+                     <p>Uses the <strong>Softmax function</strong> to compute the probabilities for each class.</p>
+
+                     <h4>How the Algorithm Works (Training - Binary Example from COVID Diagnosis):</h4>
+                     <ol>
+                         <li>Initialize the coefficients (<span class="math">b<sub>0</sub>, b<sub>1</sub>, ..., b<sub>n</sub></span>) in the sigmoid function (e.g., randomly).</li>
+                         <li>Take the first data instance (e.g., blood analysis features for patient 1, X).</li>
+                         <li>Compute the predicted output (<span class="math">ŷ</span>) using the sigmoid function with the current coefficients and the instance's features.</li>
+                         <li>Compute the error between the predicted output (<span class="math">ŷ</span>) and the actual output (<span class="math">y</span>, the known diagnosis) using the loss function.</li>
+                         <li>Update the coefficients of the sigmoid function to minimize the error using an optimization algorithm like <strong>Gradient Descent</strong>.</li>
+                         <li>Repeat steps 3-5 for the second instance, and continue until all instances in the training set have been processed (completing one iteration or epoch).</li>
+                         <li>Perform more iterations (epochs) over the entire training set until the model reaches convergence and high accuracy is achieved.</li>
+                     </ol>
                  </div>
+             </div>
 
-                 <div class="accordion-item">
-                     <button class="accordion-header">Reinforcement Learning</button>
-                     <div class="accordion-panel">
-                         <p>Involves an <strong>agent</strong> interacting with an <strong>environment</strong> to learn optimal actions (S18).</p>
-                         <p>The agent observes the environment's state, chooses an action, and receives a <strong>reward</strong> or penalty (S18).</p>
-                         <p>Goal: Find the best action for each state to maximize cumulative reward (S18).</p>
-                         <div class="accordion"><div class="accordion-item"><button class="accordion-header">How Reinforcement Learning Works (Steps - S18)</button><div class="accordion-panel">
-                             <ol>
-                                 <li>Agent observes the environment's state.</li>
-                                 <li>Agent takes an action.</li>
-                                 <li>Environment provides a reward (positive or negative).</li>
-                                 <li>Agent learns which actions lead to higher rewards.</li>
-                                 <li>Repeat the process, agent tries to improve its strategy over time.</li>
-                             </ol>
-                             <img src="https://i.imgur.com/example_rl_diagram.png" alt="Reinforcement Learning Diagram" style="max-width: 400px;"> <!-- Replace with actual image if available -->
-                             <p>Example Application: Robotics (learning how to walk) (S18).</p>
-                         </div></div></div>
-                     </div>
-                 </div>
+         </div> <!-- End Main Accordion for Concepts -->
+    </section>
 
-             </div> <!-- End Main Accordion for Concepts -->
-        </section>
+    <!-- Quiz Sections -->
+    <div id="fill" class="main-content">
+        <h2>Fill in the Blank Questions</h2>
+        <div id="fill-questions"></div>
+    </div>
+    <div id="tf" class="main-content">
+        <h2>True/False Questions</h2>
+        <div id="tf-questions"></div>
+    </div>
+    <div id="mc" class="main-content">
+        <h2>Multiple Choice Questions</h2>
+        <div id="mc-questions"></div>
+    </div>
 
-        <!-- Quiz Sections -->
-        <div id="fill" class="main-content">
-            <h2>Fill in the Blank Questions</h2>
-            <div id="fill-questions"></div>
-        </div>
-        <div id="tf" class="main-content">
-            <h2>True/False Questions</h2>
-            <div id="tf-questions"></div>
-        </div>
-        <div id="mc" class="main-content">
-            <h2>Multiple Choice Questions</h2>
-            <div id="mc-questions"></div>
-        </div>
+</div> <!-- End Container -->
 
-    </div> <!-- End Container -->
-
-    <script>
-        // --- START OF QUIZ DATA (Data Mining & ML) ---
-        const fillInTheBlank = [
-            { question: "_______ is the process of discovering hidden patterns, correlations, and knowledge from large amounts of data.", options: ["Data Analysis", "Data Warehousing", "Data Mining", "Database Querying"], answer: "Data Mining" }, // S7, general
-            { question: "Finding web pages containing specific keywords is generally NOT considered data mining, but rather _______.", options: ["Information Retrieval", "Pattern Recognition", "Clustering", "Classification"], answer: "Information Retrieval" }, // S7
-             { question: "The standard package installer for Python libraries like pandas or mlxtend is called _______.", options: ["python install", "import", "pip install", "lib install"], answer: "pip install" }, // S4
-             { question: "Python's Integrated Development and Learning Environment, providing an editor for .py files, is called _______.", options: ["CMD", "Jupyter Notebook", "IDLE", "Python Shell"], answer: "IDLE" }, // S3, S5
-            { question: "A collection of one or more items in a transaction is called an _______.", options: ["Association", "Itemset", "Cluster", "Pattern"], answer: "Itemset" }, // Concepts Section
-            { question: "The absolute number of transactions containing an itemset is its _______ count.", options: ["Confidence", "Support", "Lift", "Interest"], answer: "Support" }, // Concepts Section
-             { question: "The fraction of transactions containing an itemset is its _______.", options: ["Support Count", "Confidence", "Support", "Frequency"], answer: "Support" }, // Concepts Section
-            { question: "An itemset whose support is above a minimum threshold is called a _______ itemset.", options: ["Candidate", "Maximal", "Closed", "Frequent"], answer: "Frequent" }, // Concepts Section
-             { question: "The measure σ(X∪Y)/σ(X) calculates the _______ of the rule X→Y.", options: ["Support", "Lift", "Confidence", "Interest"], answer: "Confidence" }, // Concepts Section
-             { question: "A frequent itemset with no superset having the exact same support is a _______ frequent itemset.", options: ["Maximal", "Candidate", "Closed", "Basic"], answer: "Closed" }, // Concepts Section
-            { question: "A frequent itemset with no frequent superset is a _______ frequent itemset.", options: ["Maximal", "Candidate", "Closed", "Basic"], answer: "Maximal" }, // Concepts Section
-            { question: "The _______ principle states that if an itemset is frequent, all its subsets must be frequent.", options: ["FP-Growth", "Clustering", "Apriori", "Regression"], answer: "Apriori" }, // Concepts Section (Apriori Overview)
-            { question: "The _______ algorithm avoids explicit candidate generation by using a compact tree structure.", options: ["Apriori", "K-Means", "FP-Growth", "Decision Tree"], answer: "FP-Growth" }, // Concepts Section (FP-Growth Overview)
-             { question: "Machine learning focuses on creating _______ models that learn from data and generalize to unseen data.", options: ["Fixed", "Static", "Conventional", "Predictive"], answer: "Predictive" }, // S7
-            { question: "ML is a subset of _______.", options: ["Deep Learning", "Artificial Intelligence", "Conventional Programming", "Data Mining"], answer: "Artificial Intelligence" }, // S11
-             { question: "Data with assigned categories or known output attributes is called _______ data.", options: ["Unlabeled", "Training", "Testing", "Labeled"], answer: "Labeled" }, // S12
-            { question: "Data without predefined labels or output categories is called _______ data.", options: ["Labeled", "Training", "Testing", "Unlabeled"], answer: "Unlabeled" }, // S12
-            { question: "The data used to train a machine learning model is the _______ set.", options: ["Testing", "Validation", "Unlabeled", "Training"], answer: "Training" }, // S13
-            { question: "When a model learns the training data (including noise) too well and fails to generalize, it is called _______.", options: ["Underfitting", "Generalization", "Overfitting", "Validation"], answer: "Overfitting" }, // S13
-            { question: "When a model is too simple to learn the underlying pattern and performs poorly on all data, it is called _______.", options: ["Overfitting", "Complex", "Underfitting", "Accuracy"], answer: "Underfitting" }, // S13
-             { question: "Machine learning that uses labeled data to predict a specific outcome is called _______ learning.", options: ["Unsupervised", "Reinforcement", "Supervised", "Deep"], answer: "Supervised" }, // S14, S16
-            { question: "Machine learning that discovers structures or patterns in unlabeled data is called _______ learning.", options: ["Supervised", "Reinforcement", "Deep", "Unsupervised"], answer: "Unsupervised" }, // S14, S17
-             { question: "Grouping similar data points without predefined labels is a task called _______.", options: ["Classification", "Regression", "Clustering", "Association"], answer: "Clustering" }, // S14, S17
-             { question: "Predicting a continuous numerical value is a supervised task called _______.", options: ["Classification", "Clustering", "Association", "Regression"], answer: "Regression" }, // S14, S19
-             { question: "Predicting a discrete category or class label is a supervised task called _______.", options: ["Regression", "Clustering", "Association", "Classification"], answer: "Classification" }, // S14, S19, S20
-             { question: "A classification task with exactly two possible output categories is called _______ classification.", options: ["Multi-class", "Binary", "Simple", "Dual"], answer: "Binary" }, // S20, S21
-             { question: "The ROC curve is a tool used to evaluate the performance of _______ classification models.", options: ["Multi-class", "Regression", "Clustering", "Binary"], answer: "Binary" }, // S23
-             { question: "On an ROC curve, the X-axis represents the _______.", options: ["True Positive Rate", "False Positive Rate", "Support", "Confidence"], answer: "False Positive Rate" }, // S23
-             { question: "On an ROC curve, the Y-axis represents the _______ (also known as Recall).", options: ["False Positive Rate", "True Negative Rate", "True Positive Rate", "Precision"], answer: "True Positive Rate" }, // S23
-             { question: "A classification algorithm that uses the sigmoid function for binary output is _______.", options: ["K-Means", "Apriori", "Logistic Regression", "Decision Tree"], answer: "Logistic Regression" } // S26
-        ];
-        const trueOrFalse = [
-            { question: "Python Shell allows you to save entire script files.", answer: false }, // S3, S5 (IDLE does)
-            { question: "Libraries like pandas and mlxtend are typically installed using Python's 'import' command.", answer: false }, // S4 (pip install)
-            { question: "Machine learning solves problems by following a fixed set of rules programmed beforehand.", answer: false }, // S7, S8 (learns rules from examples)
-            { question: "The larger the dataset, the less accurate a machine learning model becomes.", answer: false }, // S7 (more accurate)
-            { question: "Artificial Intelligence is a subset of Machine Learning.", answer: false }, // S11 (ML is subset of AI)
-             { question: "Deep Learning uses artificial neural networks with multiple layers.", answer: true }, // S11
-            { question: "Reinforcement learning requires labeled data for training.", answer: false }, // S14, S18 (Supervised does)
-            { question: "Clustering is a type of supervised learning.", answer: false }, // S14, S17 (Unsupervised)
-            { question: "Regression predicts discrete class labels.", answer: false }, // S14, S19 (Predicts continuous values)
-             { question: "Association Rule Mining is an example of a predictive data mining task.", answer: false }, // S14, S17 (Descriptive/Unsupervised)
-            { question: "Overfitting occurs when a model is too simple.", answer: false }, // S13 (Underfitting)
-             { question: "A maximal frequent itemset is always a closed frequent itemset.", answer: true }, // Concepts Section (Closed/Maximal)
-            { question: "The Apriori algorithm requires multiple database scans.", answer: true }, // Concepts Section (Apriori Overview)
-            { question: "FP-Growth generates candidate itemsets similar to Apriori.", answer: false }, // Concepts Section (FP-Growth Overview)
-            { question: "The Sigmoid function in logistic regression outputs a value between 0 and 1.", answer: true }, // S26
-            { question: "The Loss Function measures the difference between predicted and actual output.", answer: true }, // S26
-             { question: "Gradient Descent is an algorithm used to maximize a function.", answer: false }, // S27 (Minimize)
-             { question: "A diagonal ROC curve indicates a model that perfectly separates the classes.", answer: false } // S24 (Random guessing)
-        ];
-        const multipleChoice = [
-            { question: "Which Python tool provides a simple text editor to write and save full Python programs (.py files)?", options: ["Python Shell", "CMD", "Pip", "IDLE"], answer: "IDLE" }, // S3, S5
-            { question: "Which command is used in CMD to install Python libraries like pandas or mlxtend?", options: ["python install", "import library", "pip install", "get library"], answer: "pip install" }, // S4
-             { question: "What is the term for a collection of one or more items in a transactional dataset?", options: ["Attribute", "Tuple", "Itemset", "Feature"], answer: "Itemset" }, // Concepts Section
-            { question: "If an itemset appears in 3 out of 10 transactions, what is its Support?", options: ["30%", "3", "10%", "0.3"], answer: "30%" }, // Concepts Section
-             { question: "If Support({A,B,C}) = 30% and Support({A,B}) = 60%, what is the Confidence({A,B} → {C})?", options: ["30%", "60%", "50%", "20%"], answer: "50%" }, // Concepts Section (30/60 = 0.5)
-            { question: "Which frequent itemset property states that if an itemset is frequent, all its subsets must also be frequent?", options: ["Maximal Property", "Closed Property", "Apriori Principle", "Confidence Principle"], answer: "Apriori Principle" }, // Concepts Section (Apriori Overview)
-            { question: "Which algorithm is known for avoiding candidate generation by using an FP-Tree structure?", options: ["Apriori", "K-Means", "FP-Growth", "DBSCAN"], answer: "FP-Growth" }, // Concepts Section (FP-Growth Overview)
-            { question: "What is the main difference between Machine Learning and Conventional Programming according to the slides?", options: ["ML is faster", "ML uses databases", "ML learns rules from examples; Conventional follows predefined rules", "Conventional programming uses less memory"], answer: "ML learns rules from examples; Conventional follows predefined rules" }, // S7, S8
-             { question: "Which of these is a subset of Machine Learning?", options: ["Artificial Intelligence", "Conventional Programming", "Deep Learning", "Information Retrieval"], answer: "Deep Learning" }, // S11
-            { question: "Predicting whether an email is spam or not spam is an example of:", options: ["Regression", "Clustering", "Binary Classification", "Multi-class Classification"], answer: "Binary Classification" }, // S16, S21
-             { question: "Predicting the specific type of Iris flower (setosa, versicolor, or virginica) is an example of:", options: ["Regression", "Clustering", "Binary Classification", "Multi-class Classification"], answer: "Multi-class Classification" }, // S16, S22
-            { question: "Grouping customers based on their purchasing history without predefined categories is an example of:", options: ["Supervised Learning", "Classification", "Reinforcement Learning", "Unsupervised Learning"], answer: "Unsupervised Learning" }, // S14, S17
-             { question: "Predicting the temperature tomorrow is an example of:", options: ["Classification", "Clustering", "Association", "Regression"], answer: "Regression" }, // S16, S19
-            { question: "Which type of machine learning involves an agent interacting with an environment to maximize rewards?", options: ["Supervised Learning", "Unsupervised Learning", "Reinforcement Learning", "Active Learning"], answer: "Reinforcement Learning" }, // S14, S18
-            { question: "Which concept describes a model that performs poorly on both training and test data because it is too simple?", options: ["Overfitting", "Underfitting", "Generalization", "Complexity"], answer: "Underfitting" }, // S13
-             { question: "What does the ROC curve primarily evaluate?", options: ["Regression model accuracy", "Clustering performance", "Association rule strength", "Binary classifier performance"], answer: "Binary classifier performance" }, // S23
-             { question: "In binary logistic regression, what function is used to output a probability between 0 and 1?", options: ["Softmax", "ReLU", "Sigmoid", "Tanh"], answer: "Sigmoid" } // S26
-        ];
-        // --- END OF QUIZ DATA ---
+<script>
+    // --- START OF QUIZ DATA (Based on PPT ML Sections) ---
+    const fillInTheBlank = [
+        { question: "Machine Learning focuses on creating _______ models that learn from data.", options: ["Statistical", "Descriptive", "Predictive", "Heuristic"], answer: "Predictive" },
+        { question: "In machine learning, the computer finds the _______ from input and output examples.", options: ["Data", "Examples", "Rules", "Code"], answer: "Rules" },
+        { question: "Increased availability of data, compute power, and improved algorithms have accelerated the progress in _______.", options: ["Conventional Programming", "Data Storage", "Hardware Design", "Machine Learning"], answer: "Machine Learning" },
+        { question: "_______ is a subset of AI that focuses on learning from data.", options: ["Expert Systems", "Machine Learning", "Traditional NLP", "Information Retrieval"], answer: "Machine Learning" },
+        { question: "Data where each instance has a known category is called _______ data.", options: ["Unlabeled", "Structured", "Labeled", "Raw"], answer: "Labeled" },
+        { question: "The data used to evaluate a model's generalization ability on unseen data is the _______ set.", options: ["Training", "Validation", "Testing", "Labeled"], answer: "Testing" },
+        { question: "When a model learns the training data too well and performs poorly on new data, it is called _______.", options: ["Underfitting", "Overfitting", "Generalization", "Convergence"], answer: "Overfitting" },
+        { question: "Grouping similar data points without predefined labels is the task of _______.", options: ["Classification", "Regression", "Association", "Clustering"], answer: "Clustering" },
+        { question: "Predicting a continuous numerical value is the goal of _______.", options: ["Classification", "Clustering", "Regression", "Binary Classification"], answer: "Regression" },
+         { question: "A model trained to assign input data to one of exactly two categories is a _______ classifier.", options: ["Multi-class", "Regression", "Binary", "Clustering"], answer: "Binary" },
+        { question: "The _______ function is used in binary logistic regression to compute the estimated output probability.", options: ["Softmax", "ReLU", "Sigmoid", "Tanh"], answer: "Sigmoid" },
+        { question: "The _______ function is used in multi-class logistic regression to compute probabilities for each class.", options: ["Sigmoid", "Softmax", "Step", "Linear"], answer: "Softmax" },
+         { question: "The ratio TP / (TP + FN) is known as the True Positive Rate or _______.", options: ["FPR", "Precision", "Accuracy", "Recall"], answer: "Recall" },
+        { question: "The curve plotting TPR vs FPR for evaluating binary classifiers is the _______ Curve.", options: ["Precision-Recall", "Learning", "ROC", "Gain"], answer: "ROC" },
+        { question: "Logistic Regression uses an algorithm like _______ to update coefficients and minimize the loss function.", options: ["K-Means", "Apriori", "Gradient Descent", "Decision Tree"], answer: "Gradient Descent" }
+    ];
+    const trueOrFalse = [
+        { question: "Conventional programming is generally easier than ML for complex problems like image recognition.", answer: false },
+        { question: "Machine learning requires the programmer to explicitly define all the rules for solving a problem.", answer: false },
+        { question: "Deep Learning is a type of Artificial Intelligence but not a type of Machine Learning.", answer: false },
+        { question: "Labeled data is necessary for supervised learning.", answer: true },
+        { question: "Unlabeled data is typically used in clustering tasks.", answer: true },
+        { question: "The training set is used to evaluate how well a model generalizes to unseen data.", answer: false },
+        { question: "Underfitting occurs when a model is too complex relative to the training data.", answer: false }, // That's Overfitting
+        { question: "Classification is a supervised learning task.", answer: true },
+        { question: "Regression predicts discrete class labels.", answer: false },
+        { question: "Reinforcement learning involves an agent interacting with an environment.", answer: true },
+        { question: "An L-shaped ROC curve indicates poor binary classification performance.", answer: false }, // Indicates good performance
+        { question: "The Sigmoid function outputs values between 0 and 1.", answer: true },
+         { question: "The Loss Function in ML measures the difference between predicted and actual outputs.", answer: true },
+        { question: "Multi-class classification is limited to exactly three categories.", answer: false }, // More than two
+        { question: "Logistic Regression can only be used for binary classification.", answer: false } // Also multi-class
+    ];
+    const multipleChoice = [
+        { question: "Which of the following is NOT a primary reason for the acceleration in ML progress?", options: ["Availability of large data", "Decreased compute power costs", "Improved algorithms", "Availability of large memory"], answer: "Decreased compute power costs" }, // Increased compute power availability
+        { question: "What is the main goal of Unsupervised Learning?", options: ["Predict specific outcomes", "Assign data to predefined categories", "Discover structures in data", "Predict continuous values"], answer: "Discover structures in data" },
+        { question: "Which type of machine learning involves an agent learning by interacting with an environment and receiving rewards?", options: ["Supervised Learning", "Unsupervised Learning", "Reinforcement Learning", "Deep Learning"], answer: "Reinforcement Learning" },
+        { question: "Which supervised learning task aims to predict a continuous numerical value?", options: ["Classification", "Clustering", "Regression", "Association"], answer: "Regression" },
+        { question: "Spam filtering is a typical application of which ML task?", options: ["Clustering", "Regression", "Classification", "Dimensionality Reduction"], answer: "Classification" },
+        { question: "Grouping customers based on purchasing habits using unlabeled data is an example of:", options: ["Classification", "Regression", "Clustering", "Reinforcement Learning"], answer: "Clustering" },
+        { question: "What does a Diagonal ROC curve suggest about a binary classifier?", options: ["Perfect performance", "Random guessing performance", "Poor recall", "Poor precision"], answer: "Random guessing performance" },
+        { question: "Which classification algorithm is specifically mentioned as being used for both binary and multi-class tasks?", options: ["K-Means", "Decision Tree", "Logistic Regression", "SVM"], answer: "Logistic Regression" },
+        { question: "In the formula for the Sigmoid function, ŷ = 1 / (1 + e<sup>-z</sup>), what does z represent?", options: ["The predicted probability", "The true label", "A linear combination of features", "The loss value"], answer: "A linear combination of features" },
+        { question: "If a model performs well on the training data but poorly on the testing data, it is likely experiencing:", options: ["Underfitting", "Good generalization", "Convergence", "Overfitting"], answer: "Overfitting" },
+         { question: "Which of these is a subset of Machine Learning that specifically uses multi-layered neural networks?", options: ["Artificial Intelligence", "Reinforcement Learning", "Deep Learning", "Conventional Programming"], answer: "Deep Learning" },
+        { question: "The ROC curve evaluates the performance of which type of model?", options: ["Regression", "Clustering", "Binary Classification", "All types of models"], answer: "Binary Classification" },
+        { question: "What is the primary difference between Labeled and Unlabeled data?", options: ["Size", "Presence of assigned categories/attributes", "Source", "Format"], answer: "Presence of assigned categories/attributes" },
+         { question: "Which task is NOT typically considered a supervised learning task?", options: ["Spam Filtering", "Image Classification", "Customer Segmentation", "Medical Diagnosis"], answer: "Customer Segmentation" }, // Segmentation is clustering (unsupervised)
+        { question: "What does the Softmax function calculate in multi-class logistic regression?", options: ["The single predicted class", "The error for each class", "The probabilities for each class", "The confidence score"], answer: "The probabilities for each class" }
+    ];
+    // --- END OF QUIZ DATA ---
 
 
-        // --- START OF SCRIPT LOGIC ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const mainTabButtons = document.querySelectorAll('.main-tabs .tab-button');
-            const mainTabContents = document.querySelectorAll('.main-content');
-            const conceptsTabContent = document.getElementById('concepts'); // Get the concepts tab content
-            const fillContainer = document.getElementById('fill-questions');
-            const tfContainer = document.getElementById('tf-questions');
-            const mcContainer = document.getElementById('mc-questions');
-            // Select ALL accordion headers, including those within nested accordions
-            const accordionHeaders = document.querySelectorAll('.accordion-header');
+    // --- START OF SCRIPT LOGIC (Same as previous, operates on new content) ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const mainTabButtons = document.querySelectorAll('.main-tabs .tab-button');
+        const mainTabContents = document.querySelectorAll('.main-content');
+        const fillContainer = document.getElementById('fill-questions');
+        const tfContainer = document.getElementById('tf-questions');
+        const mcContainer = document.getElementById('mc-questions');
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
 
-
-            // --- Main Tab Switching Logic ---
-            mainTabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const tabId = button.getAttribute('data-tab');
-                    mainTabButtons.forEach(btn => btn.classList.remove('active'));
-                    mainTabContents.forEach(content => content.classList.remove('active'));
-                    button.classList.add('active');
-                    const targetContent = document.getElementById(tabId);
-                    if (targetContent) { targetContent.classList.add('active'); }
-                });
+        // --- Main Tab Switching Logic ---
+        mainTabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                mainTabButtons.forEach(btn => btn.classList.remove('active'));
+                mainTabContents.forEach(content => content.classList.remove('active'));
+                button.classList.add('active');
+                const targetContent = document.getElementById(tabId);
+                if (targetContent) { targetContent.classList.add('active'); }
             });
+        });
 
-            // --- Accordion Logic (for Glossary AND Concepts/Examples) ---
-            accordionHeaders.forEach(header => {
-                header.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                    const panel = this.nextElementSibling;
+        // --- Accordion Logic (for Glossary AND Concepts) ---
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const panel = this.nextElementSibling;
+                if (panel.style.maxHeight && panel.style.maxHeight !== '0px') { // Check if open
+                    // Closing
+                    panel.style.maxHeight = null; // Let CSS transition handle to 0
+                    // Set padding to 0 after the transition (using a timeout)
+                     setTimeout(() => {
+                        if (!this.classList.contains('active')) { // Ensure it's still closed
+                            panel.style.paddingTop = "0";
+                            panel.style.paddingBottom = "0";
+                        }
+                     }, 400); // Match the CSS transition duration (0.4s)
 
-                    // Instantly apply padding changes regardless of state
-                    if (this.classList.contains('active')) {
-                        // Opening: Apply padding before setting max-height
-                        panel.style.paddingTop = "15px";
-                        panel.style.paddingBottom = "15px";
-                        // Set max-height to a large value to allow full expansion
-                        panel.style.maxHeight = '5000px'; // Use a large enough value
-                    } else {
-                        // Closing: Remove padding and set max-height to 0
-                        // Remove padding instantly
-                        panel.style.paddingTop = "0";
-                        panel.style.paddingBottom = "0";
-                        // Set max-height to 0 to trigger closing animation
-                        // Need to force reflow before setting to 0 if removing padding instantly
-                        requestAnimationFrame(() => {
-                           panel.style.maxHeight = '0px';
-                        });
-                    }
+                } else {
+                    // Opening
+                    // Temporarily set padding to allow scrollHeight calculation, then set maxHeight
+                    panel.style.paddingTop = "15px";
+                    panel.style.paddingBottom = "15px";
+                    panel.style.maxHeight = panel.scrollHeight + "px"; // Set based on content height
 
-                    // Optional: Close other accordions in the same group (if needed)
-                    // Find the parent accordion container
-                    const parentAccordion = this.closest('.accordion');
-                    if (parentAccordion) {
-                        parentAccordion.querySelectorAll('.accordion-header').forEach(otherHeader => {
-                            if (otherHeader !== this && otherHeader.classList.contains('active')) {
-                                otherHeader.classList.remove('active');
-                                const otherPanel = otherHeader.nextElementSibling;
-                                otherPanel.style.paddingTop = "0";
-                                otherPanel.style.paddingBottom = "0";
-                                requestAnimationFrame(() => {
-                                    otherPanel.style.maxHeight = '0px';
-                                });
-                            }
-                        });
-                    }
-                });
-            });
+                     // Recalculate max-height if window resized or content changes
+                     const resizeObserver = new ResizeObserver(entries => {
+                         for (let entry of entries) {
+                             if (entry.target.style.maxHeight !== '0px' && !header.classList.contains('active')) {
+                                  // If panel is somehow open but header isn't active, close it
+                                  entry.target.style.maxHeight = null;
+                                  entry.target.style.paddingTop = "0";
+                                  entry.target.style.paddingBottom = "0";
+                             } else if (header.classList.contains('active')) {
+                                  // If header is active, ensure max-height is correct
+                                  entry.target.style.maxHeight = entry.target.scrollHeight + "px";
+                             }
+                         }
+                     });
+                     resizeObserver.observe(panel);
 
-             // --- QUIZ LOGIC (Functions: handleOptionSelection, showFeedback, loadFillInTheBlankQuestions, loadTrueFalseQuestions, loadMultipleChoiceQuestions) ---
-            function handleOptionSelection(button, questionDiv) {
-                const siblings = questionDiv.querySelectorAll('.option-button.selected');
-                siblings.forEach(sib => sib.classList.remove('selected'));
-                button.classList.add('selected');
-                const existingFeedback = questionDiv.querySelector('.feedback');
-                if (existingFeedback) { existingFeedback.remove(); }
-            }
-            function showFeedback(questionDiv, isCorrect, correctAnswer) {
-                const existingFeedback = questionDiv.querySelector('.feedback');
-                if (existingFeedback) { existingFeedback.remove(); }
-                const feedback = document.createElement('div'); feedback.className = 'feedback';
-                if (isCorrect) { feedback.classList.add('correct'); feedback.textContent = 'Correct!'; }
-                else { feedback.classList.add('incorrect'); feedback.textContent = `Incorrect. The correct answer is: ${correctAnswer}`; }
-                const checkButton = questionDiv.querySelector('.check-answer');
-                if (checkButton) { checkButton.parentNode.insertBefore(feedback, checkButton.nextSibling); }
-                else { questionDiv.appendChild(feedback); }
-            }
-            function loadFillInTheBlankQuestions() {
-                fillContainer.innerHTML = ''; // Clear previous questions
-                // Shuffle questions for variety each load (optional)
-                const shuffledQuestions = fillInTheBlank.sort(() => Math.random() - 0.5);
-                shuffledQuestions.forEach((q) => {
-                    const questionDiv = document.createElement('div'); questionDiv.className = 'question';
-                    // Replace the blank with a placeholder for clarity
-                    const questionText = document.createElement('p');
-                    // Use a simple regex to find the first blank placeholder (___) or assume the first word is the blank
-                    let displayQuestion = q.question.replace("_______", "__________"); // Use a visual blank
-                     // If no blank placeholder, maybe underline the expected answer position? Or just use the original text and highlight the answer later.
-                     // For this structure, assuming the blank is where the answer fits the sentence naturally.
-                    questionText.textContent = displayQuestion;
-                    questionDiv.appendChild(questionText);
-
-                    const optionsDiv = document.createElement('div'); optionsDiv.className = 'options';
-                    // Shuffle options as well
-                    const shuffledOptions = q.options.sort(() => Math.random() - 0.5);
-                    shuffledOptions.forEach(option => { const optionButton = document.createElement('button'); optionButton.className = 'option-button'; optionButton.textContent = option; optionButton.addEventListener('click', () => handleOptionSelection(optionButton, questionDiv)); optionsDiv.appendChild(optionButton); });
-                    questionDiv.appendChild(optionsDiv);
-                    const checkButton = document.createElement('button'); checkButton.className = 'check-answer'; checkButton.textContent = 'Check Answer'; checkButton.addEventListener('click', () => { const selected = questionDiv.querySelector('.option-button.selected'); showFeedback(questionDiv, selected && selected.textContent === q.answer, q.answer); });
-                    questionDiv.appendChild(checkButton); fillContainer.appendChild(questionDiv);
-                });
-            }
-            function loadTrueFalseQuestions() {
-                 tfContainer.innerHTML = ''; // Clear previous questions
-                  const shuffledQuestions = trueOrFalse.sort(() => Math.random() - 0.5);
-                shuffledQuestions.forEach((q) => {
-                    const questionDiv = document.createElement('div'); questionDiv.className = 'question';
-                    const questionText = document.createElement('p'); questionText.textContent = q.question; questionDiv.appendChild(questionText);
-                    const optionsDiv = document.createElement('div'); optionsDiv.className = 'options tf-options'; // Add class for potential specific TF styling
-                    const trueButton = document.createElement('button'); trueButton.className = 'option-button'; trueButton.textContent = 'True'; trueButton.addEventListener('click', () => handleOptionSelection(trueButton, questionDiv)); optionsDiv.appendChild(trueButton);
-                    const falseButton = document.createElement('button'); falseButton.className = 'option-button'; falseButton.textContent = 'False'; falseButton.addEventListener('click', () => handleOptionSelection(falseButton, questionDiv)); optionsDiv.appendChild(falseButton);
-                     // Order True/False randomly?
-                     const tfButtons = [trueButton, falseButton].sort(() => Math.random() - 0.5);
-                     optionsDiv.innerHTML = ''; // Clear optionsDiv to add shuffled buttons
-                     tfButtons.forEach(btn => optionsDiv.appendChild(btn));
-
-                    questionDiv.appendChild(optionsDiv);
-                    const checkButton = document.createElement('button'); checkButton.className = 'check-answer'; checkButton.textContent = 'Check Answer';
-                    checkButton.addEventListener('click', () => {
-                        const selected = questionDiv.querySelector('.option-button.selected');
-                        const correctAnswerText = q.answer ? 'True' : 'False';
-                        const isCorrect = selected && selected.textContent === correctAnswerText;
-                        showFeedback(questionDiv, isCorrect, correctAnswerText);
-                    });
-                    questionDiv.appendChild(checkButton); tfContainer.appendChild(questionDiv);
-                });
-            }
-            function loadMultipleChoiceQuestions() {
-                 mcContainer.innerHTML = ''; // Clear previous questions
-                 const shuffledQuestions = multipleChoice.sort(() => Math.random() - 0.5);
-                shuffledQuestions.forEach((q) => {
-                    const questionDiv = document.createElement('div'); questionDiv.className = 'question';
-                    const questionText = document.createElement('p'); questionText.textContent = q.question; questionDiv.appendChild(questionText);
-                    const optionsDiv = document.createElement('div'); optionsDiv.className = 'options';
-                     // Shuffle options
-                     const shuffledOptions = q.options.sort(() => Math.random() - 0.5);
-                     shuffledOptions.forEach(option => { const optionButton = document.createElement('button'); optionButton.className = 'option-button'; optionButton.textContent = option; optionButton.addEventListener('click', () => handleOptionSelection(optionButton, questionDiv)); optionsDiv.appendChild(optionButton); });
-                    questionDiv.appendChild(optionsDiv);
-                    const checkButton = document.createElement('button'); checkButton.className = 'check-answer'; checkButton.textContent = 'Check Answer'; checkButton.addEventListener('click', () => { const selected = questionDiv.querySelector('.option-button.selected'); showFeedback(questionDiv, selected && selected.textContent === q.answer, q.answer); });
-                    questionDiv.appendChild(checkButton); mcContainer.appendChild(questionDiv);
-                });
-            }
-
-            // --- Initial Load ---
-            loadFillInTheBlankQuestions();
-            loadTrueFalseQuestions();
-            loadMultipleChoiceQuestions();
-
-             // --- Adjust maxHeight for accordions initially ---
-             // This ensures accordions are correctly sized if opened by default or if content loads asynchronously
-            document.querySelectorAll('.accordion-panel').forEach(panel => {
-                if (panel.style.maxHeight && panel.style.maxHeight !== '0px') {
-                     // If an accordion is meant to be open initially (e.g., by adding 'active' class),
-                     // recalculate its max-height after the DOM is ready.
-                     // This might require adding an 'active' class to the panel itself or checking the header's active class.
-                     // For simplicity with the current structure, we assume all are closed initially by CSS max-height: 0.
-                     // If you needed one open, you'd add 'active' to header and set initial panel max-height here.
+                     // Clean up observer when accordion is closed
+                     panel.addEventListener('transitionend', function handler() {
+                        if (panel.style.maxHeight === '0px' || panel.style.maxHeight === '') {
+                            resizeObserver.unobserve(panel);
+                            panel.removeEventListener('transitionend', handler);
+                        }
+                     });
                 }
-             });
+            });
+        });
 
 
-        }); // End DOMContentLoaded
-       
-    </script>
+         // --- QUIZ LOGIC (Functions: handleOptionSelection, showFeedback, loadFillInTheBlankQuestions, loadTrueFalseQuestions, loadMultipleChoiceQuestions) ---
+        function handleOptionSelection(button, questionDiv) {
+            const siblings = questionDiv.querySelectorAll('.option-button.selected');
+            siblings.forEach(sib => sib.classList.remove('selected'));
+            button.classList.add('selected');
+            const existingFeedback = questionDiv.querySelector('.feedback');
+            if (existingFeedback) { existingFeedback.remove(); }
+        }
+        function showFeedback(questionDiv, isCorrect, correctAnswer) {
+            const existingFeedback = questionDiv.querySelector('.feedback');
+            if (existingFeedback) { existingFeedback.remove(); }
+            const feedback = document.createElement('div'); feedback.className = 'feedback';
+            if (isCorrect) { feedback.classList.add('correct'); feedback.textContent = 'Correct!'; }
+            else { feedback.classList.add('incorrect'); feedback.textContent = `Incorrect. Correct answer: ${correctAnswer}`; }
+            const checkButton = questionDiv.querySelector('.check-answer');
+            if (checkButton) { checkButton.parentNode.insertBefore(feedback, checkButton.nextSibling); }
+            else { questionDiv.appendChild(feedback); }
+        }
+        function loadFillInTheBlankQuestions() {
+            fillContainer.innerHTML = '';
+            fillInTheBlank.forEach((q) => {
+                const questionDiv = document.createElement('div'); questionDiv.className = 'question';
+                const questionText = document.createElement('p'); questionText.textContent = q.question; questionDiv.appendChild(questionText);
+                const optionsDiv = document.createElement('div'); optionsDiv.className = 'options';
+                q.options.forEach(option => { const optionButton = document.createElement('button'); optionButton.className = 'option-button'; optionButton.textContent = option; optionButton.addEventListener('click', () => handleOptionSelection(optionButton, questionDiv)); optionsDiv.appendChild(optionButton); });
+                questionDiv.appendChild(optionsDiv);
+                const checkButton = document.createElement('button'); checkButton.className = 'check-answer'; checkButton.textContent = 'Check Answer'; checkButton.addEventListener('click', () => { const selected = questionDiv.querySelector('.option-button.selected'); showFeedback(questionDiv, selected && selected.textContent === q.answer, q.answer); });
+                questionDiv.appendChild(checkButton); fillContainer.appendChild(questionDiv);
+            });
+        }
+        function loadTrueFalseQuestions() {
+             tfContainer.innerHTML = '';
+            trueOrFalse.forEach((q) => {
+                const questionDiv = document.createElement('div'); questionDiv.className = 'question';
+                const questionText = document.createElement('p'); questionText.textContent = q.question; questionDiv.appendChild(questionText);
+                const optionsDiv = document.createElement('div'); optionsDiv.className = 'options';
+                const trueButton = document.createElement('button'); trueButton.className = 'option-button'; trueButton.textContent = 'True'; trueButton.addEventListener('click', () => handleOptionSelection(trueButton, questionDiv)); optionsDiv.appendChild(trueButton);
+                const falseButton = document.createElement('button'); falseButton.className = 'option-button'; falseButton.textContent = 'False'; falseButton.addEventListener('click', () => handleOptionSelection(falseButton, questionDiv)); optionsDiv.appendChild(falseButton);
+                questionDiv.appendChild(optionsDiv);
+                const checkButton = document.createElement('button'); checkButton.className = 'check-answer'; checkButton.textContent = 'Check Answer';
+                checkButton.addEventListener('click', () => {
+                    const selected = questionDiv.querySelector('.option-button.selected'); const correctAnswerText = q.answer ? 'True' : 'False'; const isCorrect = selected && ((selected.textContent === 'True' && q.answer) || (selected.textContent === 'False' && !q.answer)); showFeedback(questionDiv, isCorrect, correctAnswerText);
+                });
+                questionDiv.appendChild(checkButton); tfContainer.appendChild(questionDiv);
+            });
+        }
+        function loadMultipleChoiceQuestions() {
+             mcContainer.innerHTML = '';
+            multipleChoice.forEach((q) => {
+                const questionDiv = document.createElement('div'); questionDiv.className = 'question';
+                const questionText = document.createElement('p'); questionText.innerHTML = q.question; questionDiv.appendChild(questionText); // Use innerHTML for potential math
+                const optionsDiv = document.createElement('div'); optionsDiv.className = 'options';
+                 q.options.forEach(option => { const optionButton = document.createElement('button'); optionButton.className = 'option-button'; optionButton.textContent = option; optionButton.addEventListener('click', () => handleOptionSelection(optionButton, questionDiv)); optionsDiv.appendChild(optionButton); });
+                questionDiv.appendChild(optionsDiv);
+                const checkButton = document.createElement('button'); checkButton.className = 'check-answer'; checkButton.textContent = 'Check Answer'; checkButton.addEventListener('click', () => { const selected = questionDiv.querySelector('.option-button.selected'); showFeedback(questionDiv, selected && selected.textContent === q.answer, q.answer); });
+                questionDiv.appendChild(checkButton); mcContainer.appendChild(questionDiv);
+            });
+        }
+
+        // --- Initial Load ---
+        loadFillInTheBlankQuestions();
+        loadTrueFalseQuestions();
+        loadMultipleChoiceQuestions();
+
+        // Manually trigger click on the first tab button to show default content
+         if (mainTabButtons.length > 0) {
+             mainTabButtons[0].click();
+         }
+
+    }); // End DOMContentLoaded
+    // --- END OF SCRIPT LOGIC ---
+</script>
+
 </body>
 </html>
+
