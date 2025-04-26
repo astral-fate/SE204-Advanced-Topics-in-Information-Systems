@@ -47,6 +47,19 @@
             margin-bottom: 15px;
             color: #007bff; /* Lighter Blue */
         }
+        /* Added h4, h5 styles for example steps */
+        h4 {
+            color: #17a2b8; /* Teal for steps */
+            margin-top: 1.5em;
+            margin-bottom: 1em;
+        }
+         h5 {
+            color: #6c757d; /* Gray for sub-steps */
+            margin-top: 1.2em;
+            margin-bottom: 0.8em;
+            font-style: italic;
+        }
+
 
         /* --- Main Tabs Styles --- */
         .main-tabs {
@@ -94,23 +107,39 @@
         .accordion {
             border: 1px solid #dee2e6; border-radius: 5px; overflow: hidden; margin-bottom: 20px;
         }
+        /* Nested accordion styling */
+         .accordion .accordion {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            border: 1px dashed #adb5bd; /* Slightly different border for nested */
+         }
         .accordion-item { border-bottom: 1px solid #dee2e6; }
         .accordion-item:last-child { border-bottom: none; }
         .accordion-header {
             background-color: #f8f9fa; cursor: pointer; padding: 12px 20px; width: 100%; border: none; text-align: left; outline: none; font-size: 1.1em; font-weight: bold; transition: background-color 0.3s ease; position: relative; color: #0056b3;
         }
+        /* Style for nested accordion headers */
+         .accordion .accordion .accordion-header {
+            font-size: 1.0em; /* Slightly smaller */
+            background-color: #e9ecef; /* Different background */
+            color: #004085; /* Darker blue */
+         }
         #glossary .accordion-header { color: #dc3545; } /* Glossary terms red */
         .accordion-header:hover { background-color: #e9ecef; }
+        .accordion .accordion .accordion-header:hover { background-color: #d6e0ea; }
+
         .accordion-header::after { content: '\002B'; color: #0056b3; font-weight: bold; float: right; margin-left: 5px; transition: transform 0.2s ease-in-out; }
         .accordion-header.active::after { content: "\2212"; transform: rotate(180deg); }
         .accordion-header.active { background-color: #e7f1ff; }
+        .accordion .accordion .accordion-header.active { background-color: #cce5ff; }
+
         .accordion-panel {
             padding: 0 20px; background-color: white; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, padding 0.4s ease-out;
         }
          /* Adjusted padding for open panels */
         .accordion-panel.open {
              padding: 15px 20px;
-             max-height: 5000px; /* Sufficiently large */
+             max-height: 10000px; /* Sufficiently large */
         }
 
         .accordion-panel > * { margin-top: 15px; margin-bottom: 15px; }
@@ -123,16 +152,28 @@
         table { width: auto; border-collapse: collapse; margin: 15px auto; border: 1px solid #ccc; font-size: 0.9em; }
         th, td { border: 1px solid #ccc; padding: 8px 10px; text-align: center; vertical-align: middle; }
         th { background-color: #e9ecef; font-weight: bold; }
+        /* Align text left in first column for readability in detailed tables */
+        td:first-child { text-align: left; }
+        th:first-child { text-align: left; }
+        /* Center align header for TID */
+        th.tid-header { text-align: center; }
+        /* Center align data for TID */
+        td.tid-cell { text-align: center; }
+
+
         td code { background-color: transparent; padding: 0; font-size: 1em; }
         .check-mark { color: green; font-weight: bold; }
         .cross-mark { color: red; font-weight: bold; }
         .support-table { width: 60%; }
 
         /* --- Formulas Section Specifics --- */
-        #formulas h4 { color: #17a2b8; margin-top: 1.5em; }
         #formulas ul { list-style: disc; padding-left: 30px; }
         #formulas ol { list-style: decimal; padding-left: 30px; }
         #formulas .math { font-family: 'Times New Roman', serif; font-style: italic; font-size: 1.1em;}
+        /* Ensure nested accordion panels have sufficient space */
+        #formulas .accordion .accordion-panel {
+            background-color: #fdfdff; /* Slightly off-white for nested panels */
+        }
 
         /* --- Quiz Styles --- */
         .question { margin-bottom: 25px; padding: 20px; border: 1px solid #dee2e6; border-radius: 8px; background-color: #ffffff; position: relative; }
@@ -257,7 +298,7 @@
                          <h4>Support Count (σ)</h4><p>The absolute frequency of occurrence of an itemset. Formula: <code>σ(Itemset) = Count(Transactions containing Itemset)</code></p>
                          <h4>Support (s)</h4><p>The fraction/percentage of transactions containing an itemset. Formula: <code class="math">s(Itemset) = σ(Itemset) / Total Transactions (T)</code></p>
                          <div class="accordion"><div class="accordion-item"><button class="accordion-header">Example: Support Calculation</button><div class="accordion-panel">
-                             <p>Transactions:</p><table><thead><tr><th>TID</th><th>Items</th></tr></thead><tbody><tr><td>1</td><td>Bread, Milk</td></tr><tr><td>2</td><td>Bread, Diaper, Beer, Eggs</td></tr><tr><td>3</td><td>Milk, Diaper, Beer, Coke</td></tr><tr><td>4</td><td>Bread, Milk, Diaper, Beer</td></tr><tr><td>5</td><td>Bread, Milk, Diaper, Coke</td></tr></tbody></table>
+                             <p>Transactions:</p><table><thead><tr><th class="tid-header">TID</th><th>Items</th></tr></thead><tbody><tr><td class="tid-cell">1</td><td>Bread, Milk</td></tr><tr><td class="tid-cell">2</td><td>Bread, Diaper, Beer, Eggs</td></tr><tr><td class="tid-cell">3</td><td>Milk, Diaper, Beer, Coke</td></tr><tr><td class="tid-cell">4</td><td>Bread, Milk, Diaper, Beer</td></tr><tr><td class="tid-cell">5</td><td>Bread, Milk, Diaper, Coke</td></tr></tbody></table>
                              <p>Support Count & Support for <code>{Milk, Bread, Diaper}</code>:</p><p>Occurs in TIDs 4, 5.</p><p><code>σ({Milk, Bread, Diaper}) = 2</code></p><p><code>T = 5</code></p><p><code>s({Milk, Bread, Diaper}) = 2 / 5 = 40%</code></p>
                          </div></div></div>
 
@@ -295,8 +336,8 @@
                      <div class="accordion-panel">
                          <p>An itemset is <strong>Frequent</strong> if its support (s) ≥ <strong>Minimum Support Threshold (minsup)</strong>.</p>
                          <div class="accordion"><div class="accordion-item"><button class="accordion-header">Example: Finding Frequent Itemsets (minsup = 60%)</button><div class="accordion-panel">
-                            <p>Transactions:</p><table><thead><tr><th>TID</th><th>Items</th></tr></thead><tbody><tr><td>1</td><td>Bread, Milk</td></tr><tr><td>2</td><td>Bread, Diaper, Beer, Eggs</td></tr><tr><td>3</td><td>Milk, Diaper, Beer, Coke</td></tr><tr><td>4</td><td>Bread, Milk, Diaper, Beer</td></tr><tr><td>5</td><td>Bread, Milk, Diaper, Coke</td></tr></tbody></table>
-                        
+                            <p>Transactions:</p><table><thead><tr><th class="tid-header">TID</th><th>Items</th></tr></thead><tbody><tr><td class="tid-cell">1</td><td>Bread, Milk</td></tr><tr><td class="tid-cell">2</td><td>Bread, Diaper, Beer, Eggs</td></tr><tr><td class="tid-cell">3</td><td>Milk, Diaper, Beer, Coke</td></tr><tr><td class="tid-cell">4</td><td>Bread, Milk, Diaper, Beer</td></tr><tr><td class="tid-cell">5</td><td>Bread, Milk, Diaper, Coke</td></tr></tbody></table>
+
                             <p>Using same 5 transactions, <code>minsup = 60% (0.6)</code>. Check: <code>{Bread}, {Eggs}, {Bread, Diaper}, {Bread, Milk}, {Bread, Milk, Diaper}</code>.</p>
                              <table><thead><tr><th>Itemset</th><th>Support (s)</th><th>Frequent? (s ≥ 60%)</th></tr></thead><tbody><tr><td>{Bread}</td><td>80%</td><td class="check-mark">Yes</td></tr><tr><td>{Eggs}</td><td>20%</td><td class="cross-mark">No</td></tr><tr><td>{Bread, Diaper}</td><td>60%</td><td class="check-mark">Yes</td></tr><tr><td>{Bread, Milk}</td><td>60%</td><td class="check-mark">Yes</td></tr><tr><td>{Bread, Milk, Diaper}</td><td>40%</td><td class="cross-mark">No</td></tr></tbody></table>
                              <p>Frequent Itemsets: {Bread}, {Bread, Diaper}, {Bread, Milk}.</p>
@@ -307,13 +348,13 @@
                      <button class="accordion-header">Closed and Maximal Frequent Itemsets</button>
                      <div class="accordion-panel">
                              <h4>Closed Frequent Itemset</h4>
-                            
-                             <p>A frequent itemset is <strong>closed</strong> if all of its proper supersets have a support count that is <strong>different</strong> from the support count of the itemset itself. 
+
+                             <p>A frequent itemset is <strong>closed</strong> if all of its proper supersets have a support count that is <strong>different</strong> from the support count of the itemset itself.
                                 <br>
                                 This means its support value is not 'repeated' by any larger itemset containing it.</p>
                               <p>In simple terms:</p>
                               <ul>
-                                  <li><strong>Not Closed</strong>: You can add items to the frequent itemset, and the new, larger itemset has the <strong>exact same support</strong>. 
+                                  <li><strong>Not Closed</strong>: You can add items to the frequent itemset, and the new, larger itemset has the <strong>exact same support</strong>.
                                     <br>
                                     (Support is "repeated" by a superset).</li>
                                   <li><strong>Closed</strong>: For every way you add items to the frequent itemset to make a larger itemset, the support of that larger itemset is <strong>different</strong> from the original. (Support is "not repeated" by any superset).</li>
@@ -325,12 +366,12 @@
                                          <div class="example-box">
                                              <p><strong>Transaction Data (T=4):</strong></p>
                                              <table>
-                                                 <thead><tr><th>Transaction ID</th><th>Milk</th><th>Bread</th><th>Butter</th><th>Cheese</th></tr></thead>
+                                                 <thead><tr><th class="tid-header">Transaction ID</th><th>Milk</th><th>Bread</th><th>Butter</th><th>Cheese</th></tr></thead>
                                                  <tbody>
-                                                     <tr><td>1</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
-                                                     <tr><td>2</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
-                                                     <tr><td>3</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
-                                                     <tr><td>4</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+                                                     <tr><td class="tid-cell">1</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
+                                                     <tr><td class="tid-cell">2</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
+                                                     <tr><td class="tid-cell">3</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
+                                                     <tr><td class="tid-cell">4</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
                                                  </tbody>
                                              </table>
                                              <hr>
@@ -358,14 +399,14 @@
                                          <div class="example-box">
                                               <p><strong>Transaction Data (T=6):</strong></p>
                                               <table>
-                                                <thead><tr><th>TID</th><th>Shirt</th><th>Jeans</th><th>Belt</th><th>Dress</th><th>Socks</th></tr></thead>
+                                                <thead><tr><th class="tid-header">TID</th><th>Shirt</th><th>Jeans</th><th>Belt</th><th>Dress</th><th>Socks</th></tr></thead>
                                                 <tbody>
-                                                <tr><td>T1</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
-                                                <tr><td>T2</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
-                                                <tr><td>T3</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td></tr>
-                                                <tr><td>T4</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
-                                                <tr><td>T5</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
-                                                <tr><td>T6</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
+                                                <tr><td class="tid-cell">T1</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
+                                                <tr><td class="tid-cell">T2</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
+                                                <tr><td class="tid-cell">T3</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td></tr>
+                                                <tr><td class="tid-cell">T4</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+                                                <tr><td class="tid-cell">T5</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+                                                <tr><td class="tid-cell">T6</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
                                                 </tbody>
                                               </table>
                                              <hr>
@@ -408,12 +449,12 @@
                                    <div class="example-box">
                                         <p><strong>Transaction Data (T=4):</strong> (Same as above)</p>
                                          <table>
-                                             <thead><tr><th>Transaction ID</th><th>Milk</th><th>Bread</th><th>Butter</th><th>Cheese</th></tr></thead>
+                                             <thead><tr><th class="tid-header">Transaction ID</th><th>Milk</th><th>Bread</th><th>Butter</th><th>Cheese</th></tr></thead>
                                              <tbody>
-                                                 <tr><td>1</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
-                                                 <tr><td>2</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
-                                                 <tr><td>3</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
-                                                 <tr><td>4</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+                                                 <tr><td class="tid-cell">1</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
+                                                 <tr><td class="tid-cell">2</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
+                                                 <tr><td class="tid-cell">3</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
+                                                 <tr><td class="tid-cell">4</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
                                              </tbody>
                                          </table>
                                        <hr>
@@ -455,14 +496,14 @@
                                    <div class="example-box">
                                        <p><strong>Transaction Data (T=6):</strong> (Same as above)</p>
                                          <table>
-                                                <thead><tr><th>TID</th><th>Shirt</th><th>Jeans</th><th>Belt</th><th>Dress</th><th>Socks</th></tr></thead>
+                                                <thead><tr><th class="tid-header">TID</th><th>Shirt</th><th>Jeans</th><th>Belt</th><th>Dress</th><th>Socks</th></tr></thead>
                                                 <tbody>
-                                                <tr><td>T1</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
-                                                <tr><td>T2</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
-                                                <tr><td>T3</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td></tr>
-                                                <tr><td>T4</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
-                                                <tr><td>T5</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
-                                                <tr><td>T6</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
+                                                <tr><td class="tid-cell">T1</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="cross-mark">✗</td></tr>
+                                                <tr><td class="tid-cell">T2</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
+                                                <tr><td class="tid-cell">T3</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td></tr>
+                                                <tr><td class="tid-cell">T4</td><td class="cross-mark">✗</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+                                                <tr><td class="tid-cell">T5</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+                                                <tr><td class="tid-cell">T6</td><td class="cross-mark">✗</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="cross-mark">✗</td><td class="check-mark">✓</td></tr>
                                                 </tbody>
                                               </table>
                                         <hr>
@@ -501,7 +542,7 @@
                          <h4>Support (s) of Rule</h4><p><code class="math">s(X → Y) = σ(X ∪ Y) / T</code></p>
                          <h4>Confidence (c) of Rule</h4><p><code class="math">c(X → Y) = σ(X ∪ Y) / σ(X)</code></p>
                          <div class="accordion"><div class="accordion-item"><button class="accordion-header">Example: Rule Calculation</button><div class="accordion-panel">
-                             <p>Using 5-transaction table:</p><table><thead><tr><th>TID</th><th>Items</th></tr></thead><tbody><tr><td>1</td><td>Bread, Milk</td></tr><tr><td>2</td><td>Bread, Diaper, Beer, Eggs</td></tr><tr><td>3</td><td>Milk, Diaper, Beer, Coke</td></tr><tr><td>4</td><td>Bread, Milk, Diaper, Beer</td></tr><tr><td>5</td><td>Bread, Milk, Diaper, Coke</td></tr></tbody></table><p>T = 5.</p><hr/>
+                             <p>Using 5-transaction table:</p><table><thead><tr><th class="tid-header">TID</th><th>Items</th></tr></thead><tbody><tr><td class="tid-cell">1</td><td>Bread, Milk</td></tr><tr><td class="tid-cell">2</td><td>Bread, Diaper, Beer, Eggs</td></tr><tr><td class="tid-cell">3</td><td>Milk, Diaper, Beer, Coke</td></tr><tr><td class="tid-cell">4</td><td>Bread, Milk, Diaper, Beer</td></tr><tr><td class="tid-cell">5</td><td>Bread, Milk, Diaper, Coke</td></tr></tbody></table><p>T = 5.</p><hr/>
                              <p><strong>Rule: {Bread} → {Milk}</strong></p><p>σ(Bread∪Milk)=3. σ(Bread)=4.</p><p>Support(Rule) = 3/5=60%. Confidence(Rule) = 3/4=75%.</p><hr/>
                              <p><strong>Rule: {Milk, Diaper} → {Beer}</strong></p><p>σ(Milk∪Diaper∪Beer)=2. σ(Milk, Diaper)=3.</p><p>Support(Rule) = 2/5=40%. Confidence(Rule) = 2/3≈66.7%.</p>
                          </div></div></div>
@@ -514,8 +555,10 @@
                          <h4>Steps Overview:</h4><ol><li>Find frequent 1-itemsets (F1).</li><li>Generate candidate (k+1)-itemsets (Ck+1) from Fk.</li><li>Prune Ck+1 using Apriori Principle.</li><li>Scan DB to find frequent (k+1)-itemsets (Fk+1) from Ck+1.</li><li>Repeat until no more frequent itemsets found.</li></ol>
                          <h4>Rule Generation:</h4><p>From frequent itemsets L, generate rules S → (L-S) and check minimum confidence.</p>
                          <h4>Drawbacks:</h4><p>Multiple DB scans, large candidate sets.</p>
-                         <div class="accordion"><div class="accordion-item"><button class="accordion-header">Example: Apriori Walkthrough (minsup=50% / σ≥3)</button><div class="accordion-panel">
-                             <p>Transactions:</p><table><thead><tr><th>TID</th><th>Items</th></tr></thead><tbody><tr><td>1</td><td>M, B, T</td></tr><tr><td>2</td><td>M, B</td></tr><tr><td>3</td><td>B, T</td></tr><tr><td>4</td><td>M, B, T, E</td></tr><tr><td>5</td><td>B, T</td></tr></tbody></table><p>Minsup count ≥ 3.</p>
+
+                         <!-- Original Simple Example -->
+                         <div class="accordion"><div class="accordion-item"><button class="accordion-header">Simple Apriori Walkthrough (minsup=50% / σ≥3)</button><div class="accordion-panel">
+                             <p>Transactions:</p><table><thead><tr><th class="tid-header">TID</th><th>Items</th></tr></thead><tbody><tr><td class="tid-cell">1</td><td>M, B, T</td></tr><tr><td class="tid-cell">2</td><td>M, B</td></tr><tr><td class="tid-cell">3</td><td>B, T</td></tr><tr><td class="tid-cell">4</td><td>M, B, T, E</td></tr><tr><td class="tid-cell">5</td><td>B, T</td></tr></tbody></table><p>Minsup count ≥ 3.</p>
                              <p><strong>F1 = {{M}:3, {B}:5, {T}:4}</strong> ({E}:1 is infrequent)</p>
                              <p><strong>C2 = {{M,B}, {M,T}, {B,T}}</strong></p>
                              <p><strong>F2 = {{M,B}:3, {B,T}:4}</strong> ({M,T}:2 is infrequent)</p>
@@ -525,6 +568,170 @@
                              <p><strong>Rules (minconf=80%):</strong> {M}→{B}(c=3/3=100% ✓), {B}→{M}(c=3/5=60% ✗), {B}→{T}(c=4/5=80% ✓), {T}→{B}(c=4/4=100% ✓)</p>
                              <p><strong>Final Rules: {M}→{B}, {B}→{T}, {T}→{B}</strong></p>
                          </div></div></div>
+
+                         <!-- **** NEW: DETAILED APRIORI EXAMPLE FROM IMAGES **** -->
+                         <div class="accordion">
+                           <div class="accordion-item">
+                               <button class="accordion-header">Detailed Apriori Walkthrough (Image Example 1: Minsup=40%, Minconf=60%)</button>
+                               <div class="accordion-panel open"> <!-- Start open for visibility -->
+                                   <h4>Problem Parameters</h4>
+                                   <ul>
+                                       <li>Minimum Support = 40% (Requires support count ≥ 0.40 * 5 = 2)</li>
+                                       <li>Minimum Confidence = 60%</li>
+                                   </ul>
+
+                                   <h4>Step 1: Transaction Dataset</h4>
+                                   <p>Total transactions (T): 5</p>
+                                   <table>
+                                       <thead><tr><th class="tid-header">TID</th><th>Set of items</th></tr></thead>
+                                       <tbody>
+                                           <tr><td class="tid-cell">1</td><td>Bread, Butter, Milk</td></tr>
+                                           <tr><td class="tid-cell">2</td><td>Eggs, Milk, Yogurt</td></tr>
+                                           <tr><td class="tid-cell">3</td><td>Bread, Cheese, Eggs, Milk</td></tr>
+                                           <tr><td class="tid-cell">4</td><td>Eggs, Milk, Yogurt</td></tr>
+                                           <tr><td class="tid-cell">5</td><td>Cheese, Milk, Yogurt</td></tr>
+                                       </tbody>
+                                   </table>
+
+                                   <h4>Step 2: Individual Item Frequency (C1 → L1)</h4>
+                                   <table>
+                                       <thead><tr><th>Item</th><th>Transactions</th><th>Count (σ)</th><th>Support (s)</th><th>Meet Threshold? (≥ 40%)</th></tr></thead>
+                                       <tbody>
+                                           <tr><td>Bread</td><td>1, 3</td><td>2</td><td>2/5 = 40%</td><td class="check-mark">Yes</td></tr>
+                                           <tr><td>Butter</td><td>1</td><td>1</td><td>1/5 = 20%</td><td class="cross-mark">No</td></tr>
+                                           <tr><td>Cheese</td><td>3, 5</td><td>2</td><td>2/5 = 40%</td><td class="check-mark">Yes</td></tr>
+                                           <tr><td>Eggs</td><td>2, 3, 4</td><td>3</td><td>3/5 = 60%</td><td class="check-mark">Yes</td></tr>
+                                           <tr><td>Milk</td><td>1, 2, 3, 4, 5</td><td>5</td><td>5/5 = 100%</td><td class="check-mark">Yes</td></tr>
+                                           <tr><td>Yogurt</td><td>2, 4, 5</td><td>3</td><td>3/5 = 60%</td><td class="check-mark">Yes</td></tr>
+                                       </tbody>
+                                   </table>
+                                   <p><strong>L1 (Frequent 1-Itemsets):</strong> {Bread}, {Cheese}, {Eggs}, {Milk}, {Yogurt}</p>
+
+                                   <h4>Step 3: Generate 2-Itemsets (C2 → L2)</h4>
+                                   <p>(Generate candidates C2 by joining L1 items)</p>
+                                   <table>
+                                       <thead><tr><th>2-Itemset</th><th>Transactions</th><th>Count (σ)</th><th>Support (s)</th><th>Meet Threshold? (≥ 40%)</th></tr></thead>
+                                       <tbody>
+                                           <tr><td>{Bread, Cheese}</td><td>3</td><td>1</td><td>1/5 = 20%</td><td class="cross-mark">No</td></tr>
+                                           <tr><td>{Bread, Eggs}</td><td>3</td><td>1</td><td>1/5 = 20%</td><td class="cross-mark">No</td></tr>
+                                           <tr><td>{Bread, Milk}</td><td>1, 3</td><td>2</td><td>2/5 = 40%</td><td class="check-mark">Yes</td></tr>
+                                           <tr><td>{Bread, Yogurt}</td><td>-</td><td>0</td><td>0/5 = 0%</td><td class="cross-mark">No</td></tr>
+                                           <tr><td>{Cheese, Eggs}</td><td>3</td><td>1</td><td>1/5 = 20%</td><td class="cross-mark">No</td></tr>
+                                           <tr><td>{Cheese, Milk}</td><td>3, 5</td><td>2</td><td>2/5 = 40%</td><td class="check-mark">Yes</td></tr>
+                                           <tr><td>{Cheese, Yogurt}</td><td>5</td><td>1</td><td>1/5 = 20%</td><td class="cross-mark">No</td></tr>
+                                           <tr><td>{Eggs, Milk}</td><td>2, 3, 4</td><td>3</td><td>3/5 = 60%</td><td class="check-mark">Yes</td></tr>
+                                           <tr><td>{Eggs, Yogurt}</td><td>2, 4</td><td>2</td><td>2/5 = 40%</td><td class="check-mark">Yes</td></tr>
+                                           <tr><td>{Milk, Yogurt}</td><td>2, 4, 5</td><td>3</td><td>3/5 = 60%</td><td class="check-mark">Yes</td></tr>
+                                       </tbody>
+                                   </table>
+                                   <p><strong>L2 (Frequent 2-Itemsets):</strong> {Bread, Milk}, {Cheese, Milk}, {Eggs, Milk}, {Eggs, Yogurt}, {Milk, Yogurt}</p>
+
+                                   <h4>Step 4: Generate 3-Itemsets (C3 → L3)</h4>
+                                    <p>(Generate candidates C3 by joining L2 itemsets sharing first item - e.g., {Eggs, Milk} and {Eggs, Yogurt} -> {Eggs, Milk, Yogurt})</p>
+                                    <p>Candidate C3: {Eggs, Milk, Yogurt}.</p>
+                                    <p>Check subsets: {Eggs, Milk} (in L2 ✓), {Eggs, Yogurt} (in L2 ✓), {Milk, Yogurt} (in L2 ✓). No pruning needed.</p>
+                                   <table>
+                                       <thead><tr><th>3-Itemset</th><th>Transactions</th><th>Count (σ)</th><th>Support (s)</th><th>Meet Threshold? (≥ 40%)</th></tr></thead>
+                                       <tbody>
+                                           <tr><td>{Eggs, Milk, Yogurt}</td><td>2, 4</td><td>2</td><td>2/5 = 40%</td><td class="check-mark">Yes</td></tr>
+                                       </tbody>
+                                   </table>
+                                   <p><strong>L3 (Frequent 3-Itemsets):</strong> {Eggs, Milk, Yogurt}</p>
+                                   <p>(Cannot generate C4 from L3 as there's only one itemset). Stop finding frequent itemsets.</p>
+
+                                   <h4>Step 5: Generate Association Rules (Support ≥ 40% and Confidence ≥ 60%)</h4>
+
+                                   <h5>For 2-Itemset {Bread, Milk}:</h5>
+                                   <table>
+                                        <thead><tr><th>Rule</th><th>Support</th><th>Confidence Calculation</th><th>Confidence</th><th>Meet Threshold? (≥ 60%)</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>Bread → Milk</td><td>40%</td><td><code>σ(Bread, Milk) / σ(Bread) = 2/2</code></td><td>100%</td><td class="check-mark">Yes</td></tr>
+                                            <tr><td>Milk → Bread</td><td>40%</td><td><code>σ(Bread, Milk) / σ(Milk) = 2/5</code></td><td>40%</td><td class="cross-mark">No</td></tr>
+                                        </tbody>
+                                   </table>
+
+                                   <h5>For 2-Itemset {Cheese, Milk}:</h5>
+                                   <table>
+                                        <thead><tr><th>Rule</th><th>Support</th><th>Confidence Calculation</th><th>Confidence</th><th>Meet Threshold? (≥ 60%)</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>Cheese → Milk</td><td>40%</td><td><code>σ(Cheese, Milk) / σ(Cheese) = 2/2</code></td><td>100%</td><td class="check-mark">Yes</td></tr>
+                                            <tr><td>Milk → Cheese</td><td>40%</td><td><code>σ(Cheese, Milk) / σ(Milk) = 2/5</code></td><td>40%</td><td class="cross-mark">No</td></tr>
+                                        </tbody>
+                                   </table>
+
+                                   <h5>For 2-Itemset {Eggs, Milk}:</h5>
+                                   <table>
+                                        <thead><tr><th>Rule</th><th>Support</th><th>Confidence Calculation</th><th>Confidence</th><th>Meet Threshold? (≥ 60%)</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>Eggs → Milk</td><td>60%</td><td><code>σ(Eggs, Milk) / σ(Eggs) = 3/3</code></td><td>100%</td><td class="check-mark">Yes</td></tr>
+                                            <tr><td>Milk → Eggs</td><td>60%</td><td><code>σ(Eggs, Milk) / σ(Milk) = 3/5</code></td><td>60%</td><td class="check-mark">Yes</td></tr>
+                                        </tbody>
+                                   </table>
+
+                                   <h5>For 2-Itemset {Eggs, Yogurt}:</h5>
+                                   <table>
+                                        <thead><tr><th>Rule</th><th>Support</th><th>Confidence Calculation</th><th>Confidence</th><th>Meet Threshold? (≥ 60%)</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>Eggs → Yogurt</td><td>40%</td><td><code>σ(Eggs, Yogurt) / σ(Eggs) = 2/3</code></td><td>67%</td><td class="check-mark">Yes</td></tr>
+                                            <tr><td>Yogurt → Eggs</td><td>40%</td><td><code>σ(Eggs, Yogurt) / σ(Yogurt) = 2/3</code></td><td>67%</td><td class="check-mark">Yes</td></tr>
+                                        </tbody>
+                                   </table>
+
+                                   <h5>For 2-Itemset {Milk, Yogurt}:</h5>
+                                   <table>
+                                        <thead><tr><th>Rule</th><th>Support</th><th>Confidence Calculation</th><th>Confidence</th><th>Meet Threshold? (≥ 60%)</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>Milk → Yogurt</td><td>60%</td><td><code>σ(Milk, Yogurt) / σ(Milk) = 3/5</code></td><td>60%</td><td class="check-mark">Yes</td></tr>
+                                            <tr><td>Yogurt → Milk</td><td>60%</td><td><code>σ(Milk, Yogurt) / σ(Yogurt) = 3/3</code></td><td>100%</td><td class="check-mark">Yes</td></tr>
+                                        </tbody>
+                                   </table>
+
+                                   <h5>For 3-Itemset {Eggs, Milk, Yogurt}:</h5>
+                                   <table>
+                                       <thead><tr><th>Rule</th><th>Support</th><th>Confidence Calculation</th><th>Confidence</th><th>Meet Threshold? (≥ 60%)</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>{Eggs, Milk} → Yogurt</td><td>40%</td><td><code>σ(Eggs, Milk, Yogurt) / σ(Eggs, Milk) = 2/3</code></td><td>67%</td><td class="check-mark">Yes</td></tr>
+                                            <tr><td>{Eggs, Yogurt} → Milk</td><td>40%</td><td><code>σ(Eggs, Milk, Yogurt) / σ(Eggs, Yogurt) = 2/2</code></td><td>100%</td><td class="check-mark">Yes</td></tr>
+                                            <tr><td>{Milk, Yogurt} → Eggs</td><td>40%</td><td><code>σ(Eggs, Milk, Yogurt) / σ(Milk, Yogurt) = 2/3</code></td><td>67%</td><td class="check-mark">Yes</td></tr>
+                                            <tr><td>Eggs → {Milk, Yogurt}</td><td>40%</td><td><code>σ(Eggs, Milk, Yogurt) / σ(Eggs) = 2/3</code></td><td>67%</td><td class="check-mark">Yes</td></tr>
+                                            <tr><td>Milk → {Eggs, Yogurt}</td><td>40%</td><td><code>σ(Eggs, Milk, Yogurt) / σ(Milk) = 2/5</code></td><td>40%</td><td class="cross-mark">No</td></tr>
+                                            <tr><td>Yogurt → {Eggs, Milk}</td><td>40%</td><td><code>σ(Eggs, Milk, Yogurt) / σ(Yogurt) = 2/3</code></td><td>67%</td><td class="check-mark">Yes</td></tr>
+                                        </tbody>
+                                   </table>
+
+
+                                   <h4>Step 6: Final Strong Association Rules</h4>
+                                    <p>(Rules meeting Support ≥ 40% AND Confidence ≥ 60%)</p>
+                                    <table>
+                                        <thead><tr><th>Rule</th><th>Support</th><th>Confidence</th><th>Interpretation</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>Bread → Milk</td><td>40%</td><td>100%</td><td>When customers buy Bread, they always buy Milk</td></tr>
+                                            <tr><td>Cheese → Milk</td><td>40%</td><td>100%</td><td>When customers buy Cheese, they always buy Milk</td></tr>
+                                            <tr><td>Eggs → Milk</td><td>60%</td><td>100%</td><td>When customers buy Eggs, they always buy Milk</td></tr>
+                                            <tr><td>Milk → Eggs</td><td>60%</td><td>60%</td><td>When customers buy Milk, they buy Eggs 60% of the time</td></tr>
+                                            <tr><td>Eggs → Yogurt</td><td>40%</td><td>67%</td><td>When customers buy Eggs, they buy Yogurt 67% of the time</td></tr>
+                                            <tr><td>Yogurt → Eggs</td><td>40%</td><td>67%</td><td>When customers buy Yogurt, they buy Eggs 67% of the time</td></tr>
+                                            <tr><td>Milk → Yogurt</td><td>60%</td><td>60%</td><td>When customers buy Milk, they buy Yogurt 60% of the time</td></tr>
+                                            <tr><td>Yogurt → Milk</td><td>60%</td><td>100%</td><td>When customers buy Yogurt, they always buy Milk</td></tr>
+                                            <tr><td>{Eggs, Milk} → Yogurt</td><td>40%</td><td>67%</td><td>When customers buy Eggs and Milk, they buy Yogurt 67% of the time</td></tr>
+                                            <tr><td>{Eggs, Yogurt} → Milk</td><td>40%</td><td>100%</td><td>When customers buy Eggs and Yogurt, they always buy Milk</td></tr>
+                                            <tr><td>{Milk, Yogurt} → Eggs</td><td>40%</td><td>67%</td><td>When customers buy Milk and Yogurt, they buy Eggs 67% of the time</td></tr>
+                                            <tr><td>Eggs → {Milk, Yogurt}</td><td>40%</td><td>67%</td><td>When customers buy Eggs, they buy both Milk and Yogurt 67% of the time</td></tr>
+                                            <tr><td>Yogurt → {Eggs, Milk}</td><td>40%</td><td>67%</td><td>When customers buy Yogurt, they buy both Eggs and Milk 67% of the time</td></tr>
+                                        </tbody>
+                                    </table>
+
+                                   <h4>Explanation of Calculations</h4>
+                                    <ul>
+                                        <li><strong>Support(X)</strong> = Number of transactions containing X / Total number of transactions</li>
+                                        <li><strong>Support(X∪Y)</strong> = Support(XUY) = Number of transactions containing both X and Y / Total transactions</li>
+                                        <li><strong>Confidence(X→Y)</strong> = Support(X∪Y) / Support(X) = Probability of finding Y when X is present</li>
+                                    </ul>
+                               </div>
+                           </div>
+                       </div> <!-- End Detailed Apriori Example Accordion -->
+                       <!-- **** END OF DETAILED APRIORI EXAMPLE **** -->
+
                      </div>
                  </div>
                  <div class="accordion-item">
@@ -649,12 +856,24 @@
             // --- Accordion Logic (for Glossary AND Examples) ---
              accordionHeaders.forEach(header => {
                 header.addEventListener('click', function() {
+                    // Toggle active class on the header
                     this.classList.toggle('active');
                     const panel = this.nextElementSibling;
-                    // Toggle the 'open' class
+
+                    // Toggle the 'open' class which controls padding and max-height via CSS
                     panel.classList.toggle('open');
 
-                    // The CSS transition for max-height and padding handles the animation
+                    // Optional: Close other sibling accordions when one is opened (uncomment if desired)
+                    // const parentAccordion = this.closest('.accordion');
+                    // if (parentAccordion) {
+                    //    const allHeaders = parentAccordion.querySelectorAll(':scope > .accordion-item > .accordion-header');
+                    //    allHeaders.forEach(otherHeader => {
+                    //         if (otherHeader !== this && otherHeader.classList.contains('active')) {
+                    //             otherHeader.classList.remove('active');
+                    //             otherHeader.nextElementSibling.classList.remove('open');
+                    //         }
+                    //     });
+                    // }
                 });
             });
 
@@ -721,6 +940,14 @@
             loadFillInTheBlankQuestions();
             loadTrueFalseQuestions();
             loadMultipleChoiceQuestions();
+
+            // --- Activate first tab ---
+             if (mainTabButtons.length > 0) {
+                mainTabButtons[0].classList.add('active');
+                const firstTabId = mainTabButtons[0].getAttribute('data-tab');
+                 const firstTabContent = document.getElementById(firstTabId);
+                if(firstTabContent) firstTabContent.classList.add('active');
+            }
 
         }); // End DOMContentLoaded
         // --- END OF SCRIPT LOGIC ---
