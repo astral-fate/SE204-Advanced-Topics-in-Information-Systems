@@ -64,4 +64,11 @@ course structure
 - Python with data mining libraries (optional)
 - Data visualization tools
 - Sample datasets for pattern mining exercises
+- 
+
+
+## Python data mining
+
+![image](https://github.com/user-attachments/assets/bc984c53-901a-46cc-9540-5af69afe1bc7)
+
 
