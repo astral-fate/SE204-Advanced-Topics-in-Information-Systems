@@ -78,8 +78,11 @@
         li {
              margin-bottom: 5px;
         }
-        strong { /* For grading percentages */
-            color: #28a745; /* Green */
+        strong { /* For grading percentages and highlighted concepts */
+            /* Keeping default strong styling unless specific color needed */
+        }
+        .highlight-strong { /* Optional: Style for the bolded concepts */
+            font-weight: bold;
         }
         .intro-link {
             display: block;
@@ -112,8 +115,7 @@
             <tbody>
                 <tr>
                     <td>
-                     
-                      <td>  <strong><a href="chapters/c1.html">Descriptive Data Analysis and Visualization</a></strong>   </td>
+                        <strong><a href="chapters/c1.html">Descriptive Data Analysis and Visualization</a></strong>
                     </td>
                     <td>
                         - Information system definition and elements<br>
@@ -137,8 +139,8 @@
                 </tr>
                 <tr>
                     <td>
-                          <strong><a href="chapters/c2.html">Frequent Pattern Mining</a></strong>
-                         </td>
+                        <strong><a href="chapters/c2.html">Frequent Pattern Mining</a></strong>
+                    </td>
                     <td>
                         - Data Mining Fundamentals & Steps<br>
                         - Data Mining Models (Predictive/Descriptive)<br>
@@ -175,55 +177,60 @@
                         - <em>Reducing data complexity</em><br>
                         - <em>Customer Segmentation, Visualization</em>
                     </td>
-                    <td><!-- Placeholder --></td>
+                    <td> </td> <!-- Placeholder -->
                 </tr>
+                <!-- ****** UPDATED ML1 ROW ****** -->
                 <tr>
                     <td>
-                           <strong><a href="chapters/c3.html">Machine Learning 1: Introduction</a></strong>
+                        <strong><a href="chapters/c3.html">Machine Learning 1: Introduction</a></strong>
                     </td>
                     <td>
                         - Machine learning fundamentals<br>
                         - Supervised vs. unsupervised learning<br>
                         - Training and testing models<br>
-                        - <strong>ML vs Conventional Programming</strong><br>
-                        - <strong>ML Concepts</strong><br>
-                        - <strong>Types of ML Overview</strong>
+                        - <strong class="highlight-strong">ML vs Conventional Programming</strong><br>
+                        - <strong class="highlight-strong">ML Concepts</strong><br>
+                        - <strong class="highlight-strong">Types of ML Overview</strong>
                     </td>
                     <td>
                         - Learning from data<br>
-                        - <strong>ML vs Rule-based systems</strong><br>
-                        - <strong>AI / Deep Learning Context</strong><br>
-                        - <strong>Reasons for ML Growth</strong><br>
-                        - <strong>Labeled vs. Unlabeled Data</strong><br>
-                        - <strong>Training/Testing Sets</strong><br>
-                        - <strong>Overfitting/Underfitting</strong><br>
-                        - <strong>Supervised, Unsupervised, Reinforcement Learning (definitions & goals)</strong>
+                        - <strong class="highlight-strong">ML vs Rule-based systems</strong><br>
+                        - <strong class="highlight-strong">AI / Deep Learning Context</strong><br>
+                        - <strong class="highlight-strong">Reasons for ML Growth</strong><br>
+                        - <strong class="highlight-strong">Labeled vs. Unlabeled Data</strong><br>
+                        - <strong class="highlight-strong">Training/Testing Sets</strong><br>
+                        - <strong class="highlight-strong">Overfitting/Underfitting</strong><br>
+                        - <strong class="highlight-strong">Supervised, Unsupervised, Reinforcement Learning (definitions & goals)</strong>
                     </td>
-                    <td><!-- Placeholder --></td>
+                    <td> </td> <!-- No specific tool mentioned in source for this module -->
                 </tr>
+                <!-- ****** UPDATED ML2 ROW ****** -->
                 <tr>
-                    
-                    <a href="chapters/c4.html">Machine Learning 2: Classification</a>
+                    <td>
+                        <strong><a href="chapters/c4.html">Machine Learning 2: Classification</a></strong>
+                    </td>
                     <td>
                         - Classification algorithms<br>
-                        - Decision trees<br>
-                        - Naive Bayes<br>
-                        - Support Vector Machines<br>
-                        - <strong>Binary vs Multi-class</strong><br>
-                        - <strong>Logistic Regression Focus</strong>
+                   
+                        - <strong class="highlight-strong">Binary vs Multi-class</strong><br>
+                        - <strong class="highlight-strong">Logistic Regression Focus</strong>
                     </td>
                     <td>
                         - Assigning data points to categories<br>
-                        - <strong>Binary vs. Multi-class tasks</strong><br>
-                        - <strong>Classifier</strong><br>
-                        - <strong>Examples (Spam, Medical Diagnosis, Image Recog.)</strong><br>
-                        - <strong>Logistic Regression (Sigmoid/Softmax, Loss Function, Gradient Descent)</strong><br>
-                        
+                        - <strong class="highlight-strong">Binary vs. Multi-class tasks</strong><br>
+                        - <strong class="highlight-strong">Classifier</strong><br>
+                        - <strong class="highlight-strong">Examples (Spam, Medical Diagnosis, Image Recog.)</strong><br>
+                        - <strong class="highlight-strong">Logistic Regression (Sigmoid/Softmax, Loss Function, Gradient Descent)</strong>
                     </td>
                     <td>Python (Scikit-learn etc.)</td>
                 </tr>
+             
                 <tr>
-                    <td>Machine Learning 3: ROC Analysis and Regression</td>
+                    <td>
+                        
+                    
+                     <strong><a href="chapters/c5.html"> Machine Learning 3: ROC Analysis and Regression</a></strong>
+                    </td>
                     <td>
                         - ROC curve analysis<br>
                         - Linear regression<br>
@@ -241,7 +248,11 @@
                     <td>Python (Scikit-learn etc.)</td>
                 </tr>
                 <tr>
-                    <td>Machine Learning 4: Deep Learning</td>
+                    <td>
+                         <strong><a href="chapters/c6.html">Machine Learning 4: Deep Learning</a></strong>
+                       
+                    
+                    </td>
                     <td>
                         - Neural networks<br>
                         - Deep learning architectures<br>
@@ -253,7 +264,7 @@
                         - Complex pattern modeling<br>
                         - <em>Specific architectures (CNN, RNN)</em>
                     </td>
-                    <td><!-- Placeholder --></td>
+                    <td> </td> <!-- Placeholder -->
                 </tr>
             </tbody>
         </table>
