@@ -74,6 +74,8 @@
         ul {
             list-style-type: disc;
             padding-left: 20px;
+            margin-top: 0; /* Reduce space above list */
+            margin-bottom: 0; /* Reduce space below list */
         }
         li {
              margin-bottom: 5px;
@@ -89,6 +91,13 @@
             text-align: center;
             margin-bottom: 20px;
             font-size: 1.1em;
+        }
+        code { /* Style for formulas and code */
+            background-color: #e9ecef;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.95em;
         }
 
     </style>
@@ -166,21 +175,6 @@
                     <td>Python, pandas, mlxtend</td>
                 </tr>
                 <tr>
-                    <td>Cluster and Dimensionality Reduction</td>
-                    <td>
-                        - Clustering algorithms<br>
-                        - Dimension reduction techniques<br>
-                        - Feature selection and extraction
-                    </td>
-                    <td>
-                        - <em>Grouping similar items (Unsupervised)</em><br>
-                        - <em>Reducing data complexity</em><br>
-                        - <em>Customer Segmentation, Visualization</em>
-                    </td>
-                    <td> </td> <!-- Placeholder -->
-                </tr>
-                <!-- ****** UPDATED ML1 ROW ****** -->
-                <tr>
                     <td>
                         <strong><a href="chapters/c3.html">Machine Learning 1: Introduction</a></strong>
                     </td>
@@ -204,67 +198,110 @@
                     </td>
                     <td> </td> <!-- No specific tool mentioned in source for this module -->
                 </tr>
-                <!-- ****** UPDATED ML2 ROW ****** -->
                 <tr>
                     <td>
-                        <strong><a href="chapters/c4.html">Machine Learning 2: Classification</a></strong>
+                         <strong><a href="chapters/c4.html">Machine Learning 2: Linear Regression & Clustering</a></strong>
                     </td>
                     <td>
                         - Classification algorithms<br>
-                   
                         - <strong class="highlight-strong">Binary vs Multi-class</strong><br>
-                        - <strong class="highlight-strong">Logistic Regression Focus</strong>
+                        - <strong class="highlight-strong">Logistic Regression Focus</strong><br>
+                        - <strong class="highlight-strong">Clustering Algorithms (Unsupervised)</strong><br>
+                        - K-Means Algorithm Focus<br>
+                        - Dimensionality Reduction Overview
                     </td>
                     <td>
-                        - Assigning data points to categories<br>
-                        - <strong class="highlight-strong">Binary vs. Multi-class tasks</strong><br>
-                        - <strong class="highlight-strong">Classifier</strong><br>
-                        - <strong class="highlight-strong">Examples (Spam, Medical Diagnosis, Image Recog.)</strong><br>
-                        - <strong class="highlight-strong">Logistic Regression (Sigmoid/Softmax, Loss Function, Gradient Descent)</strong>
+                        - <strong class="highlight-strong">Task:</strong> Assigning data points to predefined categories<br>
+                        - <strong class="highlight-strong">Types:</strong> Binary (2 categories) vs. Multi-class (>2 categories)<br>
+                        - <strong class="highlight-strong">Classifier:</strong> The model performing classification<br>
+                        - Examples: Spam detection, Medical Diagnosis, Image Recognition<br>
+                        - <strong class="highlight-strong">Logistic Regression Details:</strong><br>
+                        &nbsp;&nbsp;- Predicts probability for categories<br>
+                        &nbsp;&nbsp;- <strong class="highlight-strong">Function Map:</strong> Sigmoid (binary: <code>ŷ = 1 / (1 + e⁻ᶻ)</code>) or Softmax (multi-class)<br>
+                        &nbsp;&nbsp;- <strong class="highlight-strong">Model Performance:</strong> Loss Function (e.g., Binary Cross-Entropy: <code>L(y, ŷ) = −[y log(ŷ) + (1−y)log(1−ŷ)]</code>)<br>
+                        &nbsp;&nbsp;- <strong class="highlight-strong">Optimization:</strong> Uses Gradient Descent algorithm to update coefficients & minimize loss<br>
+                        - <strong class="highlight-strong">Clustering Task:</strong> Grouping similar data points without predefined labels<br>
+                        - <strong class="highlight-strong">K-Means Algorithm Steps:</strong><br>
+                        &nbsp;&nbsp;1. Initialize K centroids<br>
+                        &nbsp;&nbsp;2. Assign points to nearest centroid (e.g., using Euclidean distance: <code>D = √((xₚ-xᵢ)²+(yₚ-yᵢ)²)</code>)<br>
+                        &nbsp;&nbsp;3. Update centroids (calculate mean of assigned points)<br>
+                        &nbsp;&nbsp;4. Repeat 2-3 until convergence (centroids stabilize)<br>
+                        - <strong class="highlight-strong">Dimensionality Reduction:</strong> Reducing number of features (brief mention)
                     </td>
                     <td>Python (Scikit-learn etc.)</td>
                 </tr>
              
+               
                 <tr>
                     <td>
-                        
-                    
-                     <strong><a href="chapters/c5.html"> Machine Learning 3: ROC Analysis and Regression</a></strong>
+                         <strong><a href="chapters/c5.html">Machine Learning 3: Practical Examples</a></strong>
                     </td>
                     <td>
-                        - ROC curve analysis<br>
-                        - Linear regression<br>
-                        - Logistic regression (as classification eval)<br>
-                        - Model evaluation metrics
+                        - Practical Implementation of K-Means Clustering in Python<br>
+                        - Practical Implementation of Linear Regression in Python<br>
+                        - Practical Implementation of Logistic Regression in Python<br>
+                      
+                       
                     </td>
                     <td>
-                        - <strong>Evaluating Binary Classifiers</strong><br>
-                        - <strong>ROC Curve (TPR, FPR, AUC)</strong><br>
-                        - <strong>Diagonal vs L-shaped ROC</strong><br>
-                        - Predicting continuous values (Regression)<br>
-                        - Linear Regression<br>
-                        - <em>Other evaluation metrics</em>
+                       <ul>
+                            <li><strong class="highlight-strong">K-Means Practical:</strong> Python code for partitioning data into 'k' clusters using centroids.</li>
+                            <li><strong class="highlight-strong">Linear Regression Practical:</strong> Python code for predicting continuous values, finding slope/intercept, evaluating with MSE.</li>
+                            <li><strong class="highlight-strong">Logistic Regression Practical:</strong> Python code for binary classification (pass/fail example).</li>
+            
+                       </ul>
                     </td>
-                    <td>Python (Scikit-learn etc.)</td>
+                    <td>
+                        Python<br>
+                        <code>numpy</code><br>
+                        <code>matplotlib.pyplot</code><br>
+                        <code>scikit-learn</code>:
+                         <ul>
+                            <li><code>KMeans</code></li>
+                            <li><code>LinearRegression</code></li>
+                            <li><code>LogisticRegression</code></li>
+                            <li><code>mean_squared_error</code></li>
+                         </ul>
+                    </td>
                 </tr>
+                
                 <tr>
                     <td>
                          <strong><a href="chapters/c6.html">Machine Learning 4: Deep Learning</a></strong>
-                       
-                    
                     </td>
                     <td>
-                        - Neural networks<br>
-                        - Deep learning architectures<br>
-                        - Applications of deep learning
+                        - Neural Networks fundamentals<br>
+                        - Deep Neural Networks (DNNs)<br>
+                        - Feature extraction in Deep Learning<br>
+                        - Comparison with traditional ML<br>
+                        - Deep Learning applications<br>
+                        - Neural Network architecture
                     </td>
                     <td>
-                        - Artificial Neural Networks (ANNs)<br>
-                        - Multi-layered networks<br>
-                        - Complex pattern modeling<br>
-                        - <em>Specific architectures (CNN, RNN)</em>
+                       <ul>
+                            <li><strong class="highlight-strong">Deep Learning (DL):</strong> Subset of ML based on ANNs with multiple hidden layers ("deep"). Learns complex patterns.</li>
+                            <li><strong class="highlight-strong">Artificial Neural Networks (ANNs):</strong> Inspired by biological neurons (cell body, dendrites, axon). Composed of layers (Input, Hidden, Output) with weighted connections adjusted during training.</li>
+                            <li><strong class="highlight-strong">Machine Learning vs. Deep Learning:</strong>
+                                <ul>
+                                    <li><i>Feature Extraction:</i> ML often manual, DL automatic.</li>
+                                    <li><i>Data/Compute Needs:</i> DL > ML.</li>
+                                    <li><i>Task Complexity:</i> DL excels at complex tasks (vision, NLP).</li>
+                                </ul>
+                            </li>
+                            <li><strong class="highlight-strong">ANN vs. DNN:</strong>
+                                <ul>
+                                    <li>ANN is general, can be shallow (e.g., 1 hidden layer).</li>
+                                    <li>DNN implies deep (2+ hidden layers). All DNNs are ANNs.</li>
+                                </ul>
+                            </li>
+                       </ul>
                     </td>
-                    <td> </td> <!-- Placeholder -->
+                    <td>
+                        Python<br>
+                        <code>TensorFlow</code><br>
+                        <code>Keras</code><br>
+                        <code>PyTorch</code>
+                    </td>
                 </tr>
             </tbody>
         </table>
