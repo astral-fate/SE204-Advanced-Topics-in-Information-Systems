@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SE204 Linear Regression & Clustering</title>
+    <style>
+        /* --- Base Styles (Similar to previous) --- */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 950px; /* Slightly wider for tables */
+            margin: 20px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            color: #0056b3; /* Cairo University Blue */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: #007bff; /* Lighter Blue */
+        }
+        /* Added h4, h5 styles for example steps */
+        h4 {
+            color: #17a2b8; /* Teal for steps */
+            margin-top: 1.5em;
+            margin-bottom: 1em;
+        }
+         h5 {
+            color: #6c757d; /* Gray for sub-steps */
+            margin-top: 1.2em;
+            margin-bottom: 0.8em;
+            font-style: italic;
+        }
+
+
+        /* --- Main Tabs Styles --- */
+        .main-tabs {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #0056b3;
+        }
+
+        .main-tabs .tab-button {
+            padding: 12px 18px;
+            border: none;
+            background: none;
+            color: #0056b3;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin-bottom: -2px;
+            border-bottom: 2px solid transparent;
+            text-align: center;
+        }
+
+        .main-tabs .tab-button.active {
+            background: #0056b3;
+            color: white;
+            border-bottom: 2px solid #0056b3;
+        }
+        .main-tabs .tab-button:hover:not(.active) {
+            background-color: #e9ecef;
+            border-bottom: 2px solid #adb5bd;
+        }
+
+        /* --- Content Sections --- */
+        .main-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .main-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- Accordion Styles (Glossary & Examples) --- */
+        .accordion {
+            border: 1px solid #dee2e6; border-radius: 5px; overflow: hidden; margin-bottom: 20px;
+        }
+        /* Nested accordion styling */
+         .accordion .accordion {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            border: 1px dashed #adb5bd; /* Slightly different border for nested */
+         }
+        .accordion-item { border-bottom: 1px solid #dee2e6; }
+        .accordion-item:last-child { border-bottom: none; }
+        .accordion-header {
+            background-color: #f8f9fa; cursor: pointer; padding: 12px 20px; width: 100%; border: none; text-align: left; outline: none; font-size: 1.1em; font-weight: bold; transition: background-color 0.3s ease; position: relative; color: #0056b3;
+        }
+        /* Style for nested accordion headers */
+         .accordion .accordion .accordion-header {
+            font-size: 1.0em; /* Slightly smaller */
+            background-color: #e9ecef; /* Different background */
+            color: #004085; /* Darker blue */
+         }
+        /* Customize glossary header color if needed */
+        /* #glossary .accordion-header { color: #dc3545; } */
+        .accordion-header:hover { background-color: #e9ecef; }
+        .accordion .accordion .accordion-header:hover { background-color: #d6e0ea; }
+
+        .accordion-header::after { content: '\002B'; color: #0056b3; font-weight: bold; float: right; margin-left: 5px; transition: transform 0.2s ease-in-out; }
+        .accordion-header.active::after { content: "\2212"; /* Minus sign */ transform: rotate(0deg); /* No rotation needed for minus */ }
+        .accordion-header.active { background-color: #e7f1ff; }
+        .accordion .accordion .accordion-header.active { background-color: #cce5ff; }
+
+        .accordion-panel {
+            padding: 0 20px; background-color: white; max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+        }
+         /* Adjusted padding for open panels */
+        .accordion-panel.open {
+             padding: 15px 20px;
+             max-height: 10000px; /* Sufficiently large */
+        }
+
+        .accordion-panel > * { margin-top: 15px; margin-bottom: 15px; }
+        .accordion-panel > *:first-child { margin-top: 15px; }
+        .accordion-panel > *:last-child { margin-bottom: 15px; }
+        .accordion-panel code { font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; background-color: #e9ecef; padding: 2px 5px; border-radius: 3px; font-size: 0.95em; }
+        /* --- End Accordion Styles --- */
+
+        /* --- Table Styles --- */
+        table { width: auto; border-collapse: collapse; margin: 15px auto; border: 1px solid #ccc; font-size: 0.9em; }
+        th, td { border: 1px solid #ccc; padding: 8px 10px; text-align: center; vertical-align: middle; }
+        th { background-color: #e9ecef; font-weight: bold; }
+        /* Align text left in first column for readability in detailed tables */
+        td:first-child { text-align: left; }
+        th:first-child { text-align: left; }
+        /* Center align header for TID */
+        th.tid-header { text-align: center; }
+        /* Center align data for TID */
+        td.tid-cell { text-align: center; }
+
+
+        td code { background-color: transparent; padding: 0; font-size: 1em; }
+        .check-mark { color: green; font-weight: bold; }
+        .cross-mark { color: red; font-weight: bold; }
+        .support-table { width: 60%; }
+
+        /* --- Formulas Section Specifics --- */
+        #formulas ul { list-style: disc; padding-left: 30px; }
+        #formulas ol { list-style: decimal; padding-left: 30px; }
+        #formulas .math { font-family: 'Times New Roman', serif; font-style: italic; font-size: 1.1em; }
+        /* Ensure nested accordion panels have sufficient space */
+        #formulas .accordion .accordion-panel {
+            background-color: #fdfdff; /* Slightly off-white for nested panels */
+        }
+
+        /* --- Quiz Styles --- */
+        .question { margin-bottom: 25px; padding: 20px; border: 1px solid #dee2e6; border-radius: 8px; background-color: #ffffff; position: relative; }
+        .question p { margin: 0 0 15px; font-weight: bold; font-size: 1.05em; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .option-button { padding: 10px 15px; border: 1px solid #ced4da; background: #f8f9fa; color: #495057; cursor: pointer; border-radius: 5px; text-align: left; transition: background-color 0.2s ease, border-color 0.2s ease; width: 100%; }
+        .option-button:hover { background-color: #e9ecef; border-color: #adb5bd; }
+        .option-button.selected { background: #007bff; color: white; border-color: #0056b3; }
+        .check-answer { margin-top: 15px; padding: 10px 20px; border: none; background: #28a745; color: white; cursor: pointer; border-radius: 5px; font-weight: bold; transition: background-color 0.2s ease; }
+        .check-answer:hover { background-color: #218838; }
+        .feedback { margin-top: 15px; padding: 10px; border-radius: 5px; font-weight: bold; }
+        .feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        /* --- Example Box Styles (Used for K-Means steps) --- */
+        .example-box {
+            background-color: #f8f9fa;
+            border-left: 3px solid #0056b3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .example-box table {
+            margin: 15px auto; /* Center tables in example boxes */
+            width: auto; /* Allow tables to size naturally */
+        }
+        .example-box table th, .example-box table td {
+             padding: 6px 8px; /* Slightly smaller padding for dense tables */
+        }
+
+        .example-box ul, .example-box ol {
+            margin: 10px 0;
+            padding-left: 25px; /* Indent lists within the box */
+        }
+         .example-box hr {
+            margin: 20px 0;
+            border: 0;
+            border-top: 1px dashed #adb5bd;
+        }
+        .formula {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-size: 1.1em;
+            margin: 10px 0;
+            padding: 5px;
+            background-color: #eee;
+            border-radius: 4px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SE204 - Lecture 7: Linear Regression & Clustering</h1>
+
+        <!-- Main Tab Buttons -->
+        <div class="main-tabs">
+            <button class="tab-button active" data-tab="glossary">Glossary</button>
+            <button class="tab-button" data-tab="formulas">Concepts & Examples</button>
+            <button class="tab-button" data-tab="fill">Fill in the Blank</button>
+            <button class="tab-button" data-tab="tf">True/False</button>
+            <button class="tab-button" data-tab="mc">Multiple Choice</button>
+        </div>
+
+        <!-- Glossary Section (Accordion) -->
+        <section id="glossary" class="main-content active">
+            <h2>Glossary of Terms</h2>
+            <div class="glossary-accordion accordion">
+                <div class="accordion-item"><button class="accordion-header">Batch Learning</button><div class="accordion-panel"><p>A machine learning approach where all training set patterns are provided to the learning model together, and parameters are computed/updated once after processing the entire dataset.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Centroid</button><div class="accordion-panel"><p>In K-Means clustering, the center point representing a cluster, typically calculated as the mean (average) of all data points assigned to that cluster.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Cluster</button><div class="accordion-panel"><p>A group of data elements identified by a clustering algorithm, where elements within the same cluster are considered more similar to each other than to elements in other clusters.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Clustering</button><div class="accordion-panel"><p>An unsupervised learning technique that groups elements based on similarity, without predefined labels. The model discovers groupings (clusters) by itself.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Convergence (K-Means)</button><div class="accordion-panel"><p>The state in the K-Means algorithm where the process stops, typically when the cluster assignments of data points no longer change between iterations, or the centroids stop moving (or move very little).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Cost Function</button><div class="accordion-panel"><p>A function that measures the error or "cost" of a machine learning model's predictions compared to the actual outputs. The goal is often to minimize this function (e.g., MSE in linear regression).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Euclidean Distance</button><div class="accordion-panel"><p>A common method for measuring the straight-line distance between two points in Euclidean space. Used in K-Means to determine the closeness of a data point to a centroid. Formula for points (xp, yp) and (xc, yc): <code class="math">√((xp - xc)² + (yp - yc)²)</code></p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Gradient Descent</button><div class="accordion-panel"><p>An iterative optimization algorithm used to find the minimum of a function (like a cost function). It updates model parameters (e.g., 'a' and 'b' in linear regression) in the direction that decreases the cost.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Input Features (xi)</button><div class="accordion-panel"><p>The independent variables or inputs used by a machine learning model to make a prediction.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Intercept (a)</button><div class="accordion-panel"><p>In linear regression (<code class="math">ŷ = a + bx</code>), the value of the predicted output (ŷ) when the input feature (x) is zero. It's the point where the regression line crosses the Y-axis.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">K-Means</button><div class="accordion-panel"><p>An unsupervised clustering algorithm that aims to partition n observations into k clusters in which each observation belongs to the cluster with the nearest mean (cluster center or centroid).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Linear Regression</button><div class="accordion-panel"><p>A supervised learning technique used to predict the value of a continuous variable by assuming a linear relationship between input features and the target variable.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Logistic Regression</button><div class="accordion-panel"><p>A supervised learning algorithm primarily used for classification tasks (predicting categories), not regression (predicting continuous values). It uses a sigmoid function to map predictions to probabilities.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Mean Squared Error (MSE)</button><div class="accordion-panel"><p>A common metric used to evaluate the performance of regression models. It calculates the average of the squared differences between the actual (yi) and predicted (ŷi) values. Formula: <code class="math">MSE = (1/n) * Σ(yi - ŷi)²</code></p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Online Learning</button><div class="accordion-panel"><p>A machine learning approach where the model learns incrementally, processing training data patterns one at a time (or in small batches) and updating parameters after each pattern. Allows adaptation to new data.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Predicted Value (ŷ)</button><div class="accordion-panel"><p>The estimated output or target value generated by a machine learning model (e.g., the predicted price in regression, the assigned cluster in clustering).</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Regression</button><div class="accordion-panel"><p>A type of supervised machine learning task that aims to find the mathematical relationship between inputs (features) and a continuous target variable (output), often used for forecasting or making predictions.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Slope (b)</button><div class="accordion-panel"><p>In simple linear regression (<code class="math">ŷ = a + bx</code>), it represents the change in the predicted output (ŷ) for a one-unit increase in the input feature (x). In multiple regression (<code class="math">ŷ = a + Σbixi</code>), each bi represents the change in ŷ for a one-unit change in xi, holding other features constant.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Supervised Learning</button><div class="accordion-panel"><p>A type of machine learning where the algorithm learns from a labeled dataset, meaning each training example has both input features and the corresponding correct output label.</p></div></div>
+                <div class="accordion-item"><button class="accordion-header">Unsupervised Learning</button><div class="accordion-panel"><p>A type of machine learning where the algorithm learns from an unlabeled dataset, identifying patterns, structures, or groupings within the data without predefined outputs or categories.</p></div></div>
+            </div> <!-- End glossary-accordion -->
+        </section>
+
+        <!-- Concepts & Examples Section -->
+        <section id="formulas" class="main-content">
+             <h2>Concepts & Examples</h2>
+             <div class="accordion">
+                 <div class="accordion-item">
+                     <button class="accordion-header">Linear Regression</button>
+                     <div class="accordion-panel">
+                         <h4>Definition</h4>
+                         <p>A supervised learning technique to predict a <strong>continuous</strong> variable based on one or more input features. It assumes a linear relationship.</p>
+                         <h4>Formula</h4>
+                         <p>For one input feature:</p>
+                         <div class="formula">ŷ = a + b x</div>
+                         <p>For multiple input features (n features):</p>
+                         <div class="formula">ŷ = a + ∑<sup>n</sup><sub>i=1</sub> b<sub>i</sub> x<sub>i</sub></div>
+                         <p>Where:</p>
+                         <ul>
+                             <li><code>ŷ</code>: Predicted value (output/target)</li>
+                             <li><code>a</code>: Intercept (value of ŷ when all x are 0)</li>
+                             <li><code>b</code> or <code>b<sub>i</sub></code>: Slope(s) (change in ŷ for a unit change in x or x<sub>i</sub>)</li>
+                             <li><code>x</code> or <code>x<sub>i</sub></code>: Input feature(s)</li>
+                         </ul>
+                         <h4>Goal</h4>
+                         <p>Find the values of 'a' and 'b' (or b<sub>i</sub>) that best fit the data. This is typically done by minimizing the <strong>Mean Squared Error (MSE)</strong>.</p>
+                         <h4>Mean Squared Error (MSE)</h4>
+                         <p>Measures the average squared difference between the actual values (y<sub>i</sub>) and the predicted values (ŷ<sub>i</sub>).</p>
+                         <div class="formula">MSE = (1/n) * ∑<sup>n</sup><sub>i=1</sub> (y<sub>i</sub> - ŷ<sub>i</sub>)²</div>
+                         <p>A lower MSE indicates a better fit.</p>
+                         <h4>Algorithm Steps (Conceptual)</h4>
+                         <ol>
+                             <li>Initialize parameters 'a' and 'b' (often to 0 or small random values).</li>
+                             <li>Start an iteration.</li>
+                             <li>For each data point (x<sub>i</sub>, y<sub>i</sub>) in the training set (or a batch):
+                                 <ul><li>Compute the prediction ŷ<sub>i</sub> using the current 'a' and 'b'.</li></ul>
+                             </li>
+                             <li>Calculate the overall error (e.g., MSE) for the current predictions using the cost function.</li>
+                             <li>Update 'a' and 'b' to reduce the error. This is often done using:
+                                 <ul>
+                                    <li><strong>Gradient Descent:</strong> Taking steps proportional to the negative gradient of the cost function.</li>
+                                    <li><strong>Algebraic Solution (Normal Equation):</strong> Directly solving for 'a' and 'b' (feasible for smaller datasets).</li>
+                                 </ul>
+                             </li>
+                             <li>Repeat steps 2-5 until the error (MSE) converges to a minimum value (stops decreasing significantly).</li>
+                         </ol>
+                         <h4>Learning Approaches</h4>
+                         <ul>
+                            <li><strong>Batch Learning:</strong> Uses the entire dataset to compute the error and update parameters in each iteration.</li>
+                            <li><strong>Online Learning:</strong> Updates parameters after processing each data point (or a small mini-batch). Adapts more quickly to new data.</li>
+                         </ul>
+                     </div>
+                 </div>
+
+                 <div class="accordion-item">
+                     <button class="accordion-header">Clustering & K-Means</button>
+                     <div class="accordion-panel">
+                        <h4>Clustering Definition</h4>
+                        <p>An <strong>unsupervised</strong> learning technique to group similar data elements together into clusters.</p>
+                        <ul>
+                            <li>Data is <strong>unlabeled</strong>.</li>
+                            <li>The model discovers the groupings (output) itself.</li>
+                            <li>Assumption: Elements within a cluster are more similar to each other than to elements in other clusters.</li>
+                        </ul>
+                        <h4>K-Means Algorithm</h4>
+                        <p>A popular partitional clustering algorithm.</p>
+                        <h5>Steps:</h5>
+                        <ol>
+                            <li><strong>Choose K:</strong> Select the desired number of clusters (K).</li>
+                            <li><strong>Initialize Centroids:</strong> Randomly select K data points from the dataset as the initial cluster centers (centroids).</li>
+                            <li><strong>Assign Points:</strong> For each data point, compute the distance (commonly Euclidean distance) to each of the K centroids. Assign the data point to the cluster whose centroid is the nearest (smallest distance).</li>
+                            <li><strong>Update Centroids:</strong> Recalculate the position of each centroid by computing the mean (average coordinates) of all data points assigned to that cluster in the previous step.</li>
+                            <li><strong>Repeat:</strong> Repeat steps 3 (Assign Points) and 4 (Update Centroids) until a stopping condition is met.</li>
+                        </ol>
+                        <h5>Stopping Condition (Convergence):</h5>
+                        <ul>
+                            <li>The cluster assignments of the data points do not change between iterations.</li>
+                            <li>The centroids' positions do not change (or change very minimally) between iterations.</li>
+                        </ul>
+                        <h5>Distance Metric:</h5>
+                        <p>Euclidean Distance between point P(x<sub>p</sub>, y<sub>p</sub>) and centroid C(x<sub>c</sub>, y<sub>c</sub>):</p>
+                        <div class="formula">D(P, C) = √((x<sub>p</sub> - x<sub>c</sub>)² + (y<sub>p</sub> - y<sub>c</sub>)²)</div>
+
+                        <!-- Nested Accordion for K-Means Example -->
+                        <div class="accordion">
+                           <div class="accordion-item">
+                               <button class="accordion-header">K-Means Step-by-Step Example (K=2)</button>
+                               <div class="accordion-panel">
+                                   <h4>Problem Setup</h4>
+                                   <div class="example-box">
+                                       <p><strong>Dataset:</strong> Eight 2D points</p>
+                                       <ul>
+                                           <li>A = (0, 0)</li>
+                                           <li>B = (0, 5)</li>
+                                           <li>C = (5, 0)</li>
+                                           <li>D = (5, 5)</li>
+                                           <li>E = (2, 2)</li>
+                                           <li>F = (3, 3)</li>
+                                           <li>G = (1, 4)</li>
+                                           <li>H = (4, 1)</li>
+                                       </ul>
+                                       <p><strong>Parameters:</strong> K = 2 clusters</p>
+                                       <p><strong>Distance Metric:</strong> Euclidean Distance</p>
+                                       <p><strong>Initial Centroids (Chosen):</strong></p>
+                                       <ul>
+                                           <li>C1 = Point D = (5, 5)</li>
+                                           <li>C2 = Point G = (1, 4)</li>
+                                       </ul>
+                                   </div>
+
+                                   <h4>Iteration 1</h4>
+                                   <div class="example-box">
+                                       <h5>1a. Assign Points (Calculate Distances)</h5>
+                                       <p>Calculate distance from each point to C1(5,5) and C2(1,4). Assign to the cluster with the minimum distance.</p>
+                                       <p>Example Calculation for Point A(0,0):</p>
+                                       <ul>
+                                          <li>Dist(A, C1) = √((0-5)² + (0-5)²) = √(25 + 25) = √50 ≈ 7.07</li>
+                                          <li>Dist(A, C2) = √((0-1)² + (0-4)²) = √(1 + 16) = √17 ≈ 4.12</li>
+                                          <li>Min distance is 4.12 (to C2). Assign A to Cluster 2.</li>
+                                       </ul>
+                                       <table>
+                                            <thead>
+                                                <tr><th>Point</th><th>Coords (x,y)</th><th>Dist to C1 (5,5)</th><th>Dist to C2 (1,4)</th><th>Assigned Cluster</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>A</td><td>(0, 0)</td><td>7.07</td><td><b>4.12</b></td><td>Cluster 2</td></tr>
+                                                <tr><td>B</td><td>(0, 5)</td><td>5.00</td><td><b>1.41</b></td><td>Cluster 2</td></tr>
+                                                <tr><td>C</td><td>(5, 0)</td><td><b>5.00</b></td><td>5.66</td><td>Cluster 1</td></tr>
+                                                <tr><td>D</td><td>(5, 5)</td><td><b>0.00</b></td><td>4.12</td><td>Cluster 1</td></tr>
+                                                <tr><td>E</td><td>(2, 2)</td><td>4.24</td><td><b>2.24</b></td><td>Cluster 2</td></tr>
+                                                <tr><td>F</td><td>(3, 3)</td><td>2.83</td><td><b>2.24</b></td><td>Cluster 2</td></tr>
+                                                <tr><td>G</td><td>(1, 4)</td><td>4.12</td><td><b>0.00</b></td><td>Cluster 2</td></tr>
+                                                <tr><td>H</td><td>(4, 1)</td><td><b>4.12</b></td><td>4.24</td><td>Cluster 1</td></tr>
+                                            </tbody>
+                                       </table>
+                                       <h5>1b. Update Centroids</h5>
+                                       <p>Calculate the mean of points assigned to each cluster.</p>
+                                       <p><strong>Cluster 1 Points:</strong> {C(5,0), D(5,5), H(4,1)}</p>
+                                       <ul>
+                                          <li>New C1 X = (5 + 5 + 4) / 3 = 14 / 3 ≈ 4.67</li>
+                                          <li>New C1 Y = (0 + 5 + 1) / 3 = 6 / 3 = 2.00</li>
+                                          <li><strong>New C1 = (4.67, 2.00)</strong></li>
+                                       </ul>
+                                       <p><strong>Cluster 2 Points:</strong> {A(0,0), B(0,5), E(2,2), F(3,3), G(1,4)}</p>
+                                        <ul>
+                                          <li>New C2 X = (0 + 0 + 2 + 3 + 1) / 5 = 6 / 5 = 1.20</li>
+                                          <li>New C2 Y = (0 + 5 + 2 + 3 + 4) / 5 = 14 / 5 = 2.80</li>
+                                          <li><strong>New C2 = (1.20, 2.80)</strong></li>
+                                       </ul>
+                                   </div>
+
+                                   <h4>Iteration 2</h4>
+                                   <div class="example-box">
+                                       <h5>2a. Assign Points (Using New Centroids)</h5>
+                                       <p>Calculate distance from each point to the *new* centroids C1'(4.67, 2.00) and C2'(1.20, 2.80).</p>
+                                        <table>
+                                            <thead>
+                                                <tr><th>Point</th><th>Coords (x,y)</th><th>Dist to C1' (4.67, 2)</th><th>Dist to C2' (1.2, 2.8)</th><th>Assigned Cluster</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>A</td><td>(0, 0)</td><td>5.08</td><td><b>3.05</b></td><td>Cluster 2</td></tr>
+                                                <tr><td>B</td><td>(0, 5)</td><td>5.55</td><td><b>2.51</b></td><td>Cluster 2</td></tr>
+                                                <tr><td>C</td><td>(5, 0)</td><td><b>2.03</b></td><td>4.72</td><td>Cluster 1</td></tr>
+                                                <tr><td>D</td><td>(5, 5)</td><td><b>3.02</b></td><td>4.39</td><td>Cluster 1</td></tr>
+                                                <tr><td>E</td><td>(2, 2)</td><td>2.67</td><td><b>1.13</b></td><td>Cluster 2</td></tr>
+                                                <tr><td>F</td><td>(3, 3)</td><td>1.95</td><td><b>1.81</b></td><td>Cluster 2</td></tr>
+                                                <tr><td>G</td><td>(1, 4)</td><td>4.18</td><td><b>1.22</b></td><td>Cluster 2</td></tr>
+                                                <tr><td>H</td><td>(4, 1)</td><td><b>1.20</b></td><td>3.33</td><td>Cluster 1</td></tr>
+                                            </tbody>
+                                       </table>
+                                       <h5>2b. Check for Convergence</h5>
+                                       <p>Compare the cluster assignments from Iteration 2 with Iteration 1:</p>
+                                       <ul>
+                                          <li>Cluster 1 (Iter 1): {C, D, H}</li>
+                                          <li>Cluster 2 (Iter 1): {A, B, E, F, G}</li>
+                                          <li>Cluster 1 (Iter 2): {C, D, H}</li>
+                                          <li>Cluster 2 (Iter 2): {A, B, E, F, G}</li>
+                                       </ul>
+                                       <p>The assignments <strong>did not change</strong> between Iteration 1 and Iteration 2.</p>
+                                       <p><strong>Conclusion:</strong> The algorithm has converged. Stop.</p>
+                                       <h5>Final Clusters:</h5>
+                                       <ul>
+                                          <li>Cluster 1: {C(5,0), D(5,5), H(4,1)} with Centroid ≈ (4.67, 2.00)</li>
+                                          <li>Cluster 2: {A(0,0), B(0,5), E(2,2), F(3,3), G(1,4)} with Centroid ≈ (1.20, 2.80)</li>
+                                       </ul>
+                                       <p>(Note: The final centroids are the ones calculated at the end of Iteration 1, as the assignments didn't change in Iteration 2, meaning the centroids wouldn't change either if recalculated).</p>
+                                   </div>
+                               </div>
+                           </div>
+                       </div> <!-- End K-Means Example Accordion -->
+
+                     </div>
+                 </div>
+
+                 <div class="accordion-item">
+                     <button class="accordion-header">Comparison: Logistic vs Linear Regression</button>
+                     <div class="accordion-panel">
+                        <p>This table highlights key differences (based on Slide 9):</p>
+                        <table>
+                            <thead>
+                                <tr><th>Feature</th><th>Logistic Regression</th><th>Linear Regression</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Task</td><td>Classification</td><td>Regression</td></tr>
+                                <tr><td>Predicted Variable Type</td><td>Categories (Discrete)</td><td>Continuous</td></tr>
+                                <tr><td>Output Mapping Function</td><td>Sigmoid (or Softmax)</td><td>Linear Sum (a + Σbixi)</td></tr>
+                                <tr><td>Typical Performance Metric</td><td>Loss Function (e.g., Log Loss)</td><td>Mean Squared Error (MSE)</td></tr>
+                                <tr><td>Parameter Update Method</td><td>Gradient Descent</td><td>Gradient Descent (or Algebraic)</td></tr>
+                            </tbody>
+                        </table>
+                     </div>
+                 </div>
+
+
+             </div> <!-- End Main Accordion for Formulas -->
+        </section>
+
+        <!-- Quiz Sections -->
+        <div id="fill" class="main-content">
+            <h2>Fill in the Blank Questions</h2>
+            <div id="fill-questions"></div>
+        </div>
+        <div id="tf" class="main-content">
+            <h2>True/False Questions</h2>
+            <div id="tf-questions"></div>
+        </div>
+        <div id="mc" class="main-content">
+            <h2>Multiple Choice Questions</h2>
+            <div id="mc-questions"></div>
+        </div>
+
+    </div> <!-- End Container -->
+
+    <script>
+        // --- START OF QUIZ DATA (Based on Lecture Slides 1-19) ---
+        const fillInTheBlank = [
+            { question: "Linear regression is a _______ learning technique used to predict continuous variables.", options: ["Unsupervised", "Reinforcement", "Supervised", "Semi-supervised"], answer: "Supervised" },
+            { question: "In the linear regression equation ŷ = a + bx, 'a' represents the _______.", options: ["Slope", "Predicted Value", "Input Feature", "Intercept"], answer: "Intercept" },
+            { question: "The _______ measures the average squared difference between actual and predicted values in regression.", options: ["Accuracy", "Mean Absolute Error", "Mean Squared Error (MSE)", "R-squared"], answer: "Mean Squared Error (MSE)" },
+            { question: "The goal in linear regression is usually to find parameters 'a' and 'b' that _______ the MSE.", options: ["Maximize", "Minimize", "Normalize", "Standardize"], answer: "Minimize" },
+            { question: "_______ is an iterative algorithm often used to update parameters 'a' and 'b' in linear regression by following the error gradient.", options: ["K-Means", "Euclidean Distance", "Gradient Descent", "Apriori"], answer: "Gradient Descent" },
+            { question: "Learning where the model sees all the training data at once before updating parameters is called _______ learning.", options: ["Online", "Reinforcement", "Batch", "Incremental"], answer: "Batch" },
+            { question: "Clustering is an example of _______ learning because the data has no predefined labels.", options: ["Supervised", "Unsupervised", "Reinforcement", "Regression"], answer: "Unsupervised" },
+            { question: "The K-Means algorithm aims to partition data into _______ predefined clusters.", options: ["An unknown number of", "Two", "K", "Hierarchical"], answer: "K" },
+            { question: "In K-Means, each data point is assigned to the cluster with the _______ centroid.", options: ["Farthest", "Initial", "Nearest", "Random"], answer: "Nearest" },
+            { question: "The center of a cluster in K-Means, often calculated as the mean of its points, is called a _______.", options: ["Node", "Centroid", "Vertex", "Boundary"], answer: "Centroid" },
+            { question: "K-Means typically uses _______ distance to measure closeness between points and centroids.", options: ["Manhattan", "Cosine", "Hamming", "Euclidean"], answer: "Euclidean" },
+            { question: "The K-Means algorithm stops when cluster assignments or centroid positions stabilize, which is called _______.", options: ["Initialization", "Divergence", "Convergence", "Assignment"], answer: "Convergence" },
+            { question: "Unlike Linear Regression which predicts continuous values, Logistic Regression is used for _______ tasks.", options: ["Clustering", "Regression", "Dimensionality Reduction", "Classification"], answer: "Classification" }
+        ];
+        const trueOrFalse = [
+            { question: "Linear Regression can be used to predict categorical outcomes like 'Yes' or 'No'.", answer: false }, // Predicts continuous values. Logistic Regression is for categories.
+            { question: "The slope 'b' in linear regression indicates where the line crosses the Y-axis.", answer: false }, // That's the intercept 'a'.
+            { question: "A lower MSE value generally indicates a better fit for a linear regression model.", answer: true },
+            { question: "Gradient descent requires calculating the error for the entire dataset before updating parameters.", answer: false }, // This is true for Batch Gradient Descent, but Stochastic/Mini-batch update more frequently. The slide implies it's a general method for updating. Let's assume batch context based on slide 10. Reconsidering: Slide 8 suggests processing instances then calculating error (MSE). Slide 10 defines Batch. So, in the context of the slides, batch GD *does* use the whole set for the gradient calc. Let's mark TRUE based on the apparent context. *Self-correction*: Slide 8 mentions updating using gradient descent *or* algebraically. Slide 10 contrasts batch and online. It's safer to say Gradient Descent *can* be batch, but isn't *required* to be. Let's stick with False as the general statement isn't always true.
+             { question: "Online learning processes the entire dataset together before updating model parameters.", answer: false }, // That's Batch learning.
+            { question: "Clustering algorithms require labeled data to function correctly.", answer: false }, // Clustering is unsupervised.
+            { question: "The number of clusters 'K' in K-Means must be determined beforehand.", answer: true },
+            { question: "In K-Means, centroids are recalculated by finding the median of the points in a cluster.", answer: false }, // Usually the mean.
+            { question: "K-Means guarantees finding the globally optimal clustering solution.", answer: false }, // It can get stuck in local optima depending on initialization.
+            { question: "Convergence in K-Means means the MSE has reached zero.", answer: false }, // It means assignments/centroids stopped changing, not necessarily zero error (MSE isn't the metric for K-Means).
+            { question: "Euclidean distance is the only distance measure that can be used with K-Means.", answer: false }, // It's the most common, but others exist (like Manhattan, Cosine).
+            { question: "Logistic Regression uses Mean Squared Error (MSE) as its primary performance metric.", answer: false }, // Typically uses Loss functions like Log Loss. MSE is for regression.
+            { question: "K-Means is a supervised learning algorithm.", answer: false } // It's unsupervised.
+        ];
+        const multipleChoice = [
+            { question: "What type of variable does Linear Regression typically predict?", options: ["Categorical", "Continuous", "Discrete", "Nominal"], answer: "Continuous" },
+            { question: "Which component of the linear equation ŷ = a + bx represents the change in ŷ for a one-unit increase in x?", options: ["ŷ", "a", "b", "x"], answer: "b" },
+            { question: "Which metric is commonly used to evaluate the performance of a Linear Regression model?", options: ["Accuracy", "Precision", "Mean Squared Error (MSE)", "AUC"], answer: "Mean Squared Error (MSE)" },
+            { question: "Which learning strategy updates model parameters after processing each data point or a small batch?", options: ["Batch Learning", "Transfer Learning", "Reinforcement Learning", "Online Learning"], answer: "Online Learning" },
+            { question: "K-Means belongs to which category of machine learning algorithms?", options: ["Supervised Learning", "Unsupervised Learning", "Reinforcement Learning", "Semi-supervised Learning"], answer: "Unsupervised Learning" },
+            { question: "What is the first step in the K-Means algorithm?", options: ["Assign points to clusters", "Update centroids", "Choose the number of clusters (K) and initialize centroids", "Calculate Euclidean distances"], answer: "Choose the number of clusters (K) and initialize centroids" },
+            { question: "How are centroids typically updated in the K-Means algorithm?", options: ["By selecting the point furthest from the current centroid", "By calculating the mean of all points assigned to the cluster", "By randomly choosing a new point", "By using the initial centroid positions"], answer: "By calculating the mean of all points assigned to the cluster" },
+            { question: "What does 'convergence' signify in the K-Means algorithm?", options: ["The algorithm found the optimal K value", "The Mean Squared Error reached zero", "The cluster assignments or centroid positions are no longer changing significantly", "The algorithm has processed all data points once"], answer: "The cluster assignments or centroid positions are no longer changing significantly" },
+            { question: "Which algorithm is used for classification, predicting discrete categories?", options: ["Linear Regression", "K-Means", "Logistic Regression", "Hierarchical Clustering"], answer: "Logistic Regression" },
+            { question: "What is the primary goal of unsupervised learning tasks like clustering?", options: ["To predict a specific output value based on labeled inputs", "To discover hidden patterns or structures in unlabeled data", "To learn through trial and error with rewards", "To minimize the Mean Squared Error"], answer: "To discover hidden patterns or structures in unlabeled data" },
+            { question: "In the K-Means example (Slide 14), which points were chosen as initial centroids?", options: ["A and B", "C and D", "G and D", "E and F"], answer: "G and D" },
+            { question: "In the K-Means example (Slide 15, Iteration 1), which cluster was point E(2,2) assigned to?", options: ["Cluster 1 (Centroid D)", "Cluster 2 (Centroid G)", "Neither", "Both"], answer: "Cluster 2 (Centroid G)" },
+             { question: "In the K-Means example (Slide 16), what were the approximate coordinates of the new centroid for Cluster 1 after Iteration 1?", options: ["(1.2, 2.8)", "(5, 5)", "(4.67, 2)", "(1, 4)"], answer: "(4.67, 2)" }
+        ];
+        // --- END OF QUIZ DATA ---
+
+
+        // --- START OF SCRIPT LOGIC ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainTabButtons = document.querySelectorAll('.main-tabs .tab-button');
+            const mainTabContents = document.querySelectorAll('.main-content');
+            const fillContainer = document.getElementById('fill-questions');
+            const tfContainer = document.getElementById('tf-questions');
+            const mcContainer = document.getElementById('mc-questions');
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+            // --- Main Tab Switching Logic ---
+            mainTabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    mainTabButtons.forEach(btn => btn.classList.remove('active'));
+                    mainTabContents.forEach(content => content.classList.remove('active'));
+                    button.classList.add('active');
+                    const targetContent = document.getElementById(tabId);
+                    if (targetContent) { targetContent.classList.add('active'); }
+                });
+            });
+
+            // --- Accordion Logic (for Glossary AND Examples) ---
+             accordionHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    // Toggle active class on the header
+                    this.classList.toggle('active');
+                    const panel = this.nextElementSibling;
+
+                    // Toggle the 'open' class which controls padding and max-height via CSS
+                    panel.classList.toggle('open');
+
+                    // Optional: Close other sibling accordions when one is opened
+                    const parentAccordion = this.closest('.accordion');
+                     if (!parentAccordion) return; // Exit if no parent accordion found
+
+                    // Check if this accordion is directly under the main content or nested
+                    let isTopLevelAccordionItem = parentAccordion.parentElement.classList.contains('main-content');
+                    let isNestedAccordionItem = parentAccordion.parentElement.classList.contains('accordion-panel');
+
+                    // Only close siblings if it's a top-level accordion item
+                    // or adjust this logic if you want nested accordions to close siblings too.
+                    // For now, let's only auto-close siblings at the top level of each section.
+                    if (isTopLevelAccordionItem) {
+                       const allHeaders = parentAccordion.querySelectorAll(':scope > .accordion-item > .accordion-header');
+                       allHeaders.forEach(otherHeader => {
+                            if (otherHeader !== this && otherHeader.classList.contains('active')) {
+                                otherHeader.classList.remove('active');
+                                otherHeader.nextElementSibling.classList.remove('open');
+                            }
+                        });
+                    }
+                    // If you want nested accordions to close their direct siblings:
+                     else if (isNestedAccordionItem) {
+                         const nestedSiblings = parentAccordion.querySelectorAll(':scope > .accordion-item > .accordion-header');
+                         nestedSiblings.forEach(otherHeader => {
+                             if (otherHeader !== this && otherHeader.classList.contains('active')) {
+                                 otherHeader.classList.remove('active');
+                                 otherHeader.nextElementSibling.classList.remove('open');
+                             }
+                         });
+                     }
+                });
+            });
+
+             // --- QUIZ LOGIC (Functions: handleOptionSelection, showFeedback, loadFillInTheBlankQuestions, loadTrueFalseQuestions, loadMultipleChoiceQuestions) ---
+            function handleOptionSelection(button, questionDiv) {
+                const siblings = questionDiv.querySelectorAll('.option-button.selected');
+                siblings.forEach(sib => sib.classList.remove('selected'));
+                button.classList.add('selected');
+                const existingFeedback = questionDiv.querySelector('.feedback');
+                if (existingFeedback) { existingFeedback.remove(); }
+            }
+            function showFeedback(questionDiv, isCorrect, correctAnswer) {
+                const existingFeedback = questionDiv.querySelector('.feedback');
+                if (existingFeedback) { existingFeedback.remove(); }
+                const feedback = document.createElement('div'); feedback.className = 'feedback';
+                if (isCorrect) { feedback.classList.add('correct'); feedback.textContent = 'Correct!'; }
+                else { feedback.classList.add('incorrect'); feedback.textContent = `Incorrect. Correct answer: ${correctAnswer}`; }
+                const checkButton = questionDiv.querySelector('.check-answer');
+                if (checkButton) { checkButton.parentNode.insertBefore(feedback, checkButton.nextSibling); }
+                else { questionDiv.appendChild(feedback); }
+            }
+            function loadFillInTheBlankQuestions() {
+                fillContainer.innerHTML = ''; // Clear previous questions
+                fillInTheBlank.forEach((q, index) => { // Added index
+                    const questionDiv = document.createElement('div'); questionDiv.className = 'question';
+                    // Added question number:
+                    const questionText = document.createElement('p'); questionText.innerHTML = `${index + 1}. ${q.question}`; questionDiv.appendChild(questionText);
+                    const optionsDiv = document.createElement('div'); optionsDiv.className = 'options';
+                    q.options.forEach(option => { const optionButton = document.createElement('button'); optionButton.className = 'option-button'; optionButton.textContent = option; optionButton.addEventListener('click', () => handleOptionSelection(optionButton, questionDiv)); optionsDiv.appendChild(optionButton); });
+                    questionDiv.appendChild(optionsDiv);
+                    const checkButton = document.createElement('button'); checkButton.className = 'check-answer'; checkButton.textContent = 'Check Answer'; checkButton.addEventListener('click', () => { const selected = questionDiv.querySelector('.option-button.selected'); showFeedback(questionDiv, selected && selected.textContent === q.answer, q.answer); });
+                    questionDiv.appendChild(checkButton); fillContainer.appendChild(questionDiv);
+                });
+            }
+            function loadTrueFalseQuestions() {
+                 tfContainer.innerHTML = ''; // Clear previous questions
+                trueOrFalse.forEach((q, index) => { // Added index
+                    const questionDiv = document.createElement('div'); questionDiv.className = 'question';
+                     // Added question number:
+                    const questionText = document.createElement('p'); questionText.innerHTML = `${index + 1}. ${q.question}`; questionDiv.appendChild(questionText);
+                    const optionsDiv = document.createElement('div'); optionsDiv.className = 'options';
+                    const trueButton = document.createElement('button'); trueButton.className = 'option-button'; trueButton.textContent = 'True'; trueButton.addEventListener('click', () => handleOptionSelection(trueButton, questionDiv)); optionsDiv.appendChild(trueButton);
+                    const falseButton = document.createElement('button'); falseButton.className = 'option-button'; falseButton.textContent = 'False'; falseButton.addEventListener('click', () => handleOptionSelection(falseButton, questionDiv)); optionsDiv.appendChild(falseButton);
+                    questionDiv.appendChild(optionsDiv);
+                    const checkButton = document.createElement('button'); checkButton.className = 'check-answer'; checkButton.textContent = 'Check Answer';
+                    checkButton.addEventListener('click', () => {
+                        const selected = questionDiv.querySelector('.option-button.selected'); const correctAnswerText = q.answer ? 'True' : 'False'; const isCorrect = selected && ((selected.textContent === 'True' && q.answer) || (selected.textContent === 'False' && !q.answer)); showFeedback(questionDiv, isCorrect, correctAnswerText);
+                    });
+                    questionDiv.appendChild(checkButton); tfContainer.appendChild(questionDiv);
+                });
+            }
+            function loadMultipleChoiceQuestions() {
+                 mcContainer.innerHTML = ''; // Clear previous questions
+                multipleChoice.forEach((q, index) => { // Added index
+                    const questionDiv = document.createElement('div'); questionDiv.className = 'question';
+                     // Added question number:
+                    const questionText = document.createElement('p'); questionText.innerHTML = `${index + 1}. ${q.question}`; questionDiv.appendChild(questionText);
+                    const optionsDiv = document.createElement('div'); optionsDiv.className = 'options';
+                     q.options.forEach(option => { const optionButton = document.createElement('button'); optionButton.className = 'option-button'; optionButton.textContent = option; optionButton.addEventListener('click', () => handleOptionSelection(optionButton, questionDiv)); optionsDiv.appendChild(optionButton); });
+                    questionDiv.appendChild(optionsDiv);
+                    const checkButton = document.createElement('button'); checkButton.className = 'check-answer'; checkButton.textContent = 'Check Answer'; checkButton.addEventListener('click', () => { const selected = questionDiv.querySelector('.option-button.selected'); showFeedback(questionDiv, selected && selected.textContent === q.answer, q.answer); });
+                    questionDiv.appendChild(checkButton); mcContainer.appendChild(questionDiv);
+                });
+            }
+
+            // --- Initial Load ---
+            loadFillInTheBlankQuestions();
+            loadTrueFalseQuestions();
+            loadMultipleChoiceQuestions();
+
+            // --- Activate first tab ---
+             if (mainTabButtons.length > 0) {
+                mainTabButtons[0].classList.add('active');
+                const firstTabId = mainTabButtons[0].getAttribute('data-tab');
+                 const firstTabContent = document.getElementById(firstTabId);
+                if(firstTabContent) firstTabContent.classList.add('active');
+            }
+
+        }); // End DOMContentLoaded
+        // --- END OF SCRIPT LOGIC ---
+    </script>
+</body>
+</html>
